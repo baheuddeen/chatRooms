@@ -1,0 +1,30 @@
+{
+  "name": "crownpeal-ext",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "watch": "vite build --watch",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
+    "bootstrap": "^5.3.2",
+    "bootstrap-vue": "^2.23.1",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.26.1",
+    "socket.io-client": "^4.7.2",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6",
+    "vue3-cookies": "^1.0.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0",
+    "vue-tsc": "^1.2.0"
+  }
+}

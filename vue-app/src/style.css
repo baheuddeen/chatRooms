@@ -1,0 +1,226 @@
+@import url('./theme.css');
+
+.p-tree.p-component{
+    background: transparent;
+    color: whitesmoke;
+    border: transparent;
+}
+.p-treenode-label {
+    font-size: 12px;
+}
+.p-tree-toggler.p-link {
+    height: .5rem;
+}
+
+.p-tree.p-component.p-tree-selectable
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+.p-button.p-component{   
+    margin: 6px;
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #007acc;
+    border-radius: 6px;
+}
+
+.changed{
+    color: red;
+}
+
+
+.p-tree-loading-overlay.p-component-overlay{
+    min-height: 90vh;
+}
+
+
+
+.menu-drop-down{
+    z-index: 1;
+  }
+
+
+.form-label{
+    display: block;
+    padding: 10px
+}
+
+.show-modified {
+    width: fit-content !important;
+}
+.p-inputgroup-addon {
+  padding: 0;
+}
+.search-bar {
+  position: fixed;
+  width: calc(100% - 40px);
+  background: #1e1f1c;
+  z-index: 1;
+}
+section.search-bar + .card {
+  padding-top: 110px;
+}
+section.search-bar input.p-inputtext {
+  font-size: 13px;
+}
+section.search-bar input.p-inputtext:focus {
+  box-shadow: none;
+}
+.search-bar .p-inputgroup {
+  margin-top: 10px;
+  height: 40px;
+}
+.search-bar .p-inputgroup .p-inputgroup-addon {
+  padding: 0;
+}
+.search-bar .p-inputgroup .p-inputgroup-addon .p-button.p-component {
+  margin: 0px;
+  padding: 14px;
+  font-size: 14px;
+  background-color: transparent;
+  border: 0;
+  color: #007acc;
+}
+.search-bar .p-inputgroup .p-inputgroup-addon span.pi{
+  color: #007acc;
+}
+.search-bar div.p-menu {
+  top: 110px;
+  left: 70px;
+}
+.search-bar .p-button:focus {
+  box-shadow: none;
+}
+.show-modified {
+  display: flex;
+  align-items: center;
+}
+.search-bar .p-inputgroup .p-inputgroup-addon.file-name {
+  flex-grow: 1;
+  justify-content: start;
+  padding-left: 10px;
+  background: #FFF;
+}
+
+.p-tree .p-tree-loading-overlay {
+  background: #1e1f1c;
+}
+
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content {
+  padding: 0;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode {
+  padding-left: 0px;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
+  margin-right: 0;
+  color: #FFF;
+  justify-content: start;
+  width: 1.5rem;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content .pi {
+  font-size: 0.7rem;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content .p-treenode-icon {
+  color: #FFF;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover .p-treenode-icon,
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover .p-tree-toggler {
+  color: #495057;
+}
+.login-page {
+  margin-top: 20px;
+}
+.p-tabview-nav-content {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.p-tabview.login-page .p-tabview-nav {
+  background: none;
+  justify-content: center;
+}
+.login-page .p-tabview-nav li{
+  flex: 1 0;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #007acc;
+    border-color: #007acc;
+    color: #fff;
+}
+.p-tabview.login-page .p-tabview-nav li.p-highlight .p-tabview-nav-link,
+.p-tabview.login-page .p-tabview-nav li .p-tabview-nav-link {
+  justify-content: center;
+  padding: 15px 0px;
+  border-radius: 0px ;
+}
+.p-tabview.login-page .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus,
+.p-tabview.login-page .p-inputtext:enabled:focus {
+  box-shadow: none;
+}
+.p-tabview-title {
+  font-size: 13px;
+}
+.p-tabview.login-page form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.login-page .p-inputgroup-addon {
+  padding: 8px;
+}
+.file-explorer .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:focus {
+    box-shadow: none;
+}
+.p-accordion.p-component.info-section-accordion {
+    position: fixed;
+    bottom: 0;
+    width: calc(100%);
+    left: 0px;
+    bottom: -4px;
+}
+.p-accordion.p-component.info-section-accordion .p-accordion-header-link {
+  padding: 5px 10px;
+  background: #272822 !important;
+  color: #FFF !important;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 400;
+}
+.p-accordion.p-component.info-section-accordion .p-accordion-header-link .pi {
+    font-size: .5rem;
+}
+.p-accordion.p-component.info-section-accordion .p-accordion-header:not(.p-disabled) .p-accordion-header-link:focus {
+  box-shadow: none;
+}
+.p-accordion.p-component.info-section-accordion .p-accordion-content {
+    padding: 5px;
+    /* border: 1px solid #dee2e6; */
+    background: #1e1f1c !important;
+    color: #FFF !important;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+}
+.p-accordion.p-component.info-section-accordion .info-section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.info-section ul li {
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+span.info-label {
+    /* background-color: #007acc; */
+    /* border-radius: 5px; */
+    padding: 3px;
+    margin-right: 5px;
+    white-space: nowrap;
+    color: #007acc;
+}   
