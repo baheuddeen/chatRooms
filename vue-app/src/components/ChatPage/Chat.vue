@@ -16,7 +16,7 @@ export default defineComponent({
     InputText,
     Message,
     ChatMessage,
-  },
+},
 
   props: {
     compare: {
