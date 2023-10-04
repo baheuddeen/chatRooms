@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from "vue";
+import { Ref, ref, onMounted } from "vue";
 import { io } from "socket.io-client";
 import Services from "../../utilites/Services";
 import { MenuItem } from "primevue/menuitem";
@@ -24,6 +24,8 @@ export default class ChatFacet {
 
     public cashMessages: Ref<{[key: number]: Message[]}>;
 
+    public messageInput: Ref<HTMLInputElement>;
+
     constructor() {
         this.state = ref({
             connected: false
@@ -41,6 +43,7 @@ export default class ChatFacet {
             cashMessages: this.cashMessages,
         });
         this.socketIoClient.connect();
+        this.messageInput = ref(null);
     }
 
     public onKeydown(event: KeyboardEvent) {
@@ -50,7 +53,8 @@ export default class ChatFacet {
         // update typing state
     }
 
-    public async onsubmit() {
+    public async onsubmit() {  
+        this.messageInput.value.focus();      
         if(!this.message.value || !this.activeConversationId.value) {
             return;
         }
@@ -133,6 +137,8 @@ export default class ChatFacet {
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),
+            messageInput: this.messageInput,
         };
     }
 }
+
