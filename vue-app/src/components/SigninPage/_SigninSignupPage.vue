@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import SigninForm from './SigninForm.vue';
@@ -14,7 +14,6 @@ export default defineComponent({
     TabView,
     TabPanel,
   },
-
   
 
   setup() {
@@ -30,10 +29,10 @@ export default defineComponent({
     <div v-if="isLoading">Loading....</div>
     <TabView v-else class="login-page">
         <TabPanel header="Log in">
-            <SigninForm></SigninForm>
+            <SigninForm @my-event="getLoginStatus"></SigninForm>
         </TabPanel>
         <TabPanel header="Sign up">
-            <SignupForm></SignupForm>
+            <SignupForm @my-event="getLoginStatus"></SignupForm>
         </TabPanel>
     </TabView>
 </template>

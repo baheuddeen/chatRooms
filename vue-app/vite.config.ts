@@ -6,7 +6,7 @@ export default defineConfig({
   base: '', 
   plugins: [vue()],
   build: {
-    outDir: "build",
+    outDir: "../public",
     rollupOptions: {
       output: {
         manualChunks: undefined,

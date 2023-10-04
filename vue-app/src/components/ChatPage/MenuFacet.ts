@@ -8,7 +8,7 @@ export default class MenuFacet {
 
     public toggle: Ref<boolean>;
 
-    public userName: string;
+    public userName: Ref<string>;
 
     public status: Ref<string>;
     
@@ -25,7 +25,7 @@ export default class MenuFacet {
             //     badge: 2
             // },
         ]);
-        this.userName = User.getUser().user_name;
+        this.userName = ref('');
         this.status = ref('online')
     }
 
@@ -35,7 +35,12 @@ export default class MenuFacet {
         // toast.add({ severity: 'info', summary: 'Info', detail: 'Item Selected', life: 3000 });
     }
 
+    public async setUserName() {
+        this.userName.value = (await User.waitingForUser()).user_name;
+    }
+
     setup () {
+        this.setUserName();
         return {
             items: this.items,
             toggle: this.toggle,

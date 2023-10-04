@@ -6,7 +6,7 @@ import router from './routes'
 const app = express();
 
 
-app.use(express.static(path.join(__dirname, '..', 'vue-app', 'build')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 // TODO FIX THIS 
 app.get('/:something', function (req, res, next) {
     if (req.url.startsWith('/api')) {

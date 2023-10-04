@@ -16,9 +16,11 @@ export default defineComponent({
     TabPanel,
   },
 
-  setup() {
+  emits: ['my-event'],
+
+  setup(_props, { emit }) {
     const signupForm = new SignupForm();
-    return signupForm.setup();
+    return signupForm.setup(emit);
   },
 
 });

@@ -5,7 +5,7 @@ import router from "../../route";
 
 
 export default class SingupFormFacet {
-	setup() {
+	setup(emit: any) {
         console.log("signup form mounted");
 		const email = ref("");
 		const password = ref("");
@@ -26,14 +26,11 @@ export default class SingupFormFacet {
 					error.value = await resp.text();
 					return true;
 				}
-				const user = await resp.json() as UserType;
-				User.setUser(user)
-				router.push('/chat');
+				emit('my-event');
 				return true;
 			} catch (err) {
 				console.log(err);
 			}
-			// router.push('/sidebar');
 		};
 
 

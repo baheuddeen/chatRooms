@@ -38,4 +38,29 @@ export default class Services {
         const resJson = await resp.json();
         return resJson;
     }
+
+    public static async login({
+        email,
+        password,
+    }: {
+        email: string,
+        password: string,
+    }) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            email,
+            password,
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+        };
+
+        const resp = await fetch("/api/users/login", requestOptions);
+        return resp;
+    }
 }

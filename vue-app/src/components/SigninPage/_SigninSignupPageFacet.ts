@@ -10,8 +10,7 @@ export default class SigninSignupPageFacet {
     this.isLoading = ref(true);
   }
 
-  public setup() {
-   onMounted(async () => {
+  public async getLoginStatus () {
     try{
       const resp = await Services.getLoginStatus();
       this.isLoading.value = false;
@@ -26,10 +25,16 @@ export default class SigninSignupPageFacet {
     } catch {
       // do something
     }
+  }
+
+  public setup() {
+   onMounted(async () => {
+    this.getLoginStatus();
    });
 
     return {
       isLoading: this.isLoading,
+      getLoginStatus: this.getLoginStatus.bind(this),
     }
   }
 }
