@@ -27,7 +27,7 @@ export default defineComponent({
         <Menu :model="items" v-if="!toggle">
             <template #start>
                 <button class="w-full p-link flex  align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-                    <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" class="mr-2" shape="circle" />
+                    <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
                     <div class="flex flex-column align">
                         <span class="font-bold">{{ userName }}</span>
                         <span class="text-sm">{{ status }}</span>

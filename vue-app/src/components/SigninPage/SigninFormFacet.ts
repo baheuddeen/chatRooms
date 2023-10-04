@@ -7,6 +7,7 @@ import User from "../../models/User";
 export default class SigninForm {
 	setup(emit: any) {
 		const email = ref("");
+		const errorMessage = ref("");
 		const password = ref("");
 		const failedToLogIn = ref(false);
 
@@ -20,6 +21,7 @@ export default class SigninForm {
 			console.log(resp);
 
 			if (resp.status != 200) {
+				errorMessage.value = (await resp.json()).msg;
 				failedToLogIn.value = true;
 			} else {
 				
@@ -33,6 +35,7 @@ export default class SigninForm {
 			email,
 			password,
             failedToLogIn,
+			errorMessage,
 			onsubmit,
 		};
 	}

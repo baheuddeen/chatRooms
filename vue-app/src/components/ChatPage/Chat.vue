@@ -37,7 +37,7 @@ export default defineComponent({
 
 <template>
   <Message severity="error" v-if="!state.connected">Can't connect to server</Message>
-  <section class="chat col-10">
+  <section class="chat col-10" v-if="activeConversationId">
     <Panel header="Messages" class="messages">
       <ChatMessage v-for="message of messages" :key="message.created + '_' + message.sender_id" :message="message"> </ChatMessage>
     </Panel>
@@ -49,7 +49,18 @@ export default defineComponent({
     </form>
     
   </section>
+  <section class="chat col-10" v-else>
+    <h1>
+      please join a conversation first.
+    </h1>
+  </section>
   <section class="col-2">
+    <h2>
+      convserations
+    </h2>
+    <div v-if="conversations.length == 0">
+      loading...
+    </div>
     <div v-for="conversation of conversations">
         <button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</button>
     </div>

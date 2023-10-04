@@ -47,7 +47,7 @@ export default defineComponent({
       </form>
 
       <span>
-        <small v-if="failedToLogIn" class="p-error" id="text-error">Wrong Username or Password</small>
+        <small v-if="failedToLogIn" class="p-error" id="text-error">{{ errorMessage }}</small>
       </span>
 </template>
 

@@ -113,7 +113,7 @@ export default class ChatFacet {
         }
         
         return ( {
-                body: args.body,
+                body: args.body.replace(/''/g, '\''),
                 sender_id: args.sender_id,
                 nickName: senderUser.user_name,
                 created: args.created,
@@ -129,6 +129,7 @@ export default class ChatFacet {
             messages: this.messages,
             conversations: this.conversations,
             state: this.state,
+            activeConversationId: this.activeConversationId,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

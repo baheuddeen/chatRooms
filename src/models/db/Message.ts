@@ -34,7 +34,6 @@ export default class Message {
       const sql = 'SELECT * FROM conversation_messages WHERE conversation_id=($1)';
       const assets = await conn.query(sql, [id]);
       conn.release();
-      if (!assets.rows[0]) throw Error(`no message with id = ${id}`);
       return assets.rows;
     } catch (err) {
       throw new Error(`${err}`);

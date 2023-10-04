@@ -11,6 +11,9 @@ export default function generateJWT(user: UserType) {
     'email': user.email,
     'id': user.id,
     'user': true,
+    'user_name': user.user_name,
+    'first_name': 'TODO',
+    'profile_pic': 'TODO',
     'date': 'TODO',
   },
   clientSecret );

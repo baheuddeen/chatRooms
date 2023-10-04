@@ -50,16 +50,15 @@ const check = async (req: IRequest, res: Response) => {
 }
 
 const login = async (req: Request, res: Response) => {
-  console.log(req.body);
-  try {
-    const password = await user.getPassword(req.body.email);
-    const valid = bcrypt.compareSync(req.body.password, password);    
+  try { 
+    const reqUser = await user.getUserByEmail(req.body.email);    
+    const valid = bcrypt.compareSync(req.body.password, reqUser.password);    
     if (!valid) {
       return res.status(401).json({ msg: 'wrong username or password' });
     }
-    res.cookie('_jwt', generateJWT(req.body.email));
+    res.cookie('_jwt', generateJWT(reqUser));
     return res.status(200).json({ msg: 'logged in successfly' });
-  } catch(err) {
+  } catch(err) {    
     return res.status(401).json({ msg: 'invalid user information' });
   }
 };

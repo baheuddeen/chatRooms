@@ -69,16 +69,16 @@ export default class User {
     }
   }
 
-  async getPassword(email: string): Promise<string> {
+  async getUserByEmail(email: string): Promise<UserType> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT password FROM users WHERE email=($1)';
+      const sql = 'SELECT * FROM users WHERE email=($1)';
       const users = await conn.query(sql, [email]);
       conn.release(); 
-      if (users.rowCount == 0) {
+      if (users.rowCount == 0) {        
         throw new Error('this email is not exist');
       }
-      return users.rows[0].password;
+      return users.rows[0];
     } catch (err) {
       throw new Error(`Error: ${err}`);
     }

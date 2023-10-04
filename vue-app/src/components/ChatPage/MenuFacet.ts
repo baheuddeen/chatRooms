@@ -37,6 +37,7 @@ export default class MenuFacet {
 
     public async setUserName() {
         this.userName.value = (await User.waitingForUser()).user_name;
+        console.log(this.userName.value);
     }
 
     setup () {
