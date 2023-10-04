@@ -36,8 +36,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <Message severity="error" v-if="!state.connected">Can't connect to server</Message>
-  <section class="chat col-10" v-if="activeConversationId">
+  <Message severity="error" v-if="!state.connected">Trying to connect to sever .... </Message>
+  <div class="row chat-container">
+    <section class="chat col-8" v-if="activeConversationId">
     <Panel header="Messages" class="messages">
       <ChatMessage v-for="message of messages" :key="message.created + '_' + message.sender_id" :message="message"> </ChatMessage>
     </Panel>
@@ -49,28 +50,42 @@ export default defineComponent({
     </form>
     
   </section>
-  <section class="chat col-10" v-else>
-    <h1>
-      please join a conversation first.
-    </h1>
-  </section>
-  <section class="col-2">
+  <section class="no-chat col-8" v-else>
     <h2>
-      convserations
+      please join a conversation first.
     </h2>
+  </section>
+  <section class="col-4">
+    <h3>
+      convserations
+    </h3>
     <div v-if="conversations.length == 0">
       loading...
     </div>
     <div v-for="conversation of conversations">
-        <button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</button>
+        <Button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</Button>
     </div>
   </section>
+  </div>
+
 </template>
 
 <style scoped>
+.chat-container {
+  flex-direction: row-reverse;
+  height: 80vh;
+}
 .chat {
-  position: fixed;
-  right: 0px;
+  height: 100%;
+}
+.chat .p-panel-content,
+.chat [role="region"] {
+  height: 100%;
+}
+
+.no-chat {
+  height: fit-content;
+  margin: auto;
 }
 .message-input {
   display: flex;
