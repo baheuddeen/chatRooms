@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.4",
+    "@types/dotenv": "^8.2.0",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/mime": "^3.0.1",
