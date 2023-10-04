@@ -27,9 +27,27 @@ export default class User {
 
     public static getUser(): User {
         if (!User.instance) {
-            throw new Error('user not set yet !');
+            throw('no user set yet')
         }
         return User.instance;
+    }
+
+    public static async waitingForUser(): Promise<User> {
+        return new Promise((res, rej) => {
+            let counter = 0;
+            const waiting = setInterval(() => {
+                if (counter++ > 20) {
+                    clearInterval(waiting);
+                    rej('can not get the user!');
+                }
+                if (!User.instance) {
+                    return;
+                }
+                clearInterval(waiting);
+                res(User.instance);
+            }, 500);
+        });
+        
     }
 
     public static setUser(user: UserType) {

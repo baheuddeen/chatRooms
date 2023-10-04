@@ -41,27 +41,27 @@ const create = async (req: Request, res: Response) => {
 };
 
 const check = async (req: IRequest, res: Response) => {
-  console.log('i am in check');
-
   try {
-    if(!req.user_data) throw new Error('no User Data');
-    
-    const foundUser = await user.check(req.user_data);
-    return res.json(foundUser);
+    if(!req.user_data) throw new Error('no User Data');    
+    return res.json(req.user_data);
   } catch (err) {
     return res.status(400).send({ status: false, err: `${err}` });
   }
 }
 
 const login = async (req: Request, res: Response) => {
-  const password = await user.getPassword(req.body.email);
-  const valid = bcrypt.compareSync(req.body.password, password);  
-    
-  if (!valid) {
+  console.log(req.body);
+  try {
+    const password = await user.getPassword(req.body.email);
+    const valid = bcrypt.compareSync(req.body.password, password);    
+    if (!valid) {
+      return res.status(401).json({ msg: 'wrong username or password' });
+    }
+    res.cookie('_jwt', generateJWT(req.body.email));
+    return res.status(200).json({ msg: 'logged in successfly' });
+  } catch(err) {
     return res.status(401).json({ msg: 'invalid user information' });
   }
-  res.cookie('_jwt', generateJWT(req.body.email));
-  res.send('logged in successfully !');
 };
 
 // TODO ADD Admin constrian

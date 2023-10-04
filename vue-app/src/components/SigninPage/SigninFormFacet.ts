@@ -5,22 +5,27 @@ import User from "../../models/User";
 
 
 export default class SigninForm {
-	setup() {
+	setup(emit: any) {
 		const email = ref("");
 		const password = ref("");
 		const failedToLogIn = ref(false);
 
-		const onsubmit = (event: Event) => {
+		const onsubmit = async (event: Event) => {
 			event.preventDefault();
 			console.log("onsubmit", event);
-            // Services.authenticated({
-            //     email: email.value, 
-            //     password: password.value,
-            // });
-			// User.setUser(user)
-			failedToLogIn.value = false;
-			router.push('/sidebar')
-			return true;
+            const resp = await Services.login({
+                email: email.value, 
+                password: password.value,
+            });
+			console.log(resp);
+
+			if (resp.status != 200) {
+				failedToLogIn.value = true;
+			} else {
+				
+				emit('my-event');
+				return true;			
+			}
 		};
 
 
