@@ -15,13 +15,13 @@
     "tsc-watch": "^6.0.4"
   },
   "dependencies": {
-    "@chilkat/ck-node14-linux64": "^9.50.92",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.4",
     "@types/dotenv": "^8.2.0",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/mime": "^3.0.1",
+    "@types/nodemailer": "^6.4.11",
     "@types/pg": "^8.10.3",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
@@ -29,9 +29,11 @@
     "db-migrate-pg": "^1.5.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "googleapis": "^126.0.1",
     "joi": "^17.10.2",
     "jsonwebtoken": "^9.0.2",
     "mime": "^3.0.0",
+    "nodemailer": "^6.9.5",
     "pg": "^8.11.3",
     "socket.io": "^4.6.2",
     "typescript": "^5.1.3"

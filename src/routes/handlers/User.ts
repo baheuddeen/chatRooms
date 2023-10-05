@@ -5,6 +5,7 @@ import validateJWT from '../../utilities/validateJWT';
 import generateJWT from '../../utilities/generateJWT';
 import IRequest from '../../models/IRequest';
 import bcrypt from 'bcrypt';
+import { sendEmail } from '../../utilities/sendEmail';
 
 const router = express.Router();
 const user = new User();
@@ -34,11 +35,30 @@ const create = async (req: Request, res: Response) => {
   try {
     const createdUser = await user.create(newConversation);
     res.cookie('_jwt', generateJWT(createdUser));
-    return res.json({success: true, created: createdUser});
+    const verifiedUser = createdUser;
+    verifiedUser.verified = 1;
+    await sendEmail({
+      email: createdUser.email,
+      jwt: generateJWT(verifiedUser),
+    })
+    return res.json({success: true});
   } catch (err) {
     return res.status(400).send({ status: false, err: `${err}` });
   }
 };
+
+const verify = async (req:IRequest, res: Response) => {  
+  try {
+    if(!req.user_data) {
+      throw new Error('unvalid token')
+    }
+    const reqUser = await user.verifyUser(req.user_data.email);  
+    res.cookie('_jwt', generateJWT(reqUser));
+    return res.redirect('/');
+  } catch (err) {
+    return res.status(400).send({ status: false, err: `${err}` });
+  }
+}
 
 const check = async (req: IRequest, res: Response) => {
   try {
@@ -71,8 +91,9 @@ const login = async (req: Request, res: Response) => {
 };
 
 // TODO ADD Admin constrian
-router.get('/', validateJWT, index); 
+// router.get('/', validateJWT, index); 
 router.get('/check', validateJWT, check);
+router.get('/verify', validateJWT, verify);
 router.get('/:id', validateJWT, show); 
 router.post('/create', verifySignup, create);
 router.post('/login', login);

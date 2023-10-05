@@ -103,6 +103,18 @@ export default class User {
       throw new Error(`Error: ${err}`);
     }
   }
+
+  async verifyUser(email: string): Promise<UserType> {    
+    try {
+      const conn = await client.connect();
+      const sql = 'UPDATE users SET verified = 1 WHERE email = $1 RETURNING *';      
+      const users = await conn.query(sql, [email]);
+      conn.release(); 
+      return users.rows[0];
+    } catch (err) {
+      throw new Error(`Error: ${err}`);
+    }
+  }
 }
 
 
