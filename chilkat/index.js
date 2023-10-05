@@ -23,7 +23,7 @@ module.exports = () => {
     email.Subject = "This is a test";
     email.Body = "This is a test";
     email.From = "Chilkat Support <verification@mbahy.com>";
-    var success = email.AddTo("Chilkat Admin","muhammad@gmail.com");
+    var success = email.AddTo("Chilkat Admin","muhammad.baheuddeen@gmail.com");
     // To add more recipients, call AddTo, AddCC, or AddBcc once per recipient.
 
     // Call SendEmail to connect to the SMTP server and send.
