@@ -15,6 +15,7 @@
     "tsc-watch": "^6.0.4"
   },
   "dependencies": {
+    "@@chilkat/ck-node11-linux64": "^9.50.92",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.4",
     "@types/dotenv": "^8.2.0",
