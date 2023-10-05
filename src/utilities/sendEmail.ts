@@ -18,7 +18,8 @@ async function createTransporter () {
     });
 
     const accessToken = await oauth2Client.getAccessToken();
-
+    console.log(accessToken);
+    
     const transporter = nodemailer.createTransport({
         // @ts-ignore
         host: "smtp.gmail.com",
@@ -49,7 +50,7 @@ export async function sendEmail({
 
     transporter.sendMail({
         from: "verify.mbahy@gmail.com",
-        to: "muhammad.baheuddeen@gmail.com",
+        to: email,
         subject: "Verify",
         text: `Verify your Account https://mbahy.eastus.cloudapp.azure.com/api/users/verify?jwt=${jwt}`,
       });
