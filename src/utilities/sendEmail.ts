@@ -18,7 +18,6 @@ async function createTransporter () {
     });
 
     const accessToken = await oauth2Client.getAccessToken();
-    console.log(accessToken);
     
     const transporter = nodemailer.createTransport({
         // @ts-ignore
@@ -47,7 +46,8 @@ export async function sendEmail({
     jwt: string,
 }) {
     const transporter = await createTransporter();
-
+    console.log('email: ', email);
+    
     transporter.sendMail({
         from: "verify.mbahy@gmail.com",
         to: email,

@@ -38,7 +38,7 @@ const create = async (req: Request, res: Response) => {
     const verifiedUser = createdUser;
     verifiedUser.verified = 1;
     await sendEmail({
-      email: createdUser.email,
+      email: req.body.email,
       jwt: generateJWT(verifiedUser),
     })
     return res.json({success: true});
