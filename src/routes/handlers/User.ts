@@ -42,14 +42,21 @@ const create = async (req: Request, res: Response) => {
 
 const check = async (req: IRequest, res: Response) => {
   try {
-    if(!req.user_data) throw new Error('no User Data');    
+    if(!req.user_data) {
+      throw new Error('unvalid token')
+    }
+    const reqUser = await user.getUserByEmail(req.user_data.email);  
+    if (req.user_data.verified != reqUser.verified) {
+      req.user_data = reqUser;
+      res.cookie('_jwt', generateJWT(reqUser));
+    }
     return res.json(req.user_data);
   } catch (err) {
     return res.status(400).send({ status: false, err: `${err}` });
   }
 }
 
-const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {  
   try { 
     const reqUser = await user.getUserByEmail(req.body.email);    
     const valid = bcrypt.compareSync(req.body.password, reqUser.password);    

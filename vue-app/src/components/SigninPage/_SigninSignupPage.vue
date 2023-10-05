@@ -27,14 +27,20 @@ export default defineComponent({
 
 <template>
     <div v-if="isLoading">Loading....</div>
-    <TabView v-else class="login-page">
+    <TabView v-if="!isLoading && !showVerify" class="login-page">
         <TabPanel header="Log in">
             <SigninForm @my-event="getLoginStatus"></SigninForm>
         </TabPanel>
         <TabPanel header="Sign up">
-            <SignupForm @my-event="getLoginStatus"></SignupForm>
+            <SignupForm @signup-success="waitingForVerification"></SignupForm>
         </TabPanel>
     </TabView>
+    <section v-if="showVerify">
+      <div> this section will be replaced with verify email component!</div>
+      <h1>
+        Account Created Please verify your Email ..
+      </h1>
+    </section>
 </template>
 
 <style>

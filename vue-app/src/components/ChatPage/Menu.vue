@@ -4,6 +4,8 @@ import { defineComponent } from "vue";
 import MenuFacet from "./MenuFacet";
 import Menu from 'primevue/menu';
 import Avatar from 'primevue/avatar';
+import Search from "./Search.vue";
+import SocketIoClient from "../../utilites/SocketIoClient";
 
 
 
@@ -11,7 +13,14 @@ export default defineComponent({
   components: {
     Menu,
     Avatar,
+    Search,
   },
+
+  props: {
+        socketIoClient: {
+            type: SocketIoClient,
+        }
+    },
   
   setup() {
     const menuFacet = new MenuFacet();
@@ -22,6 +31,7 @@ export default defineComponent({
 </script>
 
 <template>
+
     <div class="card flex align-items-end">
         <!-- <div @click="profileClick" class="simple-header">click me..</div> -->
         <Menu :model="items" v-if="!toggle">
@@ -51,5 +61,6 @@ export default defineComponent({
             </template> -->
         </Menu>
         <Toast />
+        <Search :socket-io-client="socketIoClient"></Search>
     </div>
 </template>

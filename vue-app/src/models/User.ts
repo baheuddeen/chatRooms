@@ -3,6 +3,7 @@ export type UserType = {
     email: string,
     user_name: string,
     password?: string,
+    verified?: number,
 }
 
 export default class User {
@@ -18,10 +19,13 @@ export default class User {
 
     static users: UserType[] = [];
 
+    public readonly verified?: number;
+
     private constructor(user: UserType) {
         this.email = user.email;
         this.user_name = user.user_name;
         this.id = user.id;
+        this.verified = user.verified;
         this.conversation_id = [];
     }
 

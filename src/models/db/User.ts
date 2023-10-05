@@ -75,7 +75,11 @@ export default class User {
       const sql = 'SELECT * FROM users WHERE email=($1)';
       const users = await conn.query(sql, [email]);
       conn.release(); 
-      if (users.rowCount == 0) {        
+      if (users.rowCount == 0) { 
+        console.log(sql);
+        
+        console.log('this email is not exist');
+               
         throw new Error('this email is not exist');
       }
       return users.rows[0];
@@ -83,7 +87,25 @@ export default class User {
       throw new Error(`Error: ${err}`);
     }
   }
+
+  
+  async getByUserName(user_name: string): Promise<UserType[]> {
+    try {
+      user_name = `%${user_name}%`;
+      const conn = await client.connect();
+      const sql = 'SELECT * FROM users WHERE user_name like $1';
+      console.log(sql, user_name);
+      
+      const users = await conn.query(sql, [user_name]);
+      conn.release(); 
+      return users.rows;
+    } catch (err) {
+      throw new Error(`Error: ${err}`);
+    }
+  }
 }
+
+
 
 export type UserType = {
   [keyof: string]: any
@@ -91,4 +113,5 @@ export type UserType = {
   user_name: string,
   email: string,
   password: string,
+  verified: number,
 }

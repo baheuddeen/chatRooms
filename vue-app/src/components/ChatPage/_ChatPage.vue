@@ -10,9 +10,7 @@ export default defineComponent({
   },
   
   setup() {
-
     return {
-      
     }
   }
 });
@@ -21,8 +19,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <Menu> </Menu>
-  <Chat> </Chat>
+  <Menu > </Menu>
+  <Chat > </Chat>
 </template>
 
 <style scoped>

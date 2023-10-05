@@ -8,17 +8,15 @@ import User from "../../models/User";
 
 
 export default class ChatFacet {
-    public readonly user = User.getUser();
-
     public readonly state: Ref<{connected: boolean}>;
-
-    public readonly socketIoClient: SocketIoClient;
 
     public readonly messages: Ref<Message[]>;
 
     public readonly conversations: Ref<Conversation[]>;
 
     public readonly activeConversationId: Ref<number>;
+
+    public readonly conversationLoaded: Ref<boolean>;
 
     public message: Ref<string>;
 
@@ -35,14 +33,7 @@ export default class ChatFacet {
         this.conversations = ref([]);
         this.activeConversationId = ref(null);
         this.cashMessages = ref({});
-        this.socketIoClient =  new SocketIoClient({
-            state: this.state,
-            activeConversationId: this.activeConversationId,
-            messages: this.messages,
-            conversations: this.conversations,
-            cashMessages: this.cashMessages,
-        });
-        this.socketIoClient.connect();
+        this.conversationLoaded = ref(false);
         this.messageInput = ref(null);
     }
 
@@ -58,7 +49,7 @@ export default class ChatFacet {
         if(!this.message.value || !this.activeConversationId.value) {
             return;
         }
-        this.socketIoClient.sendMessage({
+        SocketIoClient.sendMessage({
             text: this.message.value,
             conversation_id: this.activeConversationId.value,
         });
@@ -67,11 +58,11 @@ export default class ChatFacet {
     }
 
     async getConversations(): Promise<void> {
-        this.socketIoClient.getConversations();   
+        SocketIoClient.getConversations();
     }
 
     public joinConversation(conversation_id: number) {
-        this.socketIoClient.joinConversation({
+        SocketIoClient.joinConversation({
             conversation_id,
         });
     }
@@ -125,8 +116,11 @@ export default class ChatFacet {
         )
     }
 
-    setup(props, emit: (event: string, ...args: any[]) => void) {
-        this.getConversations();
+    setup() {
+        onMounted(() => {
+            SocketIoClient.connect();
+            this.getConversations();
+        })
 
         return {
             message: this.message,
@@ -134,10 +128,11 @@ export default class ChatFacet {
             conversations: this.conversations,
             state: this.state,
             activeConversationId: this.activeConversationId,
+            conversationLoaded: this.conversationLoaded,
+            messageInput: this.messageInput,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),
-            messageInput: this.messageInput,
         };
     }
 }

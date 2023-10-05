@@ -26,7 +26,7 @@ export default class SingupFormFacet {
 					error.value = await resp.text();
 					return true;
 				}
-				emit('my-event');
+				emit('signup-success');
 				return true;
 			} catch (err) {
 				console.log(err);

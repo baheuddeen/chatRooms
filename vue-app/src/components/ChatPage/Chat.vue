@@ -5,8 +5,9 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Panel from 'primevue/panel';
 import Message from 'primevue/message';
-import SearchBarFacet from './ChatFacet';
+import ChatFacet from './ChatFacet';
 import ChatMessage from './ChatMessage.vue';
+import SocketIoClient from '../../utilites/SocketIoClient';
 
 
 export default defineComponent({
@@ -19,24 +20,26 @@ export default defineComponent({
 },
 
   props: {
-    compare: {
-      type: Object as () => {
-        isComparing: boolean,
-      }
+    socketIoClient: {
+      type: SocketIoClient,
     }
   },
 
-  emits: ['setComparing'],
+  emits: [''],
 
-  setup(props, { emit }) {    
-    const searchBarFacet = new SearchBarFacet();
-    return searchBarFacet.setup(props, emit);
+  setup() {    
+    const chatFacet = new ChatFacet();
+    SocketIoClient.subscribeChat({
+      chat: chatFacet,
+    });
+
+    return chatFacet.setup();
   }
 });
 </script>
 
 <template>
-  <Message severity="error" v-if="!state.connected">Trying to connect to sever .... </Message>
+  <span class="connect-status" v-if="!state.connected">Trying to connect to sever .... </span>
   <div class="row chat-container">
     <section class="chat col-8" v-if="activeConversationId">
     <Panel header="Messages" class="messages">
@@ -59,8 +62,11 @@ export default defineComponent({
     <h3>
       convserations
     </h3>
-    <div v-if="conversations.length == 0">
+    <div v-if="!conversationLoaded">
       loading...
+    </div>
+    <div v-if="conversationLoaded && conversations.length == 0">
+      No Active conversation .. 
     </div>
     <div v-for="conversation of conversations">
         <Button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</Button>

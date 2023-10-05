@@ -15,6 +15,7 @@ export default function generateJWT(user: UserType) {
     'first_name': 'TODO',
     'profile_pic': 'TODO',
     'date': 'TODO',
+    'verified': user.verified,
   },
   clientSecret );
   return jwt;
