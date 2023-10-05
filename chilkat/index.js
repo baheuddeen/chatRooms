@@ -4,7 +4,7 @@ module.exports = () => {
     var mailman = new chilkat.MailMan();
 
     // Set the SMTP server.  Perhaps it is the local machine.
-    mailman.SmtpHost = "20.106.245.63";
+    mailman.SmtpHost = "ns1-201.azure-dns.com";
     // Or perhaps it's a particular computer on the local network:
     // mailman.SmtpHost = "192.168.1.123";
     // // Or provide a local domain that resolves to an IP address on the local network:
