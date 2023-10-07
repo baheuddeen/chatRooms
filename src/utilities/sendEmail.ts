@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
 
-
+ 
 dotenv.config();
 
 async function createTransporter () {
@@ -48,7 +48,7 @@ export async function sendEmail({
     const transporter = await createTransporter();
     console.log('email: ', email);
     
-    transporter.sendMail({
+    await transporter.sendMail({
         from: "verify.mbahy@gmail.com",
         to: email,
         subject: "Verify",

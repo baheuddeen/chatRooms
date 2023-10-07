@@ -8,7 +8,7 @@ import Message from 'primevue/message';
 import ChatFacet from './ChatFacet';
 import ChatMessage from './ChatMessage.vue';
 import SocketIoClient from '../../utilites/SocketIoClient';
-
+import recorder from './voiceRecorder/components/recorder.vue';
 
 export default defineComponent({
   components: {
@@ -17,15 +17,14 @@ export default defineComponent({
     InputText,
     Message,
     ChatMessage,
+    recorder,
 },
 
   props: {
     socketIoClient: {
       type: SocketIoClient,
-    }
+    },
   },
-
-  emits: [''],
 
   setup() {    
     const chatFacet = new ChatFacet();
@@ -43,7 +42,9 @@ export default defineComponent({
   <div class="row chat-container">
     <section class="chat col-8" v-if="activeConversationId">
     <Panel header="Messages" class="messages">
-      <ChatMessage v-for="message of messages" :key="message.created + '_' + message.sender_id" :message="message"> </ChatMessage>
+      <div  v-for="message of messages" >
+        <ChatMessage @stop-other-audios="onStopOtherAudios" :key="message.created + '_' + message.sender_id" :message="message" :conversation_id="activeConversationId"> </ChatMessage>
+      </div>
     </Panel>
     <form @submit.prevent="onsubmit">
       <div class="message-input">
@@ -51,7 +52,12 @@ export default defineComponent({
         <Button class="submit-input" type="submit">Send</Button>
       </div>
     </form>
-    
+    <recorder
+      :activeConversationId = "activeConversationId"
+      upload-url="YOUR_API_URL"
+      :time="2"
+      @stop-other-audios="onStopOtherAudios"
+    />    
   </section>
   <section class="no-chat col-8" v-else>
     <h2>
@@ -72,7 +78,7 @@ export default defineComponent({
         <Button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</Button>
     </div>
   </section>
-  </div>
+  </div> 
 
 </template>
 
@@ -104,7 +110,7 @@ export default defineComponent({
 
 .messages{
   width: 100%;
-  height: 75vh;
+  height: 70vh;
   overflow-y: scroll;
 }
 .submit-input {

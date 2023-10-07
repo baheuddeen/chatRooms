@@ -3,10 +3,12 @@
 import { defineComponent } from 'vue';
 import Fieldset  from 'primevue/Fieldset';
 import ChatMessage from './ChatMessageFacet';
+import audioPlayer from './voiceRecorder/components/player.vue'
 
 export default defineComponent({
   components: {
     Fieldset ,
+    audioPlayer,
   },
 
   props: {
@@ -14,13 +16,19 @@ export default defineComponent({
       type: Object as () => {
         body: string,
         sender_id: number,
+        created: string,
+        filename?: string,
+        type?: number,
       }
+    },
+    conversation_id: {
+      type: Number,
     }
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const chatMessage = new ChatMessage();
-    return chatMessage.setup(props);
+    return chatMessage.setup(props, emit);
   }
 
 });
@@ -31,7 +39,17 @@ export default defineComponent({
           'message-sender': isSender,
           'message-reciver': !isSender,
         }">
-        <Fieldset  :legend="nickName">{{body}}</Fieldset >
+        <Fieldset  :legend="nickName"  v-if="message.type == 0">
+          {{body}}
+        </Fieldset >
+        <Fieldset  :legend="nickName">
+          <audioPlayer  v-if="message.type == 1"
+           :playerUniqId="message.filename.split('/').pop()"
+           :src="'/private/_uid-' + conversation_id + '/' + message.filename"
+           @stop-other-audios="onStopOtherAudios"
+           />
+        </Fieldset >
+
     </div>
     <p v-else>{{body}}</p>
 

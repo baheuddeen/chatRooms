@@ -11,6 +11,8 @@ import onGetConversations from './Helper/onGetConversations';
 import onMessage from './Helper/onMessage';
 import onGetMessages from './Helper/onGetMessages';
 import onSearchByUser from './Helper/onSearchByUser';
+import onVoiceMessage from './Helper/onVoiceMessage';
+import onPrepareVoiceMessage from './Helper/onPrepareVoiceMessage';
 
 export default class ChatServer {
     httpServer: Server;
@@ -47,6 +49,14 @@ export default class ChatServer {
             socket,
             io: this.io!,
             messageDBHandler: this.messageDBHandler,
+        });
+        onVoiceMessage({
+            socket,
+            io: this.io!,
+            messageDBHandler: this.messageDBHandler,
+        })
+        onPrepareVoiceMessage({
+            socket,
         });
         onGetMessages({
             socket,

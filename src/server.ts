@@ -3,10 +3,14 @@ import path from 'path';
 import  express  from 'express';
 import ChatServer from './lib/ChatServer';
 import router from './routes'
+import voiceMessageValidate from './utilities/voiceMessagesValidate';
 const app = express();
 
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/private', voiceMessageValidate, express.static(path.join(__dirname, '..', 'private')));
+
+
 // TODO FIX THIS 
 app.get('/:something', function (req, res, next) {
     if (req.url.startsWith('/api')) {

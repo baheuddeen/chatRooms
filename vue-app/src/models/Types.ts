@@ -9,6 +9,8 @@ export type Message = {
     body: string,
     nickName?: string,
     created: string,
+    type: number,
+    filename?: string,
 }
 
 

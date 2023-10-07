@@ -24,6 +24,7 @@ export default function({
             sender_id: socket.user_data.id,
             created: new Date(Date.now()).toISOString(),
             conversation_id: args.conversation_id,
+            type: 0,
         }); 
         console.log( 'arg: ', args );
         
@@ -32,6 +33,7 @@ export default function({
             conversation_id: args.conversation_id,
             created: new Date(Date.now()).toISOString(),
             sender_id: socket.user_data.id,
+            type: 0,
         }); 
     });
 }

@@ -10,6 +10,7 @@ export default class SocketIoClient {
     public static socket: Socket ;
     private static chat: ChatFacet;
     private static search: SearchFacet;
+    private static sendingBinaryData: Ref<boolean>;
 
 
 
@@ -22,6 +23,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setConversation', SocketIoClient.onSetConversations);
         SocketIoClient.socket.on('setMessages', SocketIoClient.onSetMessages);
         SocketIoClient.socket.on('searchResult', SocketIoClient.onGetSearchResult);
+        SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
     }
 
     public static subscribeChat({
@@ -38,6 +40,14 @@ export default class SocketIoClient {
         search: SearchFacet
     }) {
         SocketIoClient.search = search;
+    }
+
+    public static subscribeUpload({
+        sendingBinaryData,
+    }: {
+        sendingBinaryData: Ref<boolean>,
+    }) {
+        SocketIoClient.sendingBinaryData = sendingBinaryData;
     }
 
     private static onConnect(){
@@ -68,6 +78,7 @@ export default class SocketIoClient {
     public static sendMessage(message: {
         text: string,
         conversation_id: number,
+        type: 0,
     }) {
         SocketIoClient.socket.send('message', message);
     }
@@ -91,7 +102,7 @@ export default class SocketIoClient {
         console.log('received converstions:', args);  
         SocketIoClient.chat.conversations.value = args.conversations;
         SocketIoClient.chat.conversations.value.forEach((conversation) => {
-            this.joinConversation({
+            SocketIoClient.joinConversation({
                 conversation_id: conversation.id,
             });
         });
@@ -125,4 +136,37 @@ export default class SocketIoClient {
         console.log('got search results', args);
         SocketIoClient.search.users.value = args.users;
     }
+
+    public static prepareVoiceMessage({
+        length,
+        filename,
+        binary,
+        conversation_id,
+    }) {
+        SocketIoClient.socket.emit('prepareVoiceMessage', {
+            length,
+            filename,
+            binary,
+            conversation_id,
+        });
+    }
+
+    public static sendVoiceMessage({
+        blob,
+        num,
+    }) {
+        SocketIoClient.socket.emit('sendVoiceMessage', {
+            binay: true,
+            num: num,
+            data: blob,
+        });
+    }
+
+    public static onStartSendingVoiceMessage() {        
+        if (!SocketIoClient.sendingBinaryData) {
+            return;
+        }
+        SocketIoClient.sendingBinaryData.value = true;
+    }
+    
 }

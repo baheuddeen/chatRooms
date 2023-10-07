@@ -52,6 +52,7 @@ export default class ChatFacet {
         SocketIoClient.sendMessage({
             text: this.message.value,
             conversation_id: this.activeConversationId.value,
+            type: 0,
         });
         this.message.value = ''
         return true;
@@ -77,7 +78,9 @@ export default class ChatFacet {
         }
         this.activeConversationId.value = conversationId;
         if(!this.conversations.value.find(conversation => conversation.id == this.activeConversationId.value)) {
-            this.joinConversation(this.activeConversationId.value);
+            SocketIoClient.joinConversation({
+                conversation_id: this.activeConversationId.value
+            });
         }
         // i want to have messages cash!
         if (!this.cashMessages.value[this.activeConversationId.value]){
@@ -100,6 +103,8 @@ export default class ChatFacet {
         sender_id: number,
         body: string,
         created: string,
+        type: number,
+        filename?: string,
     }) {
         let senderUser = User.users.find(user => user.id == args.sender_id);        
         if (!senderUser) {            
@@ -108,12 +113,27 @@ export default class ChatFacet {
         }
         
         return ( {
-                body: args.body.replace(/''/g, '\''),
+                body: args.body?.replace(/''/g, '\''),
                 sender_id: args.sender_id,
                 nickName: senderUser.user_name,
                 created: args.created,
+                type: args.type,
+                filename: args.filename,
             }
         )
+    }
+
+    public onStopOtherAudios(args) {
+        console.log('wow', args, 'do something!');
+        // TODO FIX IT 
+        document.querySelectorAll('audio').forEach((audio: HTMLAudioElement) => {
+            if (audio.id != args) {
+                console.log('wow', args, 'do onother something!');
+                (audio.parentElement?.querySelector('.ar-player-actions .ar-player__play--active') as HTMLDivElement)?.click();
+                console.log('wow', args, 'do the thing!', audio.parentElement?.querySelector('.ar-player-actions'));
+
+            }
+        });
     }
 
     setup() {
@@ -133,6 +153,7 @@ export default class ChatFacet {
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),
+            onStopOtherAudios: this.onStopOtherAudios.bind(this),
         };
     }
 }
