@@ -17,7 +17,7 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
       activeConversationId: {type: Object},
     },
 
-    emits:['start-upload', 'end-upload'],
+    emits:['start-upload', 'end-upload', 'reset-record'],
 
     setup(props, { emit }) {
       
@@ -45,6 +45,7 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
           } );          
         }
         sendingBinaryData.value = false;
+        emit('reset-record');
       })
 
       const upload = () => {

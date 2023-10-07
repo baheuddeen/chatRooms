@@ -127,6 +127,10 @@
         props.selectRecord && props.selectRecord(record)
       };
 
+      const resetRecord = () => {
+        selected.value = {};
+      }
+
       onBeforeUnmount(() => {
         stopRecorder()
       });
@@ -174,6 +178,7 @@
         removeRecord,
         choiceRecord,
         stopOtherAudios,
+        resetRecord
       }
     }
   });
@@ -221,6 +226,7 @@
       <uploader
               v-if="selected.id"
               class="ar__uploader"
+              @reset-record="resetRecord"
               :activeConversationId="activeConversationId"
               :record="selected"
               :filename="selected.url"
