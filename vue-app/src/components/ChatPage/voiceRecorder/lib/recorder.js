@@ -1,6 +1,7 @@
 import Mp3Encoder from './mp3-encoder'
 import WavEncoder from './wav-encoder'
 import { convertTimeMMSS } from './utils'
+import RandomNoiseProcessor from './processWorklet';
 
 export default class {
   constructor (options = {}) {
@@ -104,10 +105,10 @@ export default class {
     return this.records.slice(-1).pop()
   }
 
-  _micCaptured (stream) {
+  async _micCaptured (stream) {
     this.context    = new(window.AudioContext || window.webkitAudioContext)()
     this.duration   = this._duration
-    this.input      = this.context.createMediaStreamSource(stream)
+    this.input      = this.context.createMediaStreamSource(stream);
     this.processor  = this.context.createScriptProcessor(this.bufferSize, 1, 1)
     this.stream     = stream
 
@@ -116,6 +117,7 @@ export default class {
       let sum = 0.0
 
       if (this._isMp3()) {
+        console.log('wow mp3');
         this.lameEncoder.encode(sample)
       } else {
         this.wavSamples.push(new Float32Array(sample))

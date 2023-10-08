@@ -24,6 +24,8 @@ export default class ChatFacet {
 
     public messageInput: Ref<HTMLInputElement>;
 
+    public sampleRate: number;
+
     constructor() {
         this.state = ref({
             connected: false
@@ -35,6 +37,11 @@ export default class ChatFacet {
         this.cashMessages = ref({});
         this.conversationLoaded = ref(false);
         this.messageInput = ref(null);
+        this.sampleRate = 44100; // default sampleRate
+        const audioContext = new AudioContext();
+        if (audioContext.sampleRate) {
+            this.sampleRate = audioContext.sampleRate;
+        }
     }
 
     public onKeydown(event: KeyboardEvent) {
@@ -150,6 +157,7 @@ export default class ChatFacet {
             activeConversationId: this.activeConversationId,
             conversationLoaded: this.conversationLoaded,
             messageInput: this.messageInput,
+            sampleRate: this.sampleRate,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

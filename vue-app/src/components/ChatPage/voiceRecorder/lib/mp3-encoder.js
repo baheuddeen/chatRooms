@@ -13,10 +13,13 @@ export default class {
     const samples    = this._convertBuffer(arrayBuffer)
     let remaining    = samples.length
 
+    const buffer = this.encoder.encodeBuffer(this._convertBuffer(arrayBuffer));
+    this.dataBuffer.push(new Int8Array(buffer))
+
     for (let i = 0; remaining >= 0; i += maxSamples) {
       const left = samples.subarray(i, i + maxSamples)
-      const buffer = this.encoder.encodeBuffer(left)
-      this.dataBuffer.push(new Int8Array(buffer))
+      // const buffer = this.encoder.encodeBuffer(this.sampleRate);
+      // this.dataBuffer.push(new Int8Array(buffer))
       remaining -= maxSamples
     }
   }

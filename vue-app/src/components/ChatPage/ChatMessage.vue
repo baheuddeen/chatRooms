@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import Fieldset  from 'primevue/Fieldset';
+import Fieldset  from 'primevue/fieldset';
 import ChatMessage from './ChatMessageFacet';
 import audioPlayer from './voiceRecorder/components/player.vue'
 
