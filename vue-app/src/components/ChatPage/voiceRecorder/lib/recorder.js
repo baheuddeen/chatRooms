@@ -117,7 +117,6 @@ export default class {
       let sum = 0.0
 
       if (this._isMp3()) {
-        console.log('wow mp3');
         this.lameEncoder.encode(sample)
       } else {
         this.wavSamples.push(new Float32Array(sample))

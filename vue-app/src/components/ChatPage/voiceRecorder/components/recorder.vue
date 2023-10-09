@@ -23,7 +23,7 @@
       time     : { type: Number },
 
       bitRate    : { type: Number, default: 128   },
-      sampleRate : { type: Number, default: 44100 },
+      sampleRate : { type: Number },
 
       showDownloadButton : { type: Boolean, default: true },
       showUploadButton   : { type: Boolean, default: true },
@@ -49,7 +49,7 @@
           micFailed       : props.micFailed,
           bitRate         : props.bitRate,
           sampleRate      : props.sampleRate,
-          format          : props.format,
+          format          : 'wav', // set to wav
         })
       }
 
