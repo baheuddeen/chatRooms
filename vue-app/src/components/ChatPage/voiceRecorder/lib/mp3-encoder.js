@@ -5,7 +5,7 @@ export default class {
     this.bitRate    = config.bitRate
     this.sampleRate = config.sampleRate
     this.dataBuffer = []
-    this.encoder    = new Mp3Encoder(1, this.sampleRate, 400)
+    this.encoder    = new Mp3Encoder(1, this.sampleRate, 16)
   }
 
   encode(arrayBuffer) {
@@ -43,7 +43,7 @@ export default class {
 
   _convertBuffer(arrayBuffer) {
     const data = new Float32Array(arrayBuffer)
-    const out = new Int32Array(arrayBuffer.length)
+    const out = new Int16Array(arrayBuffer.length)
     this._floatTo16BitPCM(data, out)
     return out
   }
