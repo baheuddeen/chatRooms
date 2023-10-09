@@ -49,7 +49,7 @@
           micFailed       : props.micFailed,
           bitRate         : props.bitRate,
           sampleRate      : props.sampleRate,
-          format          : 'wav', // set to wav
+          format          : 'mp3', // set to wav
         })
       }
 
@@ -101,7 +101,15 @@
           // no pause just stop!
           // recorder.value.pause()
           recorder.value.stop();
-          selected.value = recorder.value.recordList().pop();
+          const timeout = 100;
+          let counter = 0;
+          const waitForRecord = setInterval((() => {
+            selected.value = recorder.value.recordList().pop();
+            if(!selected.value && counter++ < timeout) {
+              return;
+            }
+            clearInterval(waitForRecord);
+          }), 200)
           // so that i can play before i send it !
         }
       };
