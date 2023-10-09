@@ -16,7 +16,7 @@ export default class {
       sampleRate : options.sampleRate
     }
 
-    this.bufferSize = 8192;
+    this.bufferSize = 4096
     this.records    = []
 
     this.isPause     = false

@@ -56,7 +56,7 @@ export default defineComponent({
       :activeConversationId = "activeConversationId"
       upload-url="YOUR_API_URL"
       :time="2"
-      :sampleRate="sampleRate"
+      :sampleRate="sampleRate" 
       format="mp3"
       @stop-other-audios="onStopOtherAudios"
     />    

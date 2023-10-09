@@ -5,11 +5,11 @@ export default class {
     this.bitRate    = config.bitRate
     this.sampleRate = config.sampleRate
     this.dataBuffer = []
-    this.encoder    = new Mp3Encoder(1, this.sampleRate, this.bitRate)
+    this.encoder    = new Mp3Encoder(1, this.sampleRate, 320)
   }
 
   encode(arrayBuffer) {
-    const maxSamples = 1152
+    const maxSamples = 576
     const samples    = this._convertBuffer(arrayBuffer)
     let remaining    = samples.length
 
