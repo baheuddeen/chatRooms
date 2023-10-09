@@ -35,14 +35,24 @@ export default class {
       video: false,
       audio: {
         channelCount: 1,
-        echoCancellation: false
+        echoCancellation: false,
+
       }
     }
 
     this.beforeRecording && this.beforeRecording('start recording')
 
     navigator.mediaDevices
-             .getUserMedia(constraints)
+             .getUserMedia({
+              video: false,
+              audio: {
+                channelCount: 1,
+                echoCancellation: false,
+                sampleSize: 16,
+                noiseSuppression: true,
+                sampleRate: this.encoderOptions.sampleRate,
+              }
+             })
              .then(this._micCaptured.bind(this))
              .catch(this._micError.bind(this))
 
