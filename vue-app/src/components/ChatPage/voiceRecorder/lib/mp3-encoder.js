@@ -9,13 +9,14 @@ export default class {
   }
 
   encode(arrayBuffer) {
-    const maxSamples = 576
+    const maxSamples = 1152
     const samples    = this._convertBuffer(arrayBuffer)
     let remaining    = samples.length
 
     for (let i = 0; remaining >= 0; i += maxSamples) {
       const left = samples.subarray(i, i + maxSamples)
       const buffer = this.encoder.encodeBuffer(left);
+      console.log('high bitRate');
       this.dataBuffer.push(new Int8Array(buffer))
       remaining -= maxSamples
     }
