@@ -5,7 +5,7 @@ export default class {
     this.bitRate    = config.bitRate
     this.sampleRate = config.sampleRate
     this.dataBuffer = []
-    this.encoder    = new Mp3Encoder(1, this.sampleRate, 320)
+    this.encoder    = new Mp3Encoder(1, this.sampleRate, 1024)
   }
 
   encode(arrayBuffer) {
