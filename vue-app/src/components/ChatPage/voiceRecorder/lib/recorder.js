@@ -49,7 +49,6 @@ export default class {
                 channelCount: 1,
                 echoCancellation: false,
                 sampleSize: 16,
-                noiseSuppression: true,
                 sampleRate: this.encoderOptions.sampleRate,
               }
              })
@@ -134,7 +133,7 @@ export default class {
       if (this._isMp3()) {
         this.lameEncoder.encode(sample)
       } else {
-        this.wavSamples.push(new Float32Array(sample))
+        this.wavSamples.push(...sample)
       }
 
       for (let i = 0; i < sample.length; ++i) {

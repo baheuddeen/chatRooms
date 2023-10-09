@@ -1,13 +1,10 @@
 export default class {
   constructor (options) {
-    this.bufferSize = options.bufferSize || 4096
     this.sampleRate = options.sampleRate
     this.samples    = options.samples
   }
 
   finish () {
-    this._joinSamples()
-
     let buffer = new ArrayBuffer(44 + this.samples.length * 4)
     let view   = new DataView(buffer)
 
@@ -24,8 +21,8 @@ export default class {
     view.setUint16(34, 32, true)                             // bits per sample
     this._writeString(view, 36, 'data')                      // data chunk identifier
     view.setUint32(40, this.samples.length * 4, true)        // data chunk length
-
     this._writeFloat32(view, 44, this.samples)
+    console.log(view.getFloat32());
 
     const blob = new Blob([view], {type: 'audio/wav'})
 
@@ -48,19 +45,7 @@ export default class {
           output.setFloat32(offset, input[i], true);
       }
   }
-  _joinSamples () {
-    let recordLength  = this.samples.length * this.bufferSize
-    let joinedSamples = new Float64Array(recordLength)
-    let offset        = 0
 
-    for (let i = 0; i < this.samples.length; i++) {
-      let sample = this.samples[i]
-      joinedSamples.set(sample, offset)
-      offset += sample.length
-    }
-
-    this.samples = joinedSamples
-  }
 
   _writeString (view, offset, string) {
     for (let i = 0; i < string.length; i++) {
