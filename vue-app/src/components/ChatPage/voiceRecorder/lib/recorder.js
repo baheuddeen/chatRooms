@@ -113,7 +113,12 @@ export default class {
     this.stream     = stream
 
     this.processor.onaudioprocess = (ev) => {
-      const sample = ev.inputBuffer.getChannelData(0)
+      const sample = ev.inputBuffer.getChannelData(0);
+      if (this.encoderOptions.sampleRate != ev.inputBuffer.sampleRate) {
+        alert('wrong sample rate');
+      }
+
+
       let sum = 0.0
 
       if (this._isMp3()) {
