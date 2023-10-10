@@ -1,4 +1,4 @@
-import { Ref, ref, onMounted } from "vue";
+import { Ref, ref, onMounted, watch } from "vue";
 import { io } from "socket.io-client";
 import Services from "../../utilites/Services";
 import { MenuItem } from "primevue/menuitem";
@@ -26,6 +26,14 @@ export default class ChatFacet {
 
     public sampleRate: number;
 
+    public waitForInput: any;
+
+    static rowHeight?: number;
+
+    static trackScrollHeight: number;
+
+    static inputHeightIsGrowing: boolean;
+
     constructor() {
         this.state = ref({
             connected: false
@@ -44,7 +52,39 @@ export default class ChatFacet {
         }
     }
 
-    public onKeydown(event: KeyboardEvent) {
+    public watchMessageInputHeight() {
+        if (!this.messageInput.value) {
+            return;
+        }
+
+        let scrollHeight = this.messageInput.value.scrollHeight;
+        const height = this.messageInput.value.getBoundingClientRect().height;
+        console.log(scrollHeight, ChatFacet.trackScrollHeight);
+        
+        if (!ChatFacet.rowHeight) {
+            ChatFacet.inputHeightIsGrowing = false;
+            ChatFacet.rowHeight = scrollHeight;
+        }
+        if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight < scrollHeight && !ChatFacet.inputHeightIsGrowing) {            
+            this.messageInput.value.style.height = `${height + ChatFacet.rowHeight}px`;    
+            ChatFacet.inputHeightIsGrowing = true;
+        }
+         else if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight > scrollHeight ) {
+            // we are growinh
+            this.messageInput.value.style.height = `${height - ChatFacet.rowHeight}px`;      
+            ChatFacet.inputHeightIsGrowing = true;
+        }
+        if (ChatFacet.trackScrollHeight == scrollHeight) {
+            ChatFacet.inputHeightIsGrowing = false;
+        }
+        this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
+
+        ChatFacet.trackScrollHeight = scrollHeight;
+        console.log('after:', scrollHeight, ChatFacet.trackScrollHeight);
+    }
+
+    public onKeydown(event: KeyboardEvent) {        
+        
         if (event.key == 'Enter') {
             return;          
         }
@@ -147,7 +187,9 @@ export default class ChatFacet {
         onMounted(() => {
             SocketIoClient.connect();
             this.getConversations();
-        })
+            this.waitForInput = setInterval(this.watchMessageInputHeight.bind(this), 100);
+        });
+
 
         return {
             message: this.message,

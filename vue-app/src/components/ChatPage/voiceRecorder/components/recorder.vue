@@ -253,7 +253,6 @@
       background-color: #fafafa;
       box-shadow: 0 4px 18px #0000002b;
       box-sizing: content-box;
-      min-width: 400px;
       margin-left: auto;
       margin-right: auto;
       height: fit-content;

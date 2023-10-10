@@ -48,7 +48,7 @@ export default defineComponent({
     </Panel>
     <form @submit.prevent="onsubmit">
       <div class="message-input">
-        <textarea  type="text" class="text-input" ref="messageInput" v-model="message" placeholder="Type your message.." @keydown="onKeydown($event)" />
+        <textarea  type="text" class="text-input" rows="1" ref="messageInput" v-model="message" placeholder="Type your message.." @keydown="onKeydown($event)" />
         <Button class="submit-input" type="submit">Send</Button>
       </div>
     </form>
@@ -100,12 +100,9 @@ export default defineComponent({
   height: fit-content;
   margin: auto;
 }
-.message-input {
-  display: flex;
-}
+
 .text-input{
   width: 70%;
-  height: fit-content;
   text-wrap: wrap;
 }
 
