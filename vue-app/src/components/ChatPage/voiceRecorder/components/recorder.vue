@@ -95,7 +95,7 @@
 
         if (!isRecording.value || (isRecording.value && isPause.value)) {
           console.log('it should start recording !');
-          
+          selected.value = {};
           recorder.value.start()
         } else {
           // no pause just stop!

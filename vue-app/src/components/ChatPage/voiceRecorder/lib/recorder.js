@@ -23,7 +23,9 @@ export default class {
     this.volume   = 0
 
     this._duration = 0
-
+    this.startTime; // to keep track of the start time
+    this.stopwatchInterval; // to keep track of the interval
+    this.duration = 0
   }
 
   start () {
@@ -42,13 +44,15 @@ export default class {
              .getUserMedia(constraints)
              .then(this._micCaptured.bind(this))
              .catch(this._micError.bind(this))
-    
     this.isPause     = false
     this.isRecording = true
   }
 
   stop () {
     this.mediaRecorder.stop();
+    clearInterval(this.stopwatchInterval); // stop the interval
+    this.duration = new Date().getTime() - this.startTime; // calculate elapsed paused time
+    this.stopwatchInterval = null; // reset the interval variable
   }
 
   pause () {
@@ -73,6 +77,7 @@ export default class {
   _micCaptured (stream) {
     this.mediaRecorder = new MediaRecorder(stream);
     this.duration   = this._duration;
+    this._startStopwatch();
     this.mediaRecorder.ondataavailable = (ev) => {
       console.log('ondata:', ev);
       this.chunks.push(ev.data);
@@ -111,4 +116,39 @@ export default class {
   _isMp3 () {
     return this.format.toLowerCase() === 'mp3'
   }
+  _startStopwatch() {
+    if (!this.stopwatchInterval) {
+    //   console.log(this);
+      this.startTime = new Date().getTime() - this.duration; // get the starting time by subtracting the elapsed paused time from the current time
+      this.stopwatchInterval = setInterval(this._updateStopwatch.bind(this), 1000); // update every second
+    }
+  }
+  _updateStopwatch() {
+    const currentTime = new Date().getTime(); // get current time in milliseconds
+    this.duration = (currentTime - this.startTime) / 1000; // calculate elapsed time in milliseconds
+    console.log(this.duration);
+    // var seconds = Math.floor(this.duration / 1000) % 60; // calculate seconds
+    // var minutes = Math.floor(this.duration / 1000 / 60) % 60; // calculate minutes
+    // var hours = Math.floor(this.duration / 1000 / 60 / 60); // calculate hours
+    // var displayTime = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds); // format display time
+  }
+}
+
+
+
+
+function stopStopwatch() {
+  
+}
+
+function resetStopwatch() {
+  stopStopwatch(); // stop the interval
+  elapsedPausedTime = 0; // reset the elapsed paused time variable
+  document.getElementById("stopwatch").innerHTML = "00:00:00"; // reset the display
+}
+
+
+
+function pad(number) {
+  return (number < 10 ? "0" : "") + number;
 }
