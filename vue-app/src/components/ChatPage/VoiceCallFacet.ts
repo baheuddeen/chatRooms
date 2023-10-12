@@ -78,7 +78,7 @@ export default class VoiceCallFacet {
         this.pendingPeers.forEach((pendingPeer) => {
             console.log(pendingPeer);
             
-            const peer = new Peer({ stream: this.stream });
+            const peer = new Peer({ stream: this.stream, trickle: false, });
             const socketPeer = new SocketPeer({ 
                 peer,
                 activeConversationId: this.activeConversationId,
