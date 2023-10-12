@@ -13,6 +13,7 @@ import onGetMessages from './Helper/onGetMessages';
 import onSearchByUser from './Helper/onSearchByUser';
 import onVoiceMessage from './Helper/onVoiceMessage';
 import onPrepareVoiceMessage from './Helper/onPrepareVoiceMessage';
+import onSendPeer from './Helper/onSendPeer';
 
 export default class ChatServer {
     httpServer: Server;
@@ -66,6 +67,9 @@ export default class ChatServer {
             socket,
             userDBHandler: this.userDBHandler,
         });
+        onSendPeer( {
+            socket,
+        })
     }
 }
 

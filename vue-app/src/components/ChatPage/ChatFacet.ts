@@ -57,30 +57,30 @@ export default class ChatFacet {
             return;
         }
 
-        let scrollHeight = this.messageInput.value.scrollHeight;
-        const height = this.messageInput.value.getBoundingClientRect().height;
-        console.log(scrollHeight, ChatFacet.trackScrollHeight);
+        // let scrollHeight = this.messageInput.value.scrollHeight;
+        // const height = this.messageInput.value.getBoundingClientRect().height;
+        // console.log(scrollHeight, ChatFacet.trackScrollHeight);
         
-        if (!ChatFacet.rowHeight) {
-            ChatFacet.inputHeightIsGrowing = false;
-            ChatFacet.rowHeight = scrollHeight;
-        }
-        if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight < scrollHeight && !ChatFacet.inputHeightIsGrowing) {            
-            this.messageInput.value.style.height = `${height + ChatFacet.rowHeight}px`;    
-            ChatFacet.inputHeightIsGrowing = true;
-        }
-         else if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight > scrollHeight ) {
-            // we are growinh
-            this.messageInput.value.style.height = `${height - ChatFacet.rowHeight}px`;      
-            ChatFacet.inputHeightIsGrowing = true;
-        }
-        if (ChatFacet.trackScrollHeight == scrollHeight) {
-            ChatFacet.inputHeightIsGrowing = false;
-        }
-        this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
+        // if (!ChatFacet.rowHeight) {
+        //     ChatFacet.inputHeightIsGrowing = false;
+        //     ChatFacet.rowHeight = scrollHeight;
+        // }
+        // if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight < scrollHeight && !ChatFacet.inputHeightIsGrowing) {            
+        //     this.messageInput.value.style.height = `${height + ChatFacet.rowHeight}px`;    
+        //     ChatFacet.inputHeightIsGrowing = true;
+        // }
+        //  else if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight > scrollHeight ) {
+        //     // we are growinh
+        //     this.messageInput.value.style.height = `${height - ChatFacet.rowHeight}px`;      
+        //     ChatFacet.inputHeightIsGrowing = true;
+        // }
+        // if (ChatFacet.trackScrollHeight == scrollHeight) {
+        //     ChatFacet.inputHeightIsGrowing = false;
+        // }
+        // this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
 
-        ChatFacet.trackScrollHeight = scrollHeight;
-        console.log('after:', scrollHeight, ChatFacet.trackScrollHeight);
+        // ChatFacet.trackScrollHeight = scrollHeight;
+        // console.log('after:', scrollHeight, ChatFacet.trackScrollHeight);
     }
 
     public onKeydown(event: KeyboardEvent) {        
@@ -187,7 +187,6 @@ export default class ChatFacet {
         onMounted(() => {
             SocketIoClient.connect();
             this.getConversations();
-            this.waitForInput = setInterval(this.watchMessageInputHeight.bind(this), 100);
         });
 
 

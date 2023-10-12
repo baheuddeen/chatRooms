@@ -5,6 +5,7 @@ import User, { UserType } from "../models/User";
 import Services from "./Services";
 import ChatFacet from "../components/ChatPage/ChatFacet";
 import SearchFacet from "../components/ChatPage/SearchFacet";
+import SocketPeer from "./SocketPeer";
 
 export default class SocketIoClient {
     public static socket: Socket ;
@@ -24,6 +25,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setMessages', SocketIoClient.onSetMessages);
         SocketIoClient.socket.on('searchResult', SocketIoClient.onGetSearchResult);
         SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
+        SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
     }
 
     public static subscribeChat({
@@ -168,5 +170,20 @@ export default class SocketIoClient {
         }
         SocketIoClient.sendingBinaryData.value = true;
     }
+
+    public static sendPeer(data) {
+        SocketIoClient.socket.emit('sendPeer', data);
+    }
     
+    public static onRecievePeer(args) {
+        console.log('args:', args);
+        
+        if (args.type == 'offer') {
+            SocketPeer.setPeer({
+                offer: args
+            });    
+        } else if (args.type == 'answer') {
+            SocketPeer.sendSignal(args);        
+        }
+    }
 }

@@ -9,6 +9,7 @@ import ChatFacet from './ChatFacet';
 import ChatMessage from './ChatMessage.vue';
 import SocketIoClient from '../../utilites/SocketIoClient';
 import recorder from './voiceRecorder/components/recorder.vue';
+import VoiceCall from './VoiceCall.vue';
 
 export default defineComponent({
   components: {
@@ -18,6 +19,7 @@ export default defineComponent({
     Message,
     ChatMessage,
     recorder,
+    VoiceCall,
 },
 
   props: {
@@ -59,6 +61,7 @@ export default defineComponent({
       :sampleRate="sampleRate" 
       @stop-other-audios="onStopOtherAudios"
     />    
+    <voiceCall />
   </section>
   <section class="no-chat col-8" v-else>
     <h2>
