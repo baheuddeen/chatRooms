@@ -15,6 +15,19 @@ export default class ConversationParticipant {
     }
   }
 
+  async getConversationsParticipantByConvId(id: number): Promise<ConversationParticipantType[]> {
+    try {
+      const conn = await client.connect();
+      const sql = 'SELECT * FROM conversation_participants WHERE conversation_id=$1';
+      const users_id = await conn.query(sql, [id]);
+      conn.release();
+      // if (!conversations.rows[0]) throw Error(`no conversation with id = ${id}`);
+      return users_id.rows;
+    } catch (err) {
+      throw new Error(`${err}`); 
+    }
+  }
+
   async getConversationsByUserId(id: number):Promise<ConversationParticipantType[]> {
     try {
       const conn = await client.connect();

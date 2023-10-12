@@ -1,32 +1,54 @@
 import peer from 'simple-peer';
 import SocketIoClient from './SocketIoClient';
-import  * as process from 'process';
+import * as process from 'process';
+import User from '../models/User';
 
 export default class SocketPeer {
-    private static peerClient: any = null;
+    public peer: any;
+    public activeConversationId: number;
+    public secondPeerEmail: string;
+    public offer?: any;
 
-    static isPeerinit: boolean = false;
+    constructor({peer, activeConversationId, secondPeerEmail, offer} :{peer?: any, activeConversationId: number, secondPeerEmail: string, offer?: any}) {
+        if (!window['process']) {
+            window['process'] = process;
+        }
+        this.peer = peer;
+        this.activeConversationId = activeConversationId;        
+        this.secondPeerEmail = secondPeerEmail;
+        this.offer = offer;
+    }
 
-    public static connect() {    
-
-        const peer = SocketPeer.getPeer();
-        peer.on('signal', data => {
+    public connect() {    
+        this.peer.on('signal', data => {
             console.log('wow data', data);   
 
-            if (data.type == 'offer' || data.type == 'answer') {
-                SocketIoClient.sendPeer(data);
+            if (data.type == 'offer') {
+                SocketIoClient.requestVoiceCall({
+                    data,
+                    activeConversationId: this.activeConversationId,
+                    secondPeerEmail: this.secondPeerEmail,
+                });
+            }
+
+            if (data.type == 'answer') {
+                SocketIoClient.acceptVoiceCall({ 
+                    data,
+                    activeConversationId: this.activeConversationId,
+                    secondPeerEmail: this.secondPeerEmail,
+                });
             }
         });
 
-        peer.on('connect', () => {
+        this.peer.on('connect', () => {
             console.log('wow connected !');
             // wait for 'connect' event before using the data channel
-            peer.send('hey, how is it going?')
+            this.peer.send('hey, how is it going?')
         });
 
-        peer.on("data", (data) => console.log("data:", data));
+        this.peer.on("data", (data) => console.log("data:", data));
 
-        peer.on("stream", (stream) => {
+        this.peer.on("stream", (stream) => {
             console.log('recieved stram !');
             
             console.log(stream);
@@ -35,38 +57,10 @@ export default class SocketPeer {
             video.play();
         })
 
-        peer.on("error", (err) => console.log("error", err));
+        this.peer.on("error", (err) => console.log("error", err));
     }
 
-    public static setPeerInit(stream) {
-        window['process'] = process;
-        if (!SocketPeer.peerClient) {
-            console.log('my stram', stream);
-            
-            SocketPeer.peerClient = new peer({ initiator: true, trickle: false, stream, });
-            SocketPeer.isPeerinit = true;
-        }
-    }
-
-    public static sendSignal(data) {
-        const peer = SocketPeer.getPeer(); 
-        window['peer'] = peer       
-        peer.signal(data);
-    }
-
-    public static setPeer( { offer, }: {offer: any} ) {
-        window['process'] = process;
-        if (!SocketPeer.peerClient) {
-            SocketPeer.peerClient = new peer();
-            SocketPeer.connect();
-            SocketPeer.sendSignal(offer);
-        }
-    }
-
-    public static getPeer() {
-        if (!SocketPeer.peerClient) {
-            throw new Error('peer is not set yet');
-        }
-        return SocketPeer.peerClient;
+    public signal(args) {
+        this.peer.signal(args);
     }
 }

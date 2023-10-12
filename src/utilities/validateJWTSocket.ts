@@ -7,6 +7,7 @@ import { Socket } from 'socket.io';
 import { NextHandleFunction } from 'connect';
 import { ExtendedError } from 'socket.io/dist/namespace';
 import ISocket from '../models/ISocket';
+import ChatServer from '../lib/ChatServer';
 
 dotenv.config();
 
@@ -25,6 +26,14 @@ export default async function validateJWTSocket(socket: ISocket, next: (err?: Ex
     let clientSecret = process.env.JWT_CLIENT_SECRET || 'client-secret';
     let value = jwt.verify(token, clientSecret) as UserType;       
     if (value) {      
+      // you are not joined before !
+      // ChatServer.sessionsInfo[]
+      ChatServer.sessionsInfo.push({
+        user_name: value.user_name,
+        email: value.email,
+        socketId: socket.id,
+      });
+
       socket.user_data = value;      
       return next();
     }

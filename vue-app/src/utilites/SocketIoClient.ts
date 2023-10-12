@@ -6,12 +6,15 @@ import Services from "./Services";
 import ChatFacet from "../components/ChatPage/ChatFacet";
 import SearchFacet from "../components/ChatPage/SearchFacet";
 import SocketPeer from "./SocketPeer";
+import Peer from 'simple-peer';
+import VoiceCallFacet from "../components/ChatPage/VoiceCallFacet";
 
 export default class SocketIoClient {
     public static socket: Socket ;
     private static chat: ChatFacet;
     private static search: SearchFacet;
     private static sendingBinaryData: Ref<boolean>;
+    private static voiceCall: VoiceCallFacet;
 
 
 
@@ -25,7 +28,10 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setMessages', SocketIoClient.onSetMessages);
         SocketIoClient.socket.on('searchResult', SocketIoClient.onGetSearchResult);
         SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
-        SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
+        SocketIoClient.socket.on('setConversationParticipant', SocketIoClient.onSetConversationParticipant);
+        SocketIoClient.socket.on('peerToPeerOffer', SocketIoClient.onPeerToPeerOffer);
+        SocketIoClient.socket.on('acceptVoiceCall', SocketIoClient.onAcceptVoiceCall);
+        // SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
     }
 
     public static subscribeChat({
@@ -50,6 +56,14 @@ export default class SocketIoClient {
         sendingBinaryData: Ref<boolean>,
     }) {
         SocketIoClient.sendingBinaryData = sendingBinaryData;
+    }
+
+    public static subscribeVoiceCall({
+        voiceCall,
+    }: {
+        voiceCall:VoiceCallFacet,
+    }) {
+        SocketIoClient.voiceCall = voiceCall;
     }
 
     private static onConnect(){
@@ -171,19 +185,99 @@ export default class SocketIoClient {
         SocketIoClient.sendingBinaryData.value = true;
     }
 
-    public static sendPeer(data) {
-        SocketIoClient.socket.emit('sendPeer', data);
-    }
-    
-    public static onRecievePeer(args) {
-        console.log('args:', args);
+    public static getConversationParticipant({
+        conversationId,
+    }) {
+        console.log('front get conversation participants');
         
-        if (args.type == 'offer') {
-            SocketPeer.setPeer({
-                offer: args
-            });    
-        } else if (args.type == 'answer') {
-            SocketPeer.sendSignal(args);        
-        }
+        SocketIoClient.socket.emit('getConversationParticipant', {
+            conversation_id: conversationId
+        })
     }
+
+    public static onSetConversationParticipant(args) {
+        console.log('i recieved paricipants', args);
+        
+        SocketIoClient.voiceCall.call(args)
+    }
+
+    public static requestVoiceCall({
+        data,
+        activeConversationId,
+        secondPeerEmail,
+    }){
+        SocketIoClient.socket.emit('requestVoiceCall', {
+            conversation_id: activeConversationId,
+            data, 
+            second_peer_email: secondPeerEmail,
+        });  
+    }
+
+    public static onPeerToPeerOffer(args: {
+        data,
+        second_peer_email,
+    }){
+        SocketIoClient.voiceCall.waitForAnswer(args);
+    }
+
+    public static acceptVoiceCall({
+        data,
+        activeConversationId,
+        secondPeerEmail,
+    }) {
+        console.log('send to acceptVoiceCall', { 
+            data,
+            conversation_id: activeConversationId,
+            second_peer_email: User.getUser().email,
+        });
+        
+        SocketIoClient.socket.emit('acceptVoiceCall', { 
+            data,
+            conversation_id: activeConversationId,
+            second_peer_email: secondPeerEmail,
+        })
+    }
+
+    public static onAcceptVoiceCall(args) {
+        
+        SocketIoClient.voiceCall.socketPeers.forEach((socketPeer) => {
+            console.log(socketPeer);
+            
+            if (socketPeer.secondPeerEmail == args.second_peer_email) {
+                socketPeer.signal(args.data);
+                console.log('connection should be made');
+
+            }
+        });
+    }
+
+    // public static sendPeer({
+    //     data,
+    //     activeConversationId,
+    // }) {
+    //     console.log('i am sending ', data);
+        
+    //     SocketIoClient.socket.emit('sendPeer', {
+    //         conversation_id: activeConversationId,
+    //         data, 
+    //     });
+    // }
+    
+    // public static onRecievePeer(args) {
+    //     console.log('args:', args);
+        
+    //     if (args.data.type == 'offer') {
+    //         const peer = new Peer({});
+    //         const socketPeer = new SocketPeer({
+    //             peer,
+    //             activeConversationId: args.conversation_id
+    //         });
+    //         socketPeer.connect();
+    //         socketPeer.signal(args.data);
+    //         VoiceCallFacet.socketPeers.push(socketPeer);   
+    //     } else if (args.data.type == 'answer') {
+    //         // it should choose the right peer.
+    //         VoiceCallFacet.socketPeers[0].signal(args.data);
+    //     }
+    // }
 }

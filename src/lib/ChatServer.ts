@@ -14,6 +14,16 @@ import onSearchByUser from './Helper/onSearchByUser';
 import onVoiceMessage from './Helper/onVoiceMessage';
 import onPrepareVoiceMessage from './Helper/onPrepareVoiceMessage';
 import onSendPeer from './Helper/onSendPeer';
+import onGetConversationParticipants from './Helper/onGetConversationParticipants';
+import onRequestVoiceCall from './Helper/onRequestVoiceCall';
+import onDisconnect from './Helper/onDisconnect';
+import onAcceptVoiceCall from './Helper/onAcceptVoiceCall';
+
+type SessionInfo = {
+    user_name: string,
+    email: string,
+    socketId: string,
+}
 
 export default class ChatServer {
     httpServer: Server;
@@ -22,6 +32,7 @@ export default class ChatServer {
     messageDBHandler: Message;
     conversationDBHandler: Conversation;
     conversationParticipantsDBHandler: ConversationParticipant;
+    static sessionsInfo: SessionInfo[] = [];
 
     constructor(server: Server) {
         this.httpServer = server;
@@ -40,6 +51,9 @@ export default class ChatServer {
     }
 
     public onConnection (socket: ISocket){
+        onDisconnect({
+            socket,
+        });
         onGetConversations({
             socket, 
             conversationParticipantsDBHandler: this.conversationParticipantsDBHandler,
@@ -50,6 +64,11 @@ export default class ChatServer {
             socket,
             io: this.io!,
             messageDBHandler: this.messageDBHandler,
+        });
+        onGetConversationParticipants({
+            socket, 
+            conversationParticipantsDBHandler: this.conversationParticipantsDBHandler,
+            usersDBHandler: this.userDBHandler,
         });
         onVoiceMessage({
             socket,
@@ -69,6 +88,14 @@ export default class ChatServer {
         });
         onSendPeer( {
             socket,
+        });
+        onRequestVoiceCall( {
+            socket,
+            io: this.io!,
+        });
+        onAcceptVoiceCall( {
+            socket,
+            io: this.io!,
         })
     }
 }

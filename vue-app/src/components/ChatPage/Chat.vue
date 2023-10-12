@@ -61,7 +61,7 @@ export default defineComponent({
       :sampleRate="sampleRate" 
       @stop-other-audios="onStopOtherAudios"
     />    
-    <voiceCall />
+    <voiceCall :activeConversationId="activeConversationId" />
   </section>
   <section class="no-chat col-8" v-else>
     <h2>

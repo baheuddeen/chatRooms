@@ -144,6 +144,8 @@ export default class ChatFacet {
             prepareMessages.push(preparedMessage);
         }                
         this.messages.value.push(...prepareMessages);
+
+        // updates 
     }
 
     public static async prepareMessage(args: {

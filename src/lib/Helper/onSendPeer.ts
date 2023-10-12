@@ -5,10 +5,13 @@ export default function({
 }: {
     socket: ISocket
 }) {
-    socket.on('sendPeer', async (data) => {
+    socket.on('sendPeer', async (args) => {
         if (!socket.user_data) {
             return;
         }
-        socket.broadcast.emit("recievePeer", data);
+        console.log('broadcating to' + args.conversation_id);
+        console.log('data' + args.data);
+
+        socket.broadcast.to(args.conversation_id).emit("recievePeer", args);
     });
 }
