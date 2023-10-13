@@ -13,6 +13,15 @@ export default class VoiceCallFacet {
     public someoneIsCalling: Ref<boolean> = ref(false);
     public pendingPeers: {second_peer_email: string, data: any}[] = [];
 
+    public inactiveScreen() {
+        document.addEventListener('visibilitychange', function(e){
+            e.stopImmediatePropagation();
+            console.log('visibilitychange');
+            
+            // alert('i am not active')
+        });
+    }
+
     public call({
         users,
         conversation_id,
@@ -98,7 +107,7 @@ export default class VoiceCallFacet {
 
     public setup(props) {
         this.activeConversationId = props.activeConversationId;
-
+        this.inactiveScreen();
         return {
             onCall: this.onCall.bind(this),
             onAnswer: this.onAnswer.bind(this),

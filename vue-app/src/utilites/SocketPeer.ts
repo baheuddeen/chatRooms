@@ -55,6 +55,14 @@ export default class SocketPeer {
             let video = document.getElementById("auido-stram") as HTMLAudioElement;
             video.srcObject = stream;
             video.play();
+            // but it somewhere eles!
+            var myAudio = new Audio('/assets/one-minute-of-sielnce.ogg'); 
+            myAudio.addEventListener('ended', function() {
+                console.log('i will reborn again!')
+                this.currentTime = 0;
+                this.play();
+            }, false);
+            myAudio.play();
         })
 
         this.peer.on("error", (err) => console.log("error", err));
