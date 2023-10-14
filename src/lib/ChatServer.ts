@@ -18,6 +18,7 @@ import onGetConversationParticipants from './Helper/onGetConversationParticipant
 import onRequestVoiceCall from './Helper/onRequestVoiceCall';
 import onDisconnect from './Helper/onDisconnect';
 import onAcceptVoiceCall from './Helper/onAcceptVoiceCall';
+import preventMultipleConnections from './Helper/preventMultipleConnections';
 
 type SessionInfo = {
     user_name: string,
@@ -51,6 +52,9 @@ export default class ChatServer {
     }
 
     public onConnection (socket: ISocket){
+        preventMultipleConnections({
+            socket,
+        });
         onDisconnect({
             socket,
         });

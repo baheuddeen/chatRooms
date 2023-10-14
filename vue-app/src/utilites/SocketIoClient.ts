@@ -21,6 +21,7 @@ export default class SocketIoClient {
     public static connect() {
         const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
         SocketIoClient.socket = io(URL);
+        SocketIoClient.socket.on('otherDeviceIsLoggedIn', SocketIoClient.onOtherDeviceIsLoggedIn);
         SocketIoClient.socket.on("connect", SocketIoClient.onConnect);
         SocketIoClient.socket.on('disconnect', SocketIoClient.onDisConnect);
         SocketIoClient.socket.on('message', SocketIoClient.onMessage);
@@ -251,33 +252,8 @@ export default class SocketIoClient {
         });
     }
 
-    // public static sendPeer({
-    //     data,
-    //     activeConversationId,
-    // }) {
-    //     console.log('i am sending ', data);
-        
-    //     SocketIoClient.socket.emit('sendPeer', {
-    //         conversation_id: activeConversationId,
-    //         data, 
-    //     });
-    // }
-    
-    // public static onRecievePeer(args) {
-    //     console.log('args:', args);
-        
-    //     if (args.data.type == 'offer') {
-    //         const peer = new Peer({});
-    //         const socketPeer = new SocketPeer({
-    //             peer,
-    //             activeConversationId: args.conversation_id
-    //         });
-    //         socketPeer.connect();
-    //         socketPeer.signal(args.data);
-    //         VoiceCallFacet.socketPeers.push(socketPeer);   
-    //     } else if (args.data.type == 'answer') {
-    //         // it should choose the right peer.
-    //         VoiceCallFacet.socketPeers[0].signal(args.data);
-    //     }
-    // }
+    public static onOtherDeviceIsLoggedIn() {
+        // TODO add more information.
+        SocketIoClient.chat.otherDeviceIsLoggedIn.value = true;
+    }
 }

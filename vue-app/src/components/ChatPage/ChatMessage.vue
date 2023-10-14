@@ -42,8 +42,8 @@ export default defineComponent({
         <Fieldset  :legend="nickName"  v-if="message.type == 0">
           {{body}}
         </Fieldset >
-        <Fieldset  :legend="nickName">
-          <audioPlayer  v-if="message.type == 1"
+        <Fieldset  :legend="nickName"  v-if="message.type == 1">
+          <audioPlayer 
            :playerUniqId="message.filename.split('/').pop()"
            :src="'/private/_uid-' + conversation_id + '/' + message.filename"
            @stop-other-audios="onStopOtherAudios"

@@ -8,6 +8,8 @@ import User from "../../models/User";
 
 
 export default class ChatFacet {
+    public readonly otherDeviceIsLoggedIn: Ref<boolean>;
+
     public readonly state: Ref<{connected: boolean}>;
 
     public readonly messages: Ref<Message[]>;
@@ -28,16 +30,20 @@ export default class ChatFacet {
 
     public waitForInput: any;
 
-    static rowHeight?: number;
+    public rows: Ref<number>;
 
-    static trackScrollHeight: number;
+    public rowHeight = 0;
 
-    static inputHeightIsGrowing: boolean;
+    public trackScrollHeight = 0;
+
+    public watchInputHeight: any;
 
     constructor() {
         this.state = ref({
             connected: false
         });
+        this.otherDeviceIsLoggedIn = ref(false);
+        this.rows = ref(1);
         this.message = ref('');
         this.messages = ref([]);
         this.conversations = ref([]);
@@ -52,39 +58,32 @@ export default class ChatFacet {
         }
     }
 
-    public watchMessageInputHeight() {
-        if (!this.messageInput.value) {
-            return;
+    public watchMessageInputHeight(x: any) {
+        let rows = Math.floor(this.messageInput.value.scrollHeight / this.rowHeight) + 1;
+        if (!this.rowHeight) {
+            this.rowHeight = this.messageInput.value.getBoundingClientRect().height;
         }
-
-        // let scrollHeight = this.messageInput.value.scrollHeight;
-        // const height = this.messageInput.value.getBoundingClientRect().height;
-        // console.log(scrollHeight, ChatFacet.trackScrollHeight);
-        
-        // if (!ChatFacet.rowHeight) {
-        //     ChatFacet.inputHeightIsGrowing = false;
-        //     ChatFacet.rowHeight = scrollHeight;
-        // }
-        // if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight < scrollHeight && !ChatFacet.inputHeightIsGrowing) {            
-        //     this.messageInput.value.style.height = `${height + ChatFacet.rowHeight}px`;    
-        //     ChatFacet.inputHeightIsGrowing = true;
-        // }
-        //  else if (ChatFacet.trackScrollHeight && ChatFacet.trackScrollHeight > scrollHeight ) {
-        //     // we are growinh
-        //     this.messageInput.value.style.height = `${height - ChatFacet.rowHeight}px`;      
-        //     ChatFacet.inputHeightIsGrowing = true;
-        // }
-        // if (ChatFacet.trackScrollHeight == scrollHeight) {
-        //     ChatFacet.inputHeightIsGrowing = false;
-        // }
-        // this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
-
-        // ChatFacet.trackScrollHeight = scrollHeight;
-        // console.log('after:', scrollHeight, ChatFacet.trackScrollHeight);
+        if (this.trackScrollHeight && this.messageInput.value.scrollHeight <  this.trackScrollHeight) {
+            rows -= 1;
+            console.log(rows);
+            
+            this.messageInput.value.style.height = rows * this.rowHeight + 'px';
+        }
+        this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
+        this.trackScrollHeight = this.messageInput.value.scrollHeight;
+        if ( this.messageInput.value.scrollHeight == this.messageInput.value.getBoundingClientRect().height) {
+            console.log('it should stop');
+            clearInterval(this.watchInputHeight);
+            this.watchInputHeight = null;
+        }
     }
 
+
     public onKeydown(event: KeyboardEvent) {        
-        
+        if (!this.watchInputHeight) {
+            this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
+        }
+
         if (event.key == 'Enter') {
             return;          
         }
@@ -195,12 +194,14 @@ export default class ChatFacet {
         return {
             message: this.message,
             messages: this.messages,
+            rows: this.rows,
             conversations: this.conversations,
             state: this.state,
             activeConversationId: this.activeConversationId,
             conversationLoaded: this.conversationLoaded,
             messageInput: this.messageInput,
             sampleRate: this.sampleRate,
+            otherDeviceIsLoggedIn: this.otherDeviceIsLoggedIn,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),
