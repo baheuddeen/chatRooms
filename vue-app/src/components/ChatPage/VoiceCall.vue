@@ -22,7 +22,7 @@ export default defineComponent({
 
 <template>
     <!-- this should render the voice call  as a dragable window and it should show the current connected people -->
-    <button @click="onCall" v-if="!someoneIsCalling"> Call </button>
-    <button @click="onAnswer" v-if="someoneIsCalling"> Answer the call ! </button>
+    <button @click="onJoin" v-if="!inVoiceCall"> Join </button>
+    <button @click="onLeave" v-if="inVoiceCall && activeVoiceCallId == activeConversationId"> Leave </button>
     <audio id="auido-stram" />
 </template>

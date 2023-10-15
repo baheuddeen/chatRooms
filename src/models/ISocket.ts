@@ -6,4 +6,5 @@ export default interface ISocket extends Socket{
     user_data?: UserType;
     conversations?: ConversationType[];
     voiceMessage?: {length: number, filename: string, binary: boolean, conversation_id: string};
+    activeVoiceCallId?: number;
 }

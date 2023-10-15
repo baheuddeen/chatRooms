@@ -32,6 +32,8 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setConversationParticipant', SocketIoClient.onSetConversationParticipant);
         SocketIoClient.socket.on('peerToPeerOffer', SocketIoClient.onPeerToPeerOffer);
         SocketIoClient.socket.on('acceptVoiceCall', SocketIoClient.onAcceptVoiceCall);
+        SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
+        SocketIoClient.socket.on('updateVoiceCallParticipants', SocketIoClient.onUpdateVoiceCallParticipants);
         // SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
     }
 
@@ -125,6 +127,8 @@ export default class SocketIoClient {
         });
         SocketIoClient.chat.conversationLoaded.value = true;
         SocketIoClient.getMessages();
+        SocketIoClient.getConversationParticipants();
+        SocketIoClient.getVoiceCallParticipants();
     }
 
     public static getMessages() {
@@ -136,6 +140,27 @@ export default class SocketIoClient {
         console.log('received Messages:', args);
         
         SocketIoClient.chat.cashMessages.value = args.messages;
+    }
+
+    
+    public static getConversationParticipants() {
+        console.log('front get conversation participants');
+        
+        SocketIoClient.socket.emit('getConversationParticipant');
+    }
+
+    public static onSetConversationParticipant(args) {
+        console.log('i recieved paricipants', args);        
+        SocketIoClient.chat.cashConversationParticipant.value = args.conversation_participants ;
+        // SocketIoClient.voiceCall.call(args)
+    }
+
+    public static getVoiceCallParticipants() {
+        SocketIoClient.socket.emit('getVoiceCallParticipants');
+    }
+
+    public static setVoiceCallParticipants(args) {
+        SocketIoClient.chat.cashVoiceChatParticipants.value = args.voice_calls_participants;
     }
 
     public static searchByUser({
@@ -186,20 +211,39 @@ export default class SocketIoClient {
         SocketIoClient.sendingBinaryData.value = true;
     }
 
-    public static getConversationParticipant({
-        conversationId,
+    public static joinVoiceCall({
+        conversation_id,
     }) {
-        console.log('front get conversation participants');
-        
-        SocketIoClient.socket.emit('getConversationParticipant', {
-            conversation_id: conversationId
-        })
+        SocketIoClient.socket.emit('joinVoiceCall', {
+            conversation_id,
+        });
     }
 
-    public static onSetConversationParticipant(args) {
-        console.log('i recieved paricipants', args);
+    public static onUpdateVoiceCallParticipants(args) {
+        console.log('new users on voice chat', args.users);
+        SocketIoClient.chat.cashVoiceChatParticipants.value[args.conversation_id] = args.users;
+
+        if(SocketIoClient.voiceCall.activeVoiceCallId.value == args.conversation_id) {
+            const unConnectedUsers = args.users.filter((user) => {
+                return ! SocketIoClient.voiceCall.socketPeers.find((socketPeer) => {
+                    return socketPeer.secondPeerEmail == user.email;
+                });
+            })
+            
+            SocketIoClient.voiceCall.call({
+                users: unConnectedUsers,
+                conversation_id: args.conversation_id,
+            });
+        }
         
-        SocketIoClient.voiceCall.call(args)
+        if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
+            
+            SocketIoClient.chat.voiceChatParticipants.value = args.users;
+        }
+    }
+
+    public static leaveVoiceCall() {
+        SocketIoClient.socket.emit('leaveVoiceCall');
     }
 
     public static requestVoiceCall({
@@ -218,7 +262,7 @@ export default class SocketIoClient {
         data,
         second_peer_email,
     }){
-        SocketIoClient.voiceCall.waitForAnswer(args);
+        SocketIoClient.voiceCall.answer(args);
     }
 
     public static acceptVoiceCall({

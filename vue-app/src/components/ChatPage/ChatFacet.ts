@@ -4,7 +4,7 @@ import Services from "../../utilites/Services";
 import { MenuItem } from "primevue/menuitem";
 import SocketIoClient from "../../utilites/SocketIoClient";
 import { Conversation, Message } from "../../models/Types";
-import User from "../../models/User";
+import User, { UserType } from "../../models/User";
 
 
 export default class ChatFacet {
@@ -23,6 +23,14 @@ export default class ChatFacet {
     public message: Ref<string>;
 
     public cashMessages: Ref<{[key: number]: Message[]}>;
+
+    public cashConversationParticipant: Ref<{[key: number]: UserType[]}>;
+
+    public conversationParticipant: Ref<UserType[]>;
+
+    public voiceChatParticipants: Ref<UserType[]>;
+
+    public cashVoiceChatParticipants: Ref<{[key: number]: UserType[]}>
 
     public messageInput: Ref<HTMLInputElement>;
 
@@ -49,9 +57,13 @@ export default class ChatFacet {
         this.conversations = ref([]);
         this.activeConversationId = ref(null);
         this.cashMessages = ref({});
+        this.cashConversationParticipant = ref({});
+        this.conversationParticipant = ref([]);
         this.conversationLoaded = ref(false);
         this.messageInput = ref(null);
         this.sampleRate = 44100; // default sampleRate
+        this.voiceChatParticipants = ref([]);
+        this.cashVoiceChatParticipants = ref({});
         const audioContext = new AudioContext();
         if (audioContext.sampleRate) {
             this.sampleRate = audioContext.sampleRate;
@@ -94,6 +106,9 @@ export default class ChatFacet {
         this.messageInput.value.focus();      
         if(!this.message.value || !this.activeConversationId.value) {
             return;
+        }
+        if (!this.watchInputHeight) {
+            this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
         }
         SocketIoClient.sendMessage({
             text: this.message.value,
@@ -144,6 +159,16 @@ export default class ChatFacet {
         }                
         this.messages.value.push(...prepareMessages);
 
+        if (!this.cashConversationParticipant.value[this.activeConversationId.value]){
+            console.log('no participant! something went wrong for sure!');      
+            return;
+        }   
+
+        // set conversation participants
+        this.conversationParticipant.value = this.cashConversationParticipant.value[this.activeConversationId.value];
+
+        // set voice chat participants
+        this.voiceChatParticipants.value = this.cashVoiceChatParticipants.value[this.activeConversationId.value];
         // updates 
     }
 
@@ -202,6 +227,9 @@ export default class ChatFacet {
             messageInput: this.messageInput,
             sampleRate: this.sampleRate,
             otherDeviceIsLoggedIn: this.otherDeviceIsLoggedIn,
+            cashConversationParticipant: this.cashConversationParticipant,
+            conversationParticipant: this.conversationParticipant,
+            voiceChatParticipants: this.voiceChatParticipants,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

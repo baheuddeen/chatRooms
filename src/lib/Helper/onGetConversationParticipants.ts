@@ -13,18 +13,28 @@ export default function({
     usersDBHandler: User;
 }) {
     socket.on('getConversationParticipant', async (args) => {
-        if (!socket.user_data) {
+        if (!socket.user_data || ! socket.conversations) {
             return;
         }
-        const users = [];
-        const convParts = await conversationParticipantsDBHandler.getConversationsParticipantByConvId(args.conversation_id);
 
-        for (const convPart of convParts) {
-            users.push(await usersDBHandler.show(convPart.user_id));
-        }        
+        const conversationIds = socket.conversations.map(conv => conv.id);
+
+
+        const convParts = await conversationParticipantsDBHandler.getConversationsParticipantByConvId(conversationIds);
+        console.log(convParts);
+        const conversation_participants = {} as any;
+        convParts.forEach((convPart) => {
+            if (!conversation_participants[convPart.conversation_id]) {
+                conversation_participants[convPart.conversation_id] = [];
+            }
+            conversation_participants[convPart.conversation_id].push({
+                user_name: convPart.user_name,
+                email: convPart.email,
+            });
+        });
+        
         socket.emit('setConversationParticipant', {
-            users,
-            conversation_id: args.conversation_id,
+            conversation_participants,
         });
     });
 }

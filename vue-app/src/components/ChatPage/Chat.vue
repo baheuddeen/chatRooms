@@ -10,6 +10,7 @@ import ChatMessage from './ChatMessage.vue';
 import SocketIoClient from '../../utilites/SocketIoClient';
 import recorder from './voiceRecorder/components/recorder.vue';
 import VoiceCall from './VoiceCall.vue';
+import Avatar from 'primevue/avatar';
 
 export default defineComponent({
   components: {
@@ -20,6 +21,7 @@ export default defineComponent({
     ChatMessage,
     recorder,
     VoiceCall,
+    Avatar,
 },
 
   props: {
@@ -52,8 +54,9 @@ export default defineComponent({
   <div v-else>
     <span class="connect-status" v-if="!state.connected">Trying to connect to sever .... </span>
     <div class="row chat-container">
-      <section class="chat col-8" v-if="activeConversationId">
-      <Panel header="Messages" class="messages">
+      <section class="chat col-10 row" v-if="activeConversationId">
+        <div class="col-10" >
+          <Panel header="Messages" class="messages">
         <div  v-for="message of messages" >
           <ChatMessage @stop-other-audios="onStopOtherAudios" :key="message.created + '_' + message.sender_id" :message="message" :conversation_id="activeConversationId"> </ChatMessage>
         </div>
@@ -70,15 +73,47 @@ export default defineComponent({
         :time="2"
         :sampleRate="sampleRate" 
         @stop-other-audios="onStopOtherAudios"
-      />    
-      <voiceCall :activeConversationId="activeConversationId" />
+      />  
+        </div>
+
+        <div class="col-2">
+          <div>
+            <div>
+              <b>Conversation Participants</b>
+            </div>
+          <div v-for="user of cashConversationParticipant[activeConversationId]">
+            <div class="user-participant">
+              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
+              <div class="flex flex-column align">
+                  <span class="font-bold">{{ user.user_name }}</span>
+              </div>
+            </div>
+           
+          </div>
+          </div>
+        <div>
+          <h3>
+            In Voice Chat.
+          </h3>
+          <div v-for="user of voiceChatParticipants">
+            <div class="user-participant">
+              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
+              <div class="flex flex-column align">
+                  <span class="font-bold">{{ user.user_name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <voiceCall :activeConversationId="activeConversationId" />
+      </div>
+  
     </section>
-    <section class="no-chat col-8" v-else>
+    <section class="no-chat col-10" v-else="!activeConversationId">
       <h2>
         please join a conversation first.
       </h2>
     </section>
-    <section class="col-4">
+    <section class="col-2">
       <h3>
         convserations
       </h3>
@@ -114,6 +149,11 @@ export default defineComponent({
 .no-chat {
   height: fit-content;
   margin: auto;
+}
+
+.user-participant {
+  display: flex;
+  padding: 5px;
 }
 
 .text-input{

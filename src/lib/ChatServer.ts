@@ -5,7 +5,7 @@ import validateJWTSocket from '../utilities/validateJWTSocket';
 import ISocket from '../models/ISocket';
 import Conversation from '../models/db/Conversation';
 import ConversationParticipant from '../models/db/ConversationParticipant ';
-import User from '../models/db/User';
+import User, { UserType } from '../models/db/User';
 import onJoinConversation from './Helper/onJoinConversation';
 import onGetConversations from './Helper/onGetConversations';
 import onMessage from './Helper/onMessage';
@@ -19,11 +19,19 @@ import onRequestVoiceCall from './Helper/onRequestVoiceCall';
 import onDisconnect from './Helper/onDisconnect';
 import onAcceptVoiceCall from './Helper/onAcceptVoiceCall';
 import preventMultipleConnections from './Helper/preventMultipleConnections';
+import onJoinVoiceCall from './Helper/onJoinVoiceCall';
+import onGetVoiceCallParticipants from './Helper/onGetVoiceCallParticipants';
+import onLeaveVoiceCall from './Helper/onLeaveVoiceCall';
 
 type SessionInfo = {
     user_name: string,
     email: string,
     socketId: string,
+}
+
+export type voiceCallSession = {
+    conversation_id: number,
+    users: UserType[],
 }
 
 export default class ChatServer {
@@ -34,6 +42,7 @@ export default class ChatServer {
     conversationDBHandler: Conversation;
     conversationParticipantsDBHandler: ConversationParticipant;
     static sessionsInfo: SessionInfo[] = [];
+    static voiceCallSessions: voiceCallSession[] = [];
 
     constructor(server: Server) {
         this.httpServer = server;
@@ -57,6 +66,7 @@ export default class ChatServer {
         });
         onDisconnect({
             socket,
+            io: this.io!,
         });
         onGetConversations({
             socket, 
@@ -98,6 +108,17 @@ export default class ChatServer {
             io: this.io!,
         });
         onAcceptVoiceCall( {
+            socket,
+            io: this.io!,
+        });
+        onJoinVoiceCall({
+            socket,
+            io: this.io!
+        });
+        onGetVoiceCallParticipants({
+            socket,
+        });
+        onLeaveVoiceCall({
             socket,
             io: this.io!,
         })
