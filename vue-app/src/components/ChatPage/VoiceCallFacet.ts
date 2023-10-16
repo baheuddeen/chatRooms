@@ -105,15 +105,18 @@ export default class VoiceCallFacet {
     }
     public onLeave() {
         this.activeVoiceCallId.value = null;
-        this.socketPeers.forEach((socketPeer) => { 
+        this.socketPeers.forEach((socketPeer, index) => { 
             if (socketPeer.peer) {
-                socketPeer.peer.destroy();                
-            }     else {
+                socketPeer.peer.destroy();    
+                this.socketPeers.splice(index, 1);  
                 console.log('peer is destroyed!');
+                          
+            }     else {
+                console.log('peer not found!');
                 
             }      
         });
-        this.socketPeers = [];
+        
         SocketIoClient.leaveVoiceCall();
         this.inVoiceCall.value = false;
     }
