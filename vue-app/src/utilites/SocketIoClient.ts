@@ -226,21 +226,15 @@ export default class SocketIoClient {
         if(SocketIoClient.voiceCall?.activeVoiceCallId?.value == args.conversation_id) {
             console.log(args);
             
-            if (args.user.email === User.getUser().email) {
-                switch (args.action) {
-                    case 'join':
-                        SocketIoClient.voiceCall.call({
-                            users: args.users,
-                            conversation_id: args.conversation_id,
-                        });
-                    break;
-                    case 'leave':
-                        // TODO
-                    break;
-                    default:
-                        console.log('un impelemented action', args.action);
-                    break;
-                }
+            if (args.user.email === User.getUser().email && args.action == 'join') {  
+                SocketIoClient.voiceCall.call({
+                    users: args.users,
+                    conversation_id: args.conversation_id,
+                });
+            }
+
+            if (args.action == 'leave') {
+                SocketIoClient.voiceCall.disConnect(args.user);
             }
         }
         
