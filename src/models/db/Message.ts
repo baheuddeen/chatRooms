@@ -28,7 +28,7 @@ export default class Message {
     }
   }
 
-  async getMessagesByConversationId(id: number):Promise<Message[]> {
+  async getMessagesByConversationId(id: number | string):Promise<Message[]> {
     try {
       const conn = await client.connect();
       const sql = 'SELECT * FROM conversation_messages WHERE conversation_id=($1)';

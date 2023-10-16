@@ -8,6 +8,7 @@ import SearchFacet from "../components/ChatPage/SearchFacet";
 import SocketPeer from "./SocketPeer";
 import Peer from 'simple-peer';
 import VoiceCallFacet from "../components/ChatPage/VoiceCallFacet";
+import CreateConversationFacet from "../components/ChatPage/CreateConversationFacet";
 
 export default class SocketIoClient {
     public static socket: Socket ;
@@ -15,6 +16,7 @@ export default class SocketIoClient {
     private static search: SearchFacet;
     private static sendingBinaryData: Ref<boolean>;
     private static voiceCall: VoiceCallFacet;
+    private static createConversationFacet: CreateConversationFacet;
 
 
 
@@ -34,6 +36,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('acceptVoiceCall', SocketIoClient.onAcceptVoiceCall);
         SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
         SocketIoClient.socket.on('updateVoiceCallParticipants', SocketIoClient.onUpdateVoiceCallParticipants);
+        SocketIoClient.socket.on('conversationCreated', SocketIoClient.onConversationCreated);
         // SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
     }
 
@@ -43,6 +46,12 @@ export default class SocketIoClient {
         chat: ChatFacet
     }) {
         SocketIoClient.chat = chat;
+    }
+
+    public static subcribeCreateConversationFacet({
+        createConversationFacet,
+    }){
+        this.createConversationFacet = createConversationFacet;
     }
 
     public static subscribeSearch({
@@ -302,4 +311,21 @@ export default class SocketIoClient {
         // TODO add more information.
         SocketIoClient.chat.otherDeviceIsLoggedIn.value = true;
     }
+
+
+    public static createConversation({
+        title,
+    }) {
+        console.log('it should create a room', title);
+        
+        SocketIoClient.socket.emit('createConversation', {
+            title,
+        });
+    }
+
+    public static onConversationCreated(args) {
+        console.log(args);
+        SocketIoClient.createConversationFacet.inviteLink.value = args.inviteLink;
+    }
+
 }

@@ -3,4 +3,5 @@ import { UserType } from "./db/User"
 
 export default interface IRequest extends Request{
     user_data?: UserType;
+    conversationId?: string;
 }

@@ -15,7 +15,7 @@ export default class ConversationParticipant {
     }
   }
 
-  async getConversationsParticipantByConvId(ids: number[]): Promise<ConversationParticipantType[]> {
+  async getConversationsParticipantByConvId(ids: (string | number)[]): Promise<ConversationParticipantType[]> {
     const  conversationIds = ids.join(', ');
     try {
       const conn = await client.connect();
@@ -44,21 +44,21 @@ export default class ConversationParticipant {
     }
   }
 
-  async create(newConversation: ConversationParticipantType): Promise<ConversationParticipant> {
+  async create(newConversationParticipant: ConversationParticipantType): Promise<ConversationParticipant> {
     try {
-        for (let key  of Object.keys(newConversation)){
-            if (!newConversation[key]) {
-                newConversation[key] = null;
+        for (let key  of Object.keys(newConversationParticipant)){
+            if (!newConversationParticipant[key]) {
+              newConversationParticipant[key] = null;
             }
-            if(newConversation[key] && typeof(newConversation[key]) == "string" && newConversation[key].includes("\'")) {
-                newConversation[key] = newConversation[key].replace(/\'/g, "''");
+            if(newConversationParticipant[key] && typeof(newConversationParticipant[key]) == "string" && newConversationParticipant[key].includes("\'")) {
+              newConversationParticipant[key] = newConversationParticipant[key].replace(/\'/g, "''");
             }
         }
       const conn = await client.connect();
       const sql = `INSERT INTO conversation_participants(conversation_id, user_id)
       VALUES ($1, $2) RETURNING *`;      
         
-      const assets = await conn.query(sql, []);
+      const assets = await conn.query(sql, [newConversationParticipant.conversation_id, newConversationParticipant.user_id]);
       conn.release();      
       return assets.rows[0];
     } catch (err) {
@@ -69,7 +69,7 @@ export default class ConversationParticipant {
 
 export type ConversationParticipantType ={
     [keyof: string]: any
-    id: number,
-    conversation_id : number, 
-    user_id : number,
+    id?: number,
+    conversation_id : number | string, 
+    user_id : number | string,
   }

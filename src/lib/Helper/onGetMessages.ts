@@ -15,8 +15,11 @@ export default function({
         if (!socket.user_data || !socket.conversations) {
             return;
         }
-        const messages = {} as {[key: number]: Message[]};
+        const messages = {} as {[key: number | string]: Message[]};
         for (let conv of socket.conversations) {
+            if(!conv.id) {
+                continue;
+            }
             messages[conv.id] = await messageDBHandler.getMessagesByConversationId(conv.id);
         }
         socket.emit('setMessages', {

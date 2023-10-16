@@ -15,7 +15,7 @@ export default class Conversation {
   // }
 
   // get conversation with id
-  async show(id: number):Promise<ConversationType> {
+  async show(id: number | string):Promise<ConversationType> {
     try {
       const conn = await client.connect();
       const sql = 'SELECT * FROM conversations WHERE id=($1)';
@@ -43,7 +43,7 @@ export default class Conversation {
       const sql = `INSERT INTO conversations(title, conversation_participants_id, created)
       VALUES ($1, $2, $3) RETURNING *`;      
         
-      const assets = await conn.query(sql, ['title', 1, new Date(Date.now()).toISOString()]);
+      const assets = await conn.query(sql, [newConversation.title, 1, new Date(Date.now()).toISOString()]);
       conn.release();      
       return assets.rows[0];
     } catch (err) {
@@ -54,7 +54,7 @@ export default class Conversation {
 
 export type ConversationType ={
     [keyof: string]: any
-    id: number,
+    id?: number | string,
     conversation_participant: number, 
     title: string,
   }

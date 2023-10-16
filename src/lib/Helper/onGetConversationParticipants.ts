@@ -17,9 +17,11 @@ export default function({
             return;
         }
 
-        const conversationIds = socket.conversations.map(conv => conv.id);
+        const conversationIds = socket.conversations.map(conv => conv.id!);
 
-
+        if (!conversationIds.length) {
+            return;
+        }
         const convParts = await conversationParticipantsDBHandler.getConversationsParticipantByConvId(conversationIds);
         console.log(convParts);
         const conversation_participants = {} as any;

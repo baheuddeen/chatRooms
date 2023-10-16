@@ -22,6 +22,7 @@ import preventMultipleConnections from './Helper/preventMultipleConnections';
 import onJoinVoiceCall from './Helper/onJoinVoiceCall';
 import onGetVoiceCallParticipants from './Helper/onGetVoiceCallParticipants';
 import onLeaveVoiceCall from './Helper/onLeaveVoiceCall';
+import onCreateConversation from './Helper/onCreateConversation';
 
 type SessionInfo = {
     user_name: string,
@@ -121,6 +122,10 @@ export default class ChatServer {
         onLeaveVoiceCall({
             socket,
             io: this.io!,
+        });
+        onCreateConversation({
+            socket,
+            conversationDBHandler: this.conversationDBHandler,
         })
     }
 }

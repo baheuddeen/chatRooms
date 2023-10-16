@@ -11,6 +11,7 @@ import SocketIoClient from '../../utilites/SocketIoClient';
 import recorder from './voiceRecorder/components/recorder.vue';
 import VoiceCall from './VoiceCall.vue';
 import Avatar from 'primevue/avatar';
+import CreateConversation from './CreateConversation.vue';
 
 export default defineComponent({
   components: {
@@ -22,6 +23,7 @@ export default defineComponent({
     recorder,
     VoiceCall,
     Avatar,
+    CreateConversation,
 },
 
   props: {
@@ -109,9 +111,7 @@ export default defineComponent({
   
     </section>
     <section class="no-chat col-10" v-else="!activeConversationId">
-      <h2>
-        please join a conversation first.
-      </h2>
+       <CreateConversation />
     </section>
     <section class="col-2">
       <h3>
