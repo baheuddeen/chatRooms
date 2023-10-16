@@ -49,6 +49,7 @@ export default function({
             action: 'join',
             conversation_id: socket.activeVoiceCallId,
             users: voiceCallSession.users, 
+            user: socket.user_data,
         });
 
     });

@@ -51,8 +51,9 @@ export function leaveVoiceCall({
     voiceCallSession.users.splice(i, 1);
     console.log('voiceCallSession after', voiceCallSession, socket.activeVoiceCallId.toString());
     io.to(socket.activeVoiceCallId as any).emit('updateVoiceCallParticipants', {
-        action: 'leaves',
+        action: 'leave',
         conversation_id: socket.activeVoiceCallId,
         users: voiceCallSession.users, 
+        user: socket.user_data,
     });
 }

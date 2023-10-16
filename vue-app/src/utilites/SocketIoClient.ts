@@ -223,17 +223,25 @@ export default class SocketIoClient {
         console.log('new users on voice chat', args.users);
         SocketIoClient.chat.cashVoiceChatParticipants.value[args.conversation_id] = args.users;
 
-        if(SocketIoClient.voiceCall.activeVoiceCallId.value == args.conversation_id) {
-            const unConnectedUsers = args.users.filter((user) => {
-                return ! SocketIoClient.voiceCall.socketPeers.find((socketPeer) => {
-                    return socketPeer.secondPeerEmail == user.email;
-                });
-            })
+        if(SocketIoClient.voiceCall?.activeVoiceCallId?.value == args.conversation_id) {
+            console.log(args);
             
-            SocketIoClient.voiceCall.call({
-                users: unConnectedUsers,
-                conversation_id: args.conversation_id,
-            });
+            if (args.user.email === User.getUser().email) {
+                switch (args.action) {
+                    case 'join':
+                        SocketIoClient.voiceCall.call({
+                            users: args.users,
+                            conversation_id: args.conversation_id,
+                        });
+                    break;
+                    case 'leave':
+                        // TODO
+                    break;
+                    default:
+                        console.log('un impelemented action', args.action);
+                    break;
+                }
+            }
         }
         
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
