@@ -100,7 +100,7 @@ export default class VoiceCallFacet {
             return socketPeer.secondPeerEmail == user.email;
         });
         if (socketPeer && socketPeer.peer) {
-            socketPeer.peer.distroy();
+            socketPeer.peer.destroy();
         }
     }
 
@@ -115,10 +115,10 @@ export default class VoiceCallFacet {
     public onLeave() {
         this.activeVoiceCallId.value = null;
         this.socketPeers.forEach((socketPeer, index) => { 
-            if (socketPeer.peer) {
-                socketPeer.peer.distroy();    
+            if (socketPeer.peer) {                
+                socketPeer.peer.destroy();    
                 this.socketPeers.splice(index, 1);  
-                console.log('peer is distroyed!');
+                console.log('peer is destroy!');
                           
             }     else {
                 console.log('peer not found!');
