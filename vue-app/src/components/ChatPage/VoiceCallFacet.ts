@@ -92,7 +92,7 @@ export default class VoiceCallFacet {
         });
         socketPeer.connect();
         socketPeer.signal(args.data);
-        this.socketPeers.push(peer);
+        this.socketPeers.push(socketPeer);
     }
 
     public async onAnswer() {
