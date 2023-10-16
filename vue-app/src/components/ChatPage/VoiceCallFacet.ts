@@ -95,6 +95,15 @@ export default class VoiceCallFacet {
         this.socketPeers.push(socketPeer);
     }
 
+    public disConnect(user) {
+        const socketPeer = this.socketPeers.find((socketPeer) => {
+            return socketPeer.secondPeerEmail == user.email;
+        });
+        if (socketPeer && socketPeer.peer) {
+            socketPeer.peer.distroy();
+        }
+    }
+
     public async onAnswer() {
         if (!this.stream) {
             await this.getUserMedia();
