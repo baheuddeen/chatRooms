@@ -116,9 +116,9 @@ export default class VoiceCallFacet {
         this.activeVoiceCallId.value = null;
         this.socketPeers.forEach((socketPeer, index) => { 
             if (socketPeer.peer) {
-                socketPeer.peer.destroy();    
+                socketPeer.peer.distroy();    
                 this.socketPeers.splice(index, 1);  
-                console.log('peer is destroyed!');
+                console.log('peer is distroyed!');
                           
             }     else {
                 console.log('peer not found!');
