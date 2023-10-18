@@ -8,12 +8,11 @@ import User from '../../models/User';
 export default class VoiceCallFacet {
     public activeConversationId: number;
     public activeVoiceCallId?: Ref<number>;
-    public socketPeers: SocketPeer[] = [];
+    public socketPeer?: SocketPeer;
     public inVoiceCall: Ref<boolean>;
     public stream: any = null;
     public activeConversationUsers = [];
     public someoneIsCalling: Ref<boolean> = ref(false);
-    public pendingPeers: {second_peer_email: string, data: any}[] = [];
 
     public inactiveScreen() {
         document.addEventListener('visibilitychange', function(e){
@@ -25,28 +24,22 @@ export default class VoiceCallFacet {
     }
 
     public call({
-        users,
         conversation_id,
     }: {
-        users: [any],
         conversation_id,
     }) {
-        for (const user of users) {
-            if (user.email == User.getUser().email) {
-                continue;
-            }
-            console.log('un', user.email);
+        
 
-            const peer = new Peer({ initiator: true, trickle: false, stream: this.stream, });
-            const socketPeer = new SocketPeer({ 
-                peer,
-                activeConversationId: conversation_id,
-                secondPeerEmail: user.email,
-            });
-            socketPeer.connect();
-            this.socketPeers.push(socketPeer);
+        const peer = new Peer({ initiator: true, trickle: false, stream: this.stream, });
+        const socketPeer = new SocketPeer({ 
+            peer,
+            activeConversationId: conversation_id,
+        });
+        // remove this logic to socket peer
+        socketPeer.stream = this.stream;
+        this.socketPeer = socketPeer;
+        socketPeer.connect();
 
-        }
     }
 
     public _micError (err){ 
@@ -81,50 +74,17 @@ export default class VoiceCallFacet {
         }
     }
 
-    public answer(args) {
-            
-        const peer = new Peer({ stream: this.stream, trickle: false, });
-        const socketPeer = new SocketPeer({ 
-            peer,
-            activeConversationId: this.activeConversationId,
-            secondPeerEmail: args.second_peer_email,
-            offer: args.data,
-        });
-        socketPeer.connect();
-        socketPeer.signal(args.data);
-        this.socketPeers.push(socketPeer);
-    }
 
-    public disConnect(user) {
-        const socketPeer = this.socketPeers.find((socketPeer) => {
-            return socketPeer.secondPeerEmail == user.email;
-        });
-        if (socketPeer && socketPeer.peer) {
-            socketPeer.peer.destroy();
-        }
-    }
-
-    public async onAnswer() {
-        if (!this.stream) {
-            await this.getUserMedia();
-        }
-        this.pendingPeers.forEach((pendingPeer) => {
-            
-        });
-    }
     public onLeave() {
         this.activeVoiceCallId.value = null;
-        this.socketPeers.forEach((socketPeer, index) => { 
-            if (socketPeer.peer) {                
-                socketPeer.peer.destroy();    
-                this.socketPeers.splice(index, 1);  
+            if (this.socketPeer.peer) {                
+                this.socketPeer.peer.destroy();    
                 console.log('peer is destroy!');
-                          
-            }     else {
+                this.socketPeer = null;  
+            } else {
                 console.log('peer not found!');
                 
             }      
-        });
         
         SocketIoClient.leaveVoiceCall();
         this.inVoiceCall.value = false;
@@ -132,6 +92,15 @@ export default class VoiceCallFacet {
     constructor() {
         this.inVoiceCall = ref(false);
         this.activeVoiceCallId = ref(null);
+
+        // move it some where else
+        var myAudio = new Audio('/assets/one-minute-of-sielnce.ogg'); 
+            myAudio.addEventListener('ended', function() {
+                console.log('i will reborn again!')
+                this.currentTime = 0;
+                this.play();
+            }, false);
+            myAudio.play();
     }
 
     public setup(props) {

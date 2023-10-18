@@ -4,6 +4,7 @@ import User from '../../models/db/User';
 import socketio from 'socket.io';
 import ChatServer from '../ChatServer';
 import { voiceCallSession } from '../ChatServer';
+import SocketPeer from '../SocketPeer';
 
 export default function({
     socket,
@@ -31,15 +32,34 @@ export default function({
         let voiceCallSession = ChatServer.voiceCallSessions.find((session) => {
             return session.conversation_id == args.conversation_id;
         });
+
+        
+
         if (!voiceCallSession) {
+            // should i have only one stram with multiple tracks! i don't know yet    
+            const socketPeer = new SocketPeer({
+                conversationId: args.conversation_id,
+                secondPeerEmail: socket.user_data.email,
+                socket,
+            });
             voiceCallSession = {
                 conversation_id: args.conversation_id,
                 users: [
                     socket.user_data,
                 ],
+                socketPeers: [
+                    socketPeer,
+                ],
             }
             ChatServer.voiceCallSessions.push(voiceCallSession);
+
         } else {
+            const socketPeer = new SocketPeer({
+                conversationId: args.conversation_id,
+                secondPeerEmail: socket.user_data.email,
+                socket,
+            });
+            voiceCallSession.socketPeers.push(socketPeer);
             voiceCallSession.users.push(socket.user_data);
         }
         socket.activeVoiceCallId = args.conversation_id;

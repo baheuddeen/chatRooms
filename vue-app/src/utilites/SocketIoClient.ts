@@ -32,8 +32,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('searchResult', SocketIoClient.onGetSearchResult);
         SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
         SocketIoClient.socket.on('setConversationParticipant', SocketIoClient.onSetConversationParticipant);
-        SocketIoClient.socket.on('peerToPeerOffer', SocketIoClient.onPeerToPeerOffer);
-        SocketIoClient.socket.on('acceptVoiceCall', SocketIoClient.onAcceptVoiceCall);
+        SocketIoClient.socket.on('answerVoiceCall', SocketIoClient.onAnswerVoiceCall);
         SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
         SocketIoClient.socket.on('updateVoiceCallParticipants', SocketIoClient.onUpdateVoiceCallParticipants);
         SocketIoClient.socket.on('conversationCreated', SocketIoClient.onConversationCreated);
@@ -237,13 +236,8 @@ export default class SocketIoClient {
             
             if (args.user.email === User.getUser().email && args.action == 'join') {  
                 SocketIoClient.voiceCall.call({
-                    users: args.users,
                     conversation_id: args.conversation_id,
                 });
-            }
-
-            if (args.action == 'leave') {
-                SocketIoClient.voiceCall.disConnect(args.user);
             }
         }
         
@@ -260,51 +254,19 @@ export default class SocketIoClient {
     public static requestVoiceCall({
         data,
         activeConversationId,
-        secondPeerEmail,
     }){
         SocketIoClient.socket.emit('requestVoiceCall', {
             conversation_id: activeConversationId,
             data, 
-            second_peer_email: secondPeerEmail,
         });  
     }
 
-    public static onPeerToPeerOffer(args: {
+    public static onAnswerVoiceCall({
         data,
-        second_peer_email,
     }){
-        SocketIoClient.voiceCall.answer(args);
-    }
-
-    public static acceptVoiceCall({
-        data,
-        activeConversationId,
-        secondPeerEmail,
-    }) {
-        console.log('send to acceptVoiceCall', { 
-            data,
-            conversation_id: activeConversationId,
-            second_peer_email: User.getUser().email,
-        });
+        console.log(SocketIoClient.voiceCall.socketPeer);
         
-        SocketIoClient.socket.emit('acceptVoiceCall', { 
-            data,
-            conversation_id: activeConversationId,
-            second_peer_email: secondPeerEmail,
-        })
-    }
-
-    public static onAcceptVoiceCall(args) {
-        
-        SocketIoClient.voiceCall.socketPeers.forEach((socketPeer) => {
-            console.log(socketPeer);
-            
-            if (socketPeer.secondPeerEmail == args.second_peer_email) {
-                socketPeer.signal(args.data);
-                console.log('connection should be made');
-
-            }
-        });
+        SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
     }
 
     public static onOtherDeviceIsLoggedIn() {

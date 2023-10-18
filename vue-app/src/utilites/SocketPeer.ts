@@ -7,37 +7,25 @@ export default class SocketPeer {
     public peer: any;
     public activeConversationId: number;
     public secondPeerEmail: string;
-    public offer?: any;
+    public stream: MediaStream;
 
-    constructor({peer, activeConversationId, secondPeerEmail, offer} :{peer?: any, activeConversationId: number, secondPeerEmail: string, offer?: any}) {
+    constructor({ peer, activeConversationId} :{peer?: any, activeConversationId: number }) {
         if (!window['process']) {
             window['process'] = process;
         }
         this.peer = peer;
         this.activeConversationId = activeConversationId;        
-        this.secondPeerEmail = secondPeerEmail;
-        this.offer = offer;
     }
 
     public connect() {    
         this.peer.on('signal', data => {
             console.log('wow data', data);   
 
-            if (data.type == 'offer') {
                 SocketIoClient.requestVoiceCall({
                     data,
                     activeConversationId: this.activeConversationId,
-                    secondPeerEmail: this.secondPeerEmail,
                 });
-            }
 
-            if (data.type == 'answer') {
-                SocketIoClient.acceptVoiceCall({ 
-                    data,
-                    activeConversationId: this.activeConversationId,
-                    secondPeerEmail: this.secondPeerEmail,
-                });
-            }
         });
 
         this.peer.on('connect', () => {
@@ -48,21 +36,38 @@ export default class SocketPeer {
 
         this.peer.on("data", (data) => console.log("data:", data));
 
-        this.peer.on("stream", (stream) => {
+        this.peer.on("stream", (stream: MediaStream) => {
             console.log('recieved stram !');
-            
-            console.log(stream);
-            let video = document.getElementById("auido-stram") as HTMLAudioElement;
+            // if (this.stream.id == stream.id) {
+            //     return;
+            // }
+            console.log((stream.getTracks()[0] as any));
+            stream.removeTrack(stream.getTracks()[0]);
+            let video =  new Audio();
+            video.setAttribute('id', stream.id);
             video.srcObject = stream;
+            document.body.appendChild(video);
+            console.log('video,', video);
+            
             video.play();
-            // but it somewhere eles!
-            var myAudio = new Audio('/assets/one-minute-of-sielnce.ogg'); 
-            myAudio.addEventListener('ended', function() {
-                console.log('i will reborn again!')
-                this.currentTime = 0;
-                this.play();
-            }, false);
-            myAudio.play();
+            // but it somewhere eles!   
+        })
+
+        this.peer.on("addTrack", (stream: MediaStream) => {
+            console.log('recieved track !');
+            // if (this.stream.id == stream.id) {
+            //     return;
+            // }
+            console.log((stream));
+            // stream.removeTrack(stream.getTracks()[0]);
+            // let video =  new Audio();
+            // video.setAttribute('id', stream.id);
+            // video.srcObject = stream;
+            // document.body.appendChild(video);
+            // console.log('video,', video);
+            
+            // video.play();
+            // but it somewhere eles!   
         })
 
         this.peer.on("error", (err) => console.log("error", err));

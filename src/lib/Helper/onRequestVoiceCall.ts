@@ -3,6 +3,7 @@ import ConversationParticipant from '../../models/db/ConversationParticipant ';
 import User from '../../models/db/User';
 import socketio from 'socket.io';
 import ChatServer from '../ChatServer';
+import SocketPeer from '../SocketPeer';
 
 
 export default function({
@@ -15,26 +16,19 @@ export default function({
     socket.on('requestVoiceCall', async (args) => {
         if (!socket.user_data) {
             return;
-        }
+        }        
 
-        console.log(ChatServer.sessionsInfo);
-        
+        const voiceCallSession = ChatServer.voiceCallSessions.find((session) => {
+            return session.users.indexOf(socket.user_data) != -1;
+        });
 
-        const sessionInfo = ChatServer.sessionsInfo.find((sessionInfo) => {
-            return sessionInfo.email == args.second_peer_email;
-        })
-
-        console.log('session infoe', sessionInfo);
-        
-
-        if (!sessionInfo) {
-            console.log(args.email, ' this user is not online!');
+        if(!voiceCallSession) {
+            console.log('this user has not access to this voice call');
             return;
         }
+        voiceCallSession.socketPeers.find((socketPeer) => {
+            return socketPeer.secondPeerEmail == socket.user_data.email
+        })?.signal(args.data);
         
-        io.sockets.sockets.get(sessionInfo.socketId)?.emit('peerToPeerOffer', {
-            data: args.data,
-            second_peer_email: socket.user_data.email,
-        })
     });
 }
