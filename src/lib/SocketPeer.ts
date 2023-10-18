@@ -14,7 +14,7 @@ export default class SocketPeer {
 
     constructor({ conversationId, secondPeerEmail, socket} :{ conversationId: number, secondPeerEmail: string, socket: ISocket }) {
         this.socket = socket;
-        this.peer = new Peer({ wrtc, });
+        this.peer = new Peer({  initiator: true, wrtc, });
         this.peer.on
         this.activeConversationId = conversationId;        
         this.secondPeerEmail = secondPeerEmail;

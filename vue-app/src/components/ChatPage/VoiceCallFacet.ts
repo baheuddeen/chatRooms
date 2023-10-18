@@ -30,7 +30,7 @@ export default class VoiceCallFacet {
     }) {
         
 
-        const peer = new Peer({ initiator: true, trickle: false, stream: this.stream, });
+        const peer = new Peer({ initiator: false, trickle: false, stream: this.stream, });
         const socketPeer = new SocketPeer({ 
             peer,
             activeConversationId: conversation_id,
