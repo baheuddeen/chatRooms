@@ -38,11 +38,10 @@ export default class SocketPeer {
 
         this.peer.on("stream", (stream: MediaStream) => {
             console.log('recieved stram !');
-            // if (this.stream.id == stream.id) {
-            //     return;
-            // }
+            if (this.stream.id == stream.id) {
+                return;
+            }
             console.log((stream.getTracks()[0] as any));
-            stream.removeTrack(stream.getTracks()[0]);
             let video =  new Audio();
             video.setAttribute('id', stream.id);
             video.srcObject = stream;

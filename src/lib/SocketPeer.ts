@@ -71,9 +71,9 @@ export default class SocketPeer {
                 return;
             }
             track.peerEmail = this.secondPeerEmail;  
-            socketPeer.peer.addTrack(track, socketPeer.stream);        
+            socketPeer.peer.addStream(this.stream);        
             if (socketPeer.stream?.getTracks()[0]) {
-                this.peer.addTrack(socketPeer.stream?.getTracks()[0], this.stream);                
+                this.peer.addStream(socketPeer.stream);                
             }
         })
     }

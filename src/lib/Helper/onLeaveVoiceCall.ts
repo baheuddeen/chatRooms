@@ -62,7 +62,7 @@ export function leaveVoiceCall({
         if (peer.stream && peer.stream.getTracks().indexOf(socketPeer.stream.getTracks()[0]) == -1) {
             return;
         }
-        peer.peer?.removeTrack(socketPeer.stream.getTracks()[0], peer.stream);
+        peer.peer?.removeStream(socketPeer.stream);
     });
     socketPeer.peer?.destroy();
     voiceCallSession.socketPeers.splice(voiceCallSession.socketPeers.indexOf(socketPeer), 1);
