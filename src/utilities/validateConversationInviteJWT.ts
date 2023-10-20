@@ -8,9 +8,10 @@ import { ConversationType } from '../models/db/Conversation';
 dotenv.config();
 
 export default async function validateJWT(req:IRequest, res:Response, next:NextFunction) {
-  let token = req.query["key"];
+  let token = req.query["key"];  
+  
   if (!token) {
-    res.status(401).json({msg: 'please add the key in the url query'});
+    return res.status(401).json({msg: 'please add the key in the url query'});
   }  
   try {
     let clientSecret = process.env.JWT_CLIENT_SECRET || 'client-secret';

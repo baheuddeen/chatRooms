@@ -8,7 +8,7 @@ const router = express.Router();
 const conversationParticipant = new ConversationParticipant();
 
 const joinConversation =async (req:IRequest, res: Response) => {
-    conversationParticipant.create({
+    await conversationParticipant.create({
         conversation_id: req.conversationId!,
         user_id: req.user_data?.id!,
     });
