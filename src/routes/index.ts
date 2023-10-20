@@ -21,7 +21,7 @@ router.get('/joinRoom', joinConversation);
 
 
 // users
-router.use('/users', user);
+router.use('/api/users', user);
 
 // TODO FIX THIS 
 router.get('/:something', function (req, res, next) {
@@ -34,12 +34,8 @@ router.get('/:something', function (req, res, next) {
 
 
 // Authenication
-router.use('/auth', validateJWT, auth);
+router.use('/api/auth', validateJWT, auth);
 
-//protected get
-router.get('/protected', validateJWT, (_req: Request, res: Response) => {
-  return res.json({ msg: 'congratulation you are signed in!' });
-});
 
 
 export default router;
