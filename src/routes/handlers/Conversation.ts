@@ -15,6 +15,6 @@ const joinConversation =async (req:IRequest, res: Response) => {
     res.redirect('/');   
 }
 
-router.get('/:id', validateJWT, validateConversationInviteJWT, joinConversation);
+router.use(validateJWT, validateConversationInviteJWT, joinConversation);
 
 export default router;

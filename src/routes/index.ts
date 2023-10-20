@@ -17,7 +17,7 @@ router.use(cookies());
 router.use(express.static(path.join(dirAbs, 'public')));
 router.use('/private', voiceMessageValidate, express.static(path.join(dirAbs, 'private')));
 
-router.get('/joinRoom', joinConversation);
+router.get('/joinRoom/:id', joinConversation);
 
 
 // users
