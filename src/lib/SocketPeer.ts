@@ -23,7 +23,7 @@ export default class SocketPeer {
 
     private connect() {    
         this.peer.on('signal', data  => {
-            console.log('wow data', data);   
+            // console.log('wow data', data);   
 
             this.socket.emit('answerVoiceCall', { 
                 data,
@@ -52,9 +52,10 @@ export default class SocketPeer {
         const otherSocketPeers = ChatServer.voiceCallSessions.find((session) => {
             return session.conversation_id == this.activeConversationId
         }).socketPeers;
-        console.log('otherSockets', otherSocketPeers);
+        // console.log('otherSockets', otherSocketPeers);
         this.stream = stream;
-        this.peer.addStream(stream);
+        // this.peer.addStream(stream);
+
         otherSocketPeers.forEach((socketPeer) => {
             if(socketPeer.secondPeerEmail == this.socket.user_data.email) {
                 return;
@@ -62,19 +63,23 @@ export default class SocketPeer {
             // don't send me back my stream !
             console.log('it should add Track !');
             if(socketPeer.peer.destroyed) {
-                console.log(socketPeer, 'is destroyed');
                 return;
             } 
             const track = stream?.getTracks()[0] as any;
             if (!socketPeer.stream) {
-                console.log('peer stream not found!');
+                // console.log('peer stream not found!');
                 return;
             }
             track.peerEmail = this.secondPeerEmail;  
-            socketPeer.peer.addStream(this.stream);        
-            if (socketPeer.stream?.getTracks()[0]) {
-                this.peer.addStream(socketPeer.stream);                
+            try {
+                socketPeer.peer.addTrack(track, this.stream);        
+                if (socketPeer.stream?.getTracks()[0]) {
+                    this.peer.addStream(socketPeer.stream);                
+                }
+            } catch(err) {
+                console.log('something bad happened');
             }
+            
         })
     }
 }

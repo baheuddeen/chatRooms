@@ -240,6 +240,14 @@ export default class SocketIoClient {
                 });
             }
         }
+
+        if (args.action == 'leave') {  
+            console.log('delete a stream', args);
+            
+            SocketIoClient.voiceCall.removeStream({
+                streamId: args.stream_id,
+            })
+        }
         
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
             

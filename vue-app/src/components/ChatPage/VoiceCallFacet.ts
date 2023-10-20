@@ -57,6 +57,29 @@ export default class VoiceCallFacet {
         this.inVoiceCall.value = true;
     }
 
+    public removeStream({
+        streamId
+    }){
+        console.log('socketpeer', this.socketPeer);
+        const stream = this.socketPeer?.otherStreams.find((stream) => {
+            return stream.id == streamId;
+        });
+        if (!stream) {
+            console.log('can not find the stream!');
+            
+            return;
+        }
+        const streamIndex = (this.socketPeer.peer._remoteStreams as any []).indexOf(stream);
+        if( streamIndex == -1) {
+            console.log('can not find the stream in remote streams!');
+            
+            return;
+        }
+        console.log('will remove stream', stream.id);
+        
+        this.socketPeer.peer._remoteStreams.splice(streamIndex, 1);
+    }
+
     private async getUserMedia() {
         const constraints = {
             video: false,
@@ -96,7 +119,6 @@ export default class VoiceCallFacet {
         // move it some where else
         var myAudio = new Audio('/assets/one-minute-of-sielnce.ogg'); 
             myAudio.addEventListener('ended', function() {
-                console.log('i will reborn again!')
                 this.currentTime = 0;
                 this.play();
             }, false);

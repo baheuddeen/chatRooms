@@ -74,5 +74,6 @@ export function leaveVoiceCall({
         conversation_id: socket.activeVoiceCallId,
         users: voiceCallSession.users, 
         user: socket.user_data,
+        stream_id: socketPeer.stream.id,
     });
 }
