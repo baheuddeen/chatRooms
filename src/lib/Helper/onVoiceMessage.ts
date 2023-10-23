@@ -47,6 +47,7 @@ export default function({
             sender_id: socket.user_data.id,
             type: 1, // to be replaced with ENUM
             filename: `${socket.voiceMessage?.filename}`,
+            is_encrypted: 0, // to be encreypted in the future!
         }); 
        }
 

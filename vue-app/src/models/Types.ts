@@ -6,11 +6,12 @@ export type Conversation = {
 
 export type Message = {
     sender_id: number,
-    body: string,
+    body: ArrayBuffer,
     nickName?: string,
     created: string,
     type: number,
     filename?: string,
+    is_encrypted: number,
 }
 
 

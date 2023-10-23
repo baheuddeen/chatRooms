@@ -31,6 +31,8 @@ export default class Conversation {
 
   async create(newConversation: ConversationType): Promise<ConversationType> {
     try {
+        console.log(newConversation);
+        
         for (let key  of Object.keys(newConversation)){
             if (!newConversation[key]) {
                 newConversation[key] = null;
@@ -39,11 +41,12 @@ export default class Conversation {
                 newConversation[key] = newConversation[key].replace(/\'/g, "''");
             }
         }
+        console.log(newConversation);
+
       const conn = await client.connect();
-      const sql = `INSERT INTO conversations(title, conversation_participants_id, created)
-      VALUES ($1, $2, $3) RETURNING *`;      
-        
-      const assets = await conn.query(sql, [newConversation.title, 1, new Date(Date.now()).toISOString()]);
+      const sql = `INSERT INTO conversations(title, conversation_participants_id, created, conversation_type)
+      VALUES ($1, $2, $3, $4) RETURNING *`;            
+      const assets = await conn.query(sql, [newConversation.title, 1, new Date(Date.now()).toISOString(), newConversation.conversation_type || '0']);
       conn.release();      
       return assets.rows[0];
     } catch (err) {
@@ -57,4 +60,5 @@ export type ConversationType ={
     id?: number | string,
     conversation_participant: number, 
     title: string,
+    conversation_type?: string,
   }

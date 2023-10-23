@@ -21,5 +21,6 @@ export default function({
     user_name: socket.user_data.user_name,
     email: socket.user_data.email,
     socketId: socket.id,
+    user_id: socket.user_data.id,
     });
 }

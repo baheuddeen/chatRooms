@@ -15,11 +15,11 @@ export default class ConversationParticipant {
     }
   }
 
-  async getConversationsParticipantByConvId(ids: (string | number)[]): Promise<ConversationParticipantType[]> {
+  async getConversationsParticipantByConvId(ids: (string | number)[]): Promise<{user_name: string, email: string, conversation_id: string, public_key: string, id: string}[]> {
     const  conversationIds = ids.join(', ');
     try {
       const conn = await client.connect();
-      const sql = `SELECT users.user_name, users.email, conversation_participants.conversation_id FROM conversation_participants
+      const sql = `SELECT users.user_name, users.email, users.public_key, users.id, conversation_participants.conversation_id FROM conversation_participants
         INNER JOIN users on conversation_participants.user_id = users.id
         WHERE conversation_id in (${conversationIds})`;
       const users_id = await conn.query(sql);

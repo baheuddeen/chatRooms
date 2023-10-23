@@ -20,8 +20,6 @@ export default class SocketPeer {
 
     public connect() {    
         this.peer.on('signal', data => {
-            console.log('wow data', data);   
-
                 SocketIoClient.requestVoiceCall({
                     data,
                     activeConversationId: this.activeConversationId,
@@ -43,7 +41,6 @@ export default class SocketPeer {
                 return;
             }
             this.otherStreams.push(stream);
-            console.log((stream));
             let audio =  new Audio();
             audio.setAttribute('id', stream.id);
             audio.srcObject = stream;

@@ -28,11 +28,11 @@ export default class Message {
     }
   }
 
-  async getMessagesByConversationId(id: number | string):Promise<Message[]> {
+  async getMessagesByConversationId(id: number | string, receiver_id: number | string):Promise<Message[]> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT * FROM conversation_messages WHERE conversation_id=($1)';
-      const assets = await conn.query(sql, [id]);
+      const sql = 'SELECT * FROM conversation_messages WHERE conversation_id=($1) AND receiver_id in (0, $2)';
+      const assets = await conn.query(sql, [id, receiver_id]);
       conn.release();
       return assets.rows;
     } catch (err) {
@@ -51,15 +51,24 @@ export default class Message {
             }
         }
       const conn = await client.connect();
-      const sql = `INSERT INTO conversation_messages(conversation_id, sender_id, body, created, type, filename)
-      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;      
+      const sql = `INSERT INTO conversation_messages(conversation_id, sender_id, body, created, type, filename, is_encrypted, receiver_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;      
       console.log(newmessage, 'hey');
       
-      const assets = await conn.query(sql, [newmessage.conversation_id, newmessage.sender_id, newmessage.body, newmessage.created, newmessage.type, newmessage.filename]);
+      const assets = await conn.query(sql, [
+        newmessage.conversation_id,
+        newmessage.sender_id,
+        newmessage.body,
+        newmessage.created,
+        newmessage.type,
+        newmessage.filename,
+        newmessage.is_encrypted,
+        newmessage.receiver_id,
+      ]);
       conn.release();      
       // return assets.rows[0];
     } catch (err) {
-      throw new Error(`Error: ${err}`);
+      console.log(`Error: ${err}`);
     }
   }
 }
@@ -69,7 +78,9 @@ export type messageType ={
     id?: number,
     conversation_id: number,
     sender_id: number,
+    receiver_id?: number,
     body: string,
     created: string,
     type: number,
+    is_encrypted: number,
   }

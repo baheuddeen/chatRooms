@@ -4,6 +4,8 @@ export type UserType = {
     user_name: string,
     password?: string,
     verified?: number,
+    public_key: string,
+    status?: string,
 }
 
 export default class User {
@@ -20,6 +22,8 @@ export default class User {
     static users: UserType[] = [];
 
     public readonly verified?: number;
+
+    public readonly public_key: string;
 
     private constructor(user: UserType) {
         this.email = user.email;

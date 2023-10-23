@@ -40,7 +40,7 @@ export default defineComponent({
                     <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
                     <div class="flex flex-column align">
                         <span class="font-bold">{{ userName }}</span>
-                        <span class="text-sm">{{ status }}</span>
+                        <span class="text-sm">{{ status == 'online' ? 'online' : 'offline'}}</span>
                     </div>
                 </button>
             </template>                
@@ -61,6 +61,6 @@ export default defineComponent({
             </template> -->
         </Menu>
         <Toast />
-        <Search :socket-io-client="socketIoClient"></Search>
+        <!-- <Search :socket-io-client="socketIoClient"></Search> -->
     </div>
 </template>

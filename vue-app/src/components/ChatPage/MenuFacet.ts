@@ -26,7 +26,7 @@ export default class MenuFacet {
             // },
         ]);
         this.userName = ref('');
-        this.status = ref('online')
+        this.status = ref('online'); // TODO handle it
     }
 
     public profileClick() {

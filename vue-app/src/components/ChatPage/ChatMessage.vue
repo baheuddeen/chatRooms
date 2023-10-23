@@ -14,7 +14,7 @@ export default defineComponent({
   props: {
     message: {
       type: Object as () => {
-        body: string,
+        body: ArrayBuffer,
         sender_id: number,
         created: string,
         filename?: string,
@@ -40,7 +40,7 @@ export default defineComponent({
           'message-reciver': !isSender,
         }">
         <Fieldset  :legend="nickName"  v-if="message.type == 0">
-          {{body}}
+          {{decodedMessage}}
         </Fieldset >
         <Fieldset  :legend="nickName"  v-if="message.type == 1">
           <audioPlayer 
@@ -51,7 +51,7 @@ export default defineComponent({
         </Fieldset >
 
     </div>
-    <p v-else>{{body}}</p>
+    <p v-else>{{decodedMessage}}</p>
 
 </template>
 

@@ -17,7 +17,7 @@ export default function({
             return;
         }
 
-        console.log(ChatServer.sessionsInfo);
+        // console.log(ChatServer.sessionsInfo);
         
 
         const sessionInfo = ChatServer.sessionsInfo.find((sessionInfo) => {

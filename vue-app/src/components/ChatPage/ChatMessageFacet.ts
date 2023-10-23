@@ -2,6 +2,7 @@ import { onMounted } from "vue";
 import { Message } from "../../models/Types";
 import User, { UserType } from "../../models/User";
 import Services from "../../utilites/Services";
+import Encryption from "../../utilites/Encryption";
 
 export default class ChatMessage {
     public userNames: UserType[];
@@ -21,6 +22,7 @@ export default class ChatMessage {
         });
 
         const { body, sender_id, nickName } = props.message as Message; 
+        const decodedMessage = Encryption.textDecoder.decode(body);
         const isSender = User.getUser().id == sender_id ? true : false;
         const message = props.message;
         const conversation_id = props.conversation_id;
@@ -32,7 +34,7 @@ export default class ChatMessage {
         }
                
         return {
-            body,
+            decodedMessage,
             sender_id,
             isSender,
             nickName,

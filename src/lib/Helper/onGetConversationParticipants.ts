@@ -1,6 +1,7 @@
 import ISocket from '../../models/ISocket';
 import ConversationParticipant from '../../models/db/ConversationParticipant ';
 import User from '../../models/db/User';
+import ChatServer from '../ChatServer';
 
 
 export default function({
@@ -18,7 +19,7 @@ export default function({
         }
 
         const conversationIds = socket.conversations.map(conv => conv.id!);
-
+        
         if (!conversationIds.length) {
             return;
         }
@@ -32,6 +33,9 @@ export default function({
             conversation_participants[convPart.conversation_id].push({
                 user_name: convPart.user_name,
                 email: convPart.email,
+                public_key: convPart.public_key,
+                id: convPart.id,
+                status: ChatServer.sessionsInfo.find(session => session.user_id == convPart.id) ? 'online' : 'offline',
             });
         });
         

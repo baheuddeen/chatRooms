@@ -9,6 +9,7 @@ import SocketPeer from "./SocketPeer";
 import Peer from 'simple-peer';
 import VoiceCallFacet from "../components/ChatPage/VoiceCallFacet";
 import CreateConversationFacet from "../components/ChatPage/CreateConversationFacet";
+import Encryption from "./Encryption";
 
 export default class SocketIoClient {
     public static socket: Socket ;
@@ -20,9 +21,14 @@ export default class SocketIoClient {
 
 
 
-    public static connect() {
-        const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-        SocketIoClient.socket = io(URL);
+    public static connect(listenToEvents: boolean = true) {
+        if (!SocketIoClient.socket) {
+            const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
+            SocketIoClient.socket = io(URL);   
+        }
+        if (!listenToEvents) {
+            return;
+        }
         SocketIoClient.socket.on('otherDeviceIsLoggedIn', SocketIoClient.onOtherDeviceIsLoggedIn);
         SocketIoClient.socket.on("connect", SocketIoClient.onConnect);
         SocketIoClient.socket.on('disconnect', SocketIoClient.onDisConnect);
@@ -36,6 +42,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
         SocketIoClient.socket.on('updateVoiceCallParticipants', SocketIoClient.onUpdateVoiceCallParticipants);
         SocketIoClient.socket.on('conversationCreated', SocketIoClient.onConversationCreated);
+        SocketIoClient.socket.on('changeStatus', SocketIoClient.onChangeStatus);
         // SocketIoClient.socket.on('recievePeer', SocketIoClient.onRecievePeer.bind(this));
     }
 
@@ -88,7 +95,7 @@ export default class SocketIoClient {
         SocketIoClient.chat.state.value.connected = false;
     }
 
-    private static async onMessage (args) {
+    private static async onMessage (args: any) {
         console.log('recieved message !');        
         console.log(args); 
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
@@ -99,15 +106,34 @@ export default class SocketIoClient {
 
         SocketIoClient.chat.cashMessages.value[args.conversation_id].push(args);
         console.log('chashed', SocketIoClient.chat.cashMessages.value);
-        
     }
 
-    public static sendMessage(message: {
+    public static async sendMessage(message: {
         text: string,
         conversation_id: number,
         type: 0,
+        is_encrypted: number,
     }) {
-        SocketIoClient.socket.send('message', message);
+        for (let user of SocketIoClient.chat.cashConversationParticipant.value[message.conversation_id]) {
+            
+            try {
+                console.log('sent!', user);
+
+                const public_key = await Encryption.importKey(user.public_key);
+                SocketIoClient.socket.send('message', {
+                    text: await Encryption.encryptMessage(message.text, public_key),
+                    conversation_id: message.conversation_id,
+                    type: 0,
+                    is_encrypted: 1,
+                    receiver_id: user.id,
+                });
+
+            } catch(err) {
+                console.log(err);
+                
+            }
+        }
+
     }
 
     public static joinConversation({
@@ -145,22 +171,18 @@ export default class SocketIoClient {
     }
 
     public static onSetMessages(args: any) {
-        console.log('received Messages:', args);
-        
         SocketIoClient.chat.cashMessages.value = args.messages;
+        SocketIoClient.chat.messagesLoaded.value = true;
     }
 
     
     public static getConversationParticipants() {
         console.log('front get conversation participants');
-        
         SocketIoClient.socket.emit('getConversationParticipant');
     }
 
     public static onSetConversationParticipant(args) {
-        console.log('i recieved paricipants', args);        
         SocketIoClient.chat.cashConversationParticipant.value = args.conversation_participants ;
-        // SocketIoClient.voiceCall.call(args)
     }
 
     public static getVoiceCallParticipants() {
@@ -176,14 +198,12 @@ export default class SocketIoClient {
     }: {
         user_name: string,
     }) {
-        console.log(SocketIoClient.socket   );        
         SocketIoClient.socket.emit('searchByUser', {
             user_name,
         });
     }
 
     public static onGetSearchResult(args) {
-        console.log('got search results', args);
         SocketIoClient.search.users.value = args.users;
     }
 
@@ -285,17 +305,49 @@ export default class SocketIoClient {
 
     public static createConversation({
         title,
+        conversationType,
     }) {
         console.log('it should create a room', title);
+        console.log('type', conversationType);
         
         SocketIoClient.socket.emit('createConversation', {
             title,
+            conversation_type: conversationType,
         });
     }
 
     public static onConversationCreated(args) {
-        console.log(args);
         SocketIoClient.createConversationFacet.inviteLink.value = args.inviteLink;
+    }
+
+    public static updatePublicKey({
+        id,
+        public_key,
+    }) {
+        console.log('it should update the public key', {
+            id,
+            public_key,
+        });
+        
+        SocketIoClient.socket.emit("updatePublicKey", {
+            id,
+            public_key,
+        });
+    }
+
+    public static onChangeStatus(args: {
+        user: UserType,
+        conversation_id: number | string,
+    }) {
+        // update Cash Conversation Participant
+        const convPartis = SocketIoClient.chat.cashConversationParticipant.value[args.conversation_id] as UserType[];
+        
+        const user = convPartis.find((user) => user.id == args.user.id);
+        if (!user) {
+            convPartis.push(args.user);
+            return;
+        }
+        user.status = args.user.status;
     }
 
 }

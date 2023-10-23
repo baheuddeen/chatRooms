@@ -20,7 +20,7 @@ export default function({
             if(!conv.id) {
                 continue;
             }
-            messages[conv.id] = await messageDBHandler.getMessagesByConversationId(conv.id);
+            messages[conv.id] = await messageDBHandler.getMessagesByConversationId(conv.id, socket.user_data.id);
         }
         socket.emit('setMessages', {
             messages,

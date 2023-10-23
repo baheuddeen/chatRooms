@@ -2,6 +2,7 @@ import { Ref, onMounted, ref } from "vue"
 import Services from "../../utilites/Services";
 import router from "../../route";
 import User, { UserType } from "../../models/User";
+import Encryption from "../../utilites/Encryption";
 
 export default class SigninSignupPageFacet {
   public readonly isLoading: Ref<boolean>;
@@ -24,13 +25,21 @@ export default class SigninSignupPageFacet {
       console.log(user);
 				User.setUser(user);
         if (user.verified != 0) {
-          router.push('/chat')          
+          const keys = await Encryption.getCryptoKeyPair();
+          if (!keys) {
+            router.push('/keys-config')          
+          } else {
+            router.push('/chat')          
+          }
         } else {
           this.isLoading.value = false;
           this.showVerify.value = true;
         }
-    } catch {
-      // do something
+    } catch(err) {
+      console.log(err);
+      
+      // TODO FIX IT!
+      router.push('/keys-config') 
     }
   }
 

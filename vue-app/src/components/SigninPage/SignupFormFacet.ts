@@ -2,6 +2,7 @@ import { ref } from "vue";
 import User, { UserType } from '../../models/User'
 import Services from "../../utilites/Services";
 import router from "../../route";
+import Encryption from "../../utilites/Encryption";
 
 
 export default class SingupFormFacet {
@@ -16,10 +17,12 @@ export default class SingupFormFacet {
 			event.preventDefault();
 			console.log("onsubmit", event);
             try {
+				await Encryption.getCryptoKeyPair();
 				const resp = await Services.signup({
 					email: email.value.trim(),
 					user_name: userName.value.trim(),
 					password: password.value,
+					public_key: Encryption.exportedKeyText,
 				});
 				if(resp.status !== 200) {
 					failedToSignup.value = true;

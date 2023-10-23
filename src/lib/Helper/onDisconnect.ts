@@ -28,8 +28,16 @@ export default function({
             socket,
             io,
         });
+        
+        socket.conversations?.forEach((converstion) => {
+            socket.user_data.status = 'offline';
+            io.to(converstion.id as string).emit('changeStatus', {
+                user: socket.user_data,
+                conversation_id: converstion.id,
+            })
+        })
 
         const sessionInfoIndex = ChatServer.sessionsInfo.indexOf(sessionInfo);
-        ChatServer.sessionsInfo.splice(sessionInfoIndex, 1); 
+        ChatServer.sessionsInfo.splice(sessionInfoIndex, 1);
     });
 }

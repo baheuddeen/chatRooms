@@ -24,11 +24,13 @@ import onGetVoiceCallParticipants from './Helper/onGetVoiceCallParticipants';
 import onLeaveVoiceCall from './Helper/onLeaveVoiceCall';
 import onCreateConversation from './Helper/onCreateConversation';
 import SocketPeer from './SocketPeer';
+import onUpdatePublicKey from './Helper/onUpdatePublicKey';
 
 type SessionInfo = {
     user_name: string,
     email: string,
     socketId: string,
+    user_id: string | number,
 }
 
 export type voiceCallSession = {
@@ -76,7 +78,10 @@ export default class ChatServer {
             conversationParticipantsDBHandler: this.conversationParticipantsDBHandler,
             conversationDBHandler: this.conversationDBHandler
         });
-        onJoinConversation({socket});
+        onJoinConversation({
+            socket,
+            userDBHandler: this.userDBHandler,
+        });
         onMessage({
             socket,
             io: this.io!,
@@ -128,7 +133,12 @@ export default class ChatServer {
         onCreateConversation({
             socket,
             conversationDBHandler: this.conversationDBHandler,
-        })
+            conversationParticipantsDBHandler: this.conversationParticipantsDBHandler,
+        });
+        onUpdatePublicKey({
+            socket,
+            userDBHandler: this.userDBHandler,
+        });
     }
 }
 

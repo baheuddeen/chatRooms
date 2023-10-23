@@ -1,6 +1,7 @@
 import ISocket from '../../models/ISocket';
 import socketio from 'socket.io';
 import Message from '../../models/db/Message';
+import ChatServer from '../ChatServer';
 
 
 export default function({
@@ -17,15 +18,24 @@ export default function({
         if(!(socket.user_data && socket.user_data.id)) {                
             return;
         }
-        console.log('user name:', socket.user_data.email);
-        
-        io?.to((args.conversation_id)).emit('message', {
-            body: args.text,
-            sender_id: socket.user_data.id,
-            created: new Date(Date.now()).toISOString(),
-            conversation_id: args.conversation_id,
-            type: 0,
-        }); 
+        console.log('hmmm', ChatServer.sessionsInfo);
+        const sessionInfo = ChatServer.sessionsInfo.find(session => {
+            return session.user_id == args.receiver_id
+        });
+        console.log( 'arg: ', args, sessionInfo );
+
+        if (sessionInfo) {
+            io.sockets.sockets.get(sessionInfo.socketId).emit('message', {
+                body: args.text,
+                sender_id: socket.user_data.id,
+                created: new Date(Date.now()).toISOString(),
+                conversation_id: args.conversation_id,
+                type: 0,
+                is_encrypted: args.is_encrypted,
+                receiver_id: args.receiver_id,
+            }); 
+            
+        }
         console.log( 'arg: ', args );
         
         messageDBHandler.create({
@@ -34,6 +44,8 @@ export default function({
             created: new Date(Date.now()).toISOString(),
             sender_id: socket.user_data.id,
             type: 0,
+            is_encrypted: args.is_encrypted,
+            receiver_id: args.receiver_id,
         }); 
     });
 }

@@ -85,9 +85,15 @@ export default defineComponent({
             </div>
           <div v-for="user of cashConversationParticipant[activeConversationId]">
             <div class="user-participant">
-              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
+              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" :class="{
+                'mr-2': true,
+                'online': user.status == 'online',
+                'offline': user.status == 'offline',
+                }" shape="circle" />
               <div class="flex flex-column align">
                   <span class="font-bold">{{ user.user_name }}</span>
+                  <span class="text-sm" :key="user.email + user.status">{{ user.status == 'online' ? 'online' : 'offline' }}</span>
+
               </div>
             </div>
            
@@ -117,13 +123,13 @@ export default defineComponent({
       <h3>
         convserations
       </h3>
-      <div v-if="!conversationLoaded">
+      <div v-if="!conversationLoaded || !messagesLoaded">
         loading...
       </div>
       <div v-if="conversationLoaded && conversations.length == 0">
         No Active conversation .. 
       </div>
-      <div v-for="conversation of conversations">
+      <div v-if="conversationLoaded && messagesLoaded" v-for="conversation of conversations">
           <Button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</Button>
       </div>
     </section>
@@ -144,6 +150,13 @@ export default defineComponent({
 .chat .p-panel-content,
 .chat [role="region"] {
   height: 100%;
+}
+
+.online{
+  border: 2px solid green;
+}
+.offline{
+  border: 2px solid red;
 }
 
 .no-chat {

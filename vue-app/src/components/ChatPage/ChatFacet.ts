@@ -5,6 +5,7 @@ import { MenuItem } from "primevue/menuitem";
 import SocketIoClient from "../../utilites/SocketIoClient";
 import { Conversation, Message } from "../../models/Types";
 import User, { UserType } from "../../models/User";
+import Encryption from "../../utilites/Encryption";
 
 
 export default class ChatFacet {
@@ -19,6 +20,8 @@ export default class ChatFacet {
     public readonly activeConversationId: Ref<number>;
 
     public readonly conversationLoaded: Ref<boolean>;
+
+    public readonly messagesLoaded: Ref<boolean>;
 
     public message: Ref<string>;
 
@@ -57,6 +60,7 @@ export default class ChatFacet {
         this.conversations = ref([]);
         this.activeConversationId = ref(null);
         this.cashMessages = ref({});
+        this.messagesLoaded = ref(false);
         this.cashConversationParticipant = ref({});
         this.conversationParticipant = ref([]);
         this.conversationLoaded = ref(false);
@@ -76,15 +80,12 @@ export default class ChatFacet {
             this.rowHeight = this.messageInput.value.getBoundingClientRect().height;
         }
         if (this.trackScrollHeight && this.messageInput.value.scrollHeight <  this.trackScrollHeight) {
-            rows -= 1;
-            console.log(rows);
-            
+            rows -= 1;            
             this.messageInput.value.style.height = rows * this.rowHeight + 'px';
         }
         this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
         this.trackScrollHeight = this.messageInput.value.scrollHeight;
         if ( this.messageInput.value.scrollHeight == this.messageInput.value.getBoundingClientRect().height) {
-            console.log('it should stop');
             clearInterval(this.watchInputHeight);
             this.watchInputHeight = null;
         }
@@ -110,10 +111,12 @@ export default class ChatFacet {
         if (!this.watchInputHeight) {
             this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
         }
+        
         SocketIoClient.sendMessage({
             text: this.message.value,
             conversation_id: this.activeConversationId.value,
             type: 0,
+            is_encrypted: 1,
         });
         this.message.value = ''
         return true;
@@ -174,24 +177,34 @@ export default class ChatFacet {
 
     public static async prepareMessage(args: {
         sender_id: number,
-        body: string,
+        body: ArrayBuffer,
         created: string,
         type: number,
         filename?: string,
+        is_encrypted: number,
     }) {
         let senderUser = User.users.find(user => user.id == args.sender_id);        
         if (!senderUser) {            
             senderUser = await Services.getUserById(args.sender_id);
             User.users.push(senderUser);
         }
+        let body = args.body;
+        if (args.is_encrypted == 1) {
+            try{
+                body = await Encryption.decryptMessage(args.body);
+            } catch (err) {
+                console.log('wrong key!');
+            }
+        }
         
         return ( {
-                body: args.body?.replace(/''/g, '\''),
+                body,
                 sender_id: args.sender_id,
                 nickName: senderUser.user_name,
                 created: args.created,
                 type: args.type,
                 filename: args.filename,
+                is_encrypted: args.is_encrypted,
             }
         )
     }
@@ -215,6 +228,9 @@ export default class ChatFacet {
             this.getConversations();
         });
 
+        // get your crypto keys!
+        Encryption.getCryptoKeyPair();
+
 
         return {
             message: this.message,
@@ -230,6 +246,7 @@ export default class ChatFacet {
             cashConversationParticipant: this.cashConversationParticipant,
             conversationParticipant: this.conversationParticipant,
             voiceChatParticipants: this.voiceChatParticipants,
+            messagesLoaded: this.messagesLoaded,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

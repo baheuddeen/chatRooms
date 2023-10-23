@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import signinSignup from "../components/SigninPage/_SigninSignupPage.vue";
 import Chat from '../components/ChatPage/_ChatPage.vue';
+import KeysConfig from '../components/KeysConfigPage/KeysConfig.vue';
 const routes = [
 	{
 		path: "/",
@@ -11,6 +12,11 @@ const routes = [
     path: "/chat",
     name: "Chat",
     component: Chat,
+  },
+  {
+    path: "/keys-config",
+    name: "keys",
+    component: KeysConfig,
   }
 ];
 

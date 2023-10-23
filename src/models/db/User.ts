@@ -19,13 +19,29 @@ export default class User {
   async show(id: number):Promise<UserType> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT user_name, email, id FROM users WHERE id=($1)';
+      const sql = 'SELECT user_name, email, id, public_key FROM users WHERE id=($1)';
       const assets = await conn.query(sql, [id]);
       conn.release();
       if (!assets.rows[0]) throw Error(`no User with id = ${id}`);
       return assets.rows[0];
     } catch (err) {
       throw new Error(`${err}`);
+    }
+  }
+
+  async updatePublicKey({
+    id,
+    public_key,
+  }){
+    try {
+      const conn = await client.connect();
+      const sql = 'UPDATE users SET public_key = $1 WHERE id = $2';
+      const assets = await conn.query(sql, [public_key, id]);
+      conn.release();
+      if (!assets.rows[0]) console.log(`no User with id = ${id}`);
+      return assets.rows[0];
+    } catch (err) {
+      console.log(`${err}`);
     }
   }
 
@@ -42,9 +58,9 @@ export default class User {
       const salt = bcrypt.genSaltSync(10);
       const password = bcrypt.hashSync(newUser.password, salt);
       const conn = await client.connect();
-      const sql = `INSERT INTO users(email, password, user_name)
-      VALUES ($1, $2, $3) RETURNING *`;      
-      const assets = await conn.query(sql, [newUser.email, password, newUser.user_name]);
+      const sql = `INSERT INTO users(email, password, user_name, public_key)
+      VALUES ($1, $2, $3, $4) RETURNING *`;      
+      const assets = await conn.query(sql, [newUser.email, password, newUser.user_name, newUser.public_key]);
       conn.release();      
       return assets.rows[0];
     } catch (err) {
@@ -126,4 +142,5 @@ export type UserType = {
   email: string,
   password: string,
   verified: number,
+  public_key: string,
 }
