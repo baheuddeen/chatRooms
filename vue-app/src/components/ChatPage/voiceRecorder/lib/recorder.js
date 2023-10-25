@@ -1,4 +1,5 @@
 import { convertTimeMMSS } from './utils'
+import Encryption from '../../../../utilites/Encryption';
 
 export default class {
   constructor (options = {}) {
@@ -82,14 +83,14 @@ export default class {
       console.log('ondata:', ev);
       this.chunks.push(ev.data);
     };
-    this.mediaRecorder.onstop = (ev) => {
+    this.mediaRecorder.onstop = async (ev) => {
       console.log('on stop');
       const blob = new Blob(this.chunks,  { type: "audio/ogg; codecs=opus" })
       this.chunks = []
       const record = {
         id   : Date.now(),
         blob : blob,
-        url  : URL.createObjectURL(blob)
+        url  : URL.createObjectURL(blob),
       }
       
       this.records.push(record);

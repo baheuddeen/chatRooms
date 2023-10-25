@@ -46,6 +46,8 @@ export default function({
             type: 0,
             is_encrypted: args.is_encrypted,
             receiver_id: args.receiver_id,
+            iv: new ArrayBuffer(0),
+            symmetric_key: new ArrayBuffer(0),
         }); 
     });
 }

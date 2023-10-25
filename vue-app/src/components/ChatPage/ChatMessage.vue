@@ -44,8 +44,11 @@ export default defineComponent({
         </Fieldset >
         <Fieldset  :legend="nickName"  v-if="message.type == 1">
           <audioPlayer 
+           :is_encrypted="message.is_encrypted"
            :playerUniqId="message.filename.split('/').pop()"
            :src="'/private/_uid-' + conversation_id + '/' + message.filename"
+           :iv="message.iv"
+           :symmetricKey="message.symmetric_key"
            @stop-other-audios="onStopOtherAudios"
            />
         </Fieldset >

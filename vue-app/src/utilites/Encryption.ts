@@ -3,7 +3,6 @@ export default class Encryption {
   public static textDecoder = new TextDecoder();
   public static textEncoder = new TextEncoder();
   private static bufferSize = 100;
-  public static exportedKeyText: string;
 
   public static async generateKeyPair() {
     Encryption.keyPair = await crypto.subtle.generateKey(
@@ -74,6 +73,16 @@ export default class Encryption {
     }
     return null;
   }
+
+  public static async encryptSymmetricKey(symmetricKey: ArrayBuffer, publicKey: CryptoKey): Promise<ArrayBuffer> {
+    return await crypto.subtle.encrypt(
+      {
+        name: "RSA-OAEP"
+      },
+      publicKey,
+      symmetricKey
+    );
+  }
   
   // Encrypt a message using the public key
   public static async encryptMessage(message: string, publicKey: CryptoKey) {
@@ -135,5 +144,83 @@ export default class Encryption {
       });  
 
       return decryptedData;
+  }
+
+
+  public static async encryptBinaryData(data: ArrayBuffer): Promise< {
+      encryptedData: ArrayBuffer,
+      key: ArrayBuffer,
+      iv: ArrayBuffer,
+    }> {
+    const AESKey = await crypto.subtle.generateKey(
+      {
+        name: 'AES-GCM',
+        length: 128,
+      },
+      true,
+      ['encrypt', 'decrypt']
+    );
+
+    const key = await crypto.subtle.exportKey('raw', AESKey);
+    const ivLength = 12; 
+    const iv = crypto.getRandomValues(new Uint8Array(ivLength));
+
+    const algorithm = {
+        name: 'AES-GCM',
+        iv: iv
+      };
+
+    // Encrypt the voice note
+    const encryptedData = await crypto.subtle.encrypt(
+      algorithm,
+      AESKey,
+      data
+    );
+    
+
+    return {
+      encryptedData,
+      key,
+      iv,
+    } 
+  }
+
+  public static async decryptBinaryData( {
+      encryptedData,
+      symmetricKeyBuffer,
+      iv,
+  }:
+    {
+      encryptedData: ArrayBuffer,
+      symmetricKeyBuffer: ArrayBuffer,
+      iv:ArrayBuffer,
+    }): Promise<ArrayBuffer> {
+      console.log('i have symmetricKeyEncoded', symmetricKeyBuffer);
+
+    const symmetricKey = await crypto.subtle.importKey(
+      "raw",
+      symmetricKeyBuffer,{
+      name: 'AES-GCM',
+      length: 128 
+    },
+    true,
+    ['encrypt', 'decrypt']);
+
+    console.log('i have symmetricKey', symmetricKey);
+    
+
+    const algorithm = {
+      name: 'AES-GCM',
+      iv: iv
+    };
+  
+    // Decrypt the voice note
+    const decryptedData = await crypto.subtle.decrypt(
+      algorithm,
+      symmetricKey,
+      encryptedData
+    );
+  
+    return decryptedData;
   }
 }

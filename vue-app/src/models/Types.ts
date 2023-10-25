@@ -12,6 +12,9 @@ export type Message = {
     type: number,
     filename?: string,
     is_encrypted: number,
+    iv?: ArrayBuffer,
+    symmetric_key?: ArrayBuffer,
+    receiver_id?: number,
 }
 
 

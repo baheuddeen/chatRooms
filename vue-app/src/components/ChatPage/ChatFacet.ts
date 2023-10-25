@@ -182,6 +182,9 @@ export default class ChatFacet {
         type: number,
         filename?: string,
         is_encrypted: number,
+        receiver_id?: number,
+        iv?: ArrayBuffer,
+        symmetric_key?: ArrayBuffer,
     }) {
         let senderUser = User.users.find(user => user.id == args.sender_id);        
         if (!senderUser) {            
@@ -189,14 +192,13 @@ export default class ChatFacet {
             User.users.push(senderUser);
         }
         let body = args.body;
-        if (args.is_encrypted == 1) {
+        if (args.is_encrypted == 1 && args.type == 0) {
             try{
                 body = await Encryption.decryptMessage(args.body);
             } catch (err) {
                 console.log('wrong key!');
             }
-        }
-        
+        }        
         return ( {
                 body,
                 sender_id: args.sender_id,
@@ -205,6 +207,9 @@ export default class ChatFacet {
                 type: args.type,
                 filename: args.filename,
                 is_encrypted: args.is_encrypted,
+                receiver_id: args.receiver_id,
+                iv: args.iv,
+                symmetric_key: args.symmetric_key
             }
         )
     }

@@ -207,17 +207,34 @@ export default class SocketIoClient {
         SocketIoClient.search.users.value = args.users;
     }
 
-    public static prepareVoiceMessage({
+    public static async prepareVoiceMessage({
         length,
         filename,
         binary,
         conversation_id,
+        iv,
+        symmetric_key,
     }) {
+        const symmetric_keys = [];
+        for (let user of SocketIoClient.chat.cashConversationParticipant.value[conversation_id]) {
+            const userPublicKey = await Encryption.importKey(user.public_key);
+            const key = await Encryption.encryptSymmetricKey(symmetric_key, userPublicKey);
+            try {
+                symmetric_keys.push({
+                    receiver_id: user.id,
+                    symmetric_key: key,
+                })
+             } catch(err) {
+                console.log(err);  
+            }
+        }
         SocketIoClient.socket.emit('prepareVoiceMessage', {
             length,
             filename,
             binary,
             conversation_id,
+            iv,
+            symmetric_keys,
         });
     }
 

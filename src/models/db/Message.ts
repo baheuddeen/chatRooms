@@ -51,8 +51,8 @@ export default class Message {
             }
         }
       const conn = await client.connect();
-      const sql = `INSERT INTO conversation_messages(conversation_id, sender_id, body, created, type, filename, is_encrypted, receiver_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;      
+      const sql = `INSERT INTO conversation_messages(conversation_id, sender_id, body, created, type, filename, is_encrypted, receiver_id, iv, symmetric_key)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;      
       console.log(newmessage, 'hey');
       
       const assets = await conn.query(sql, [
@@ -64,6 +64,8 @@ export default class Message {
         newmessage.filename,
         newmessage.is_encrypted,
         newmessage.receiver_id,
+        newmessage.iv ? newmessage.iv : new ArrayBuffer(0),
+        newmessage.symmetric_key ? newmessage.symmetric_key : new ArrayBuffer(0),
       ]);
       conn.release();      
       // return assets.rows[0];
@@ -83,4 +85,6 @@ export type messageType ={
     created: string,
     type: number,
     is_encrypted: number,
+    iv?: ArrayBuffer,
+    symmetric_key: ArrayBuffer,
   }

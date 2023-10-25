@@ -1,9 +1,10 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, watch } from 'vue';
+  import { Ref, defineComponent, ref, watch } from 'vue';
   import IconButton from './icon-button.vue'
 import SocketIoClient from '../../../../utilites/SocketIoClient';
+import Encryption from '../../../../utilites/Encryption';
 
   export default defineComponent({
     components: {
@@ -22,6 +23,8 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
     setup(props, { emit }) {
       
       const sendingBinaryData = ref(false);
+      const encryptedBlob: Ref<Blob> = ref(null);
+  
       SocketIoClient.subscribeUpload({
         sendingBinaryData,
       });
@@ -32,7 +35,7 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
         if (!sendingBinaryData.value) {
           return;
         }
-        const file = props.record.blob;
+        const file = encryptedBlob.value;
         const chunkSize = 700000;
         let num = 0;
 
@@ -48,18 +51,16 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
         emit('reset-record');
       })
 
-      const upload = () => {
+      const upload = async () => {
         if (!props.record.url) {
           return
         }
 
         emit('start-upload');
-
-        // const data = new FormData()
-        // data.append('audio', props.record.blob, `${props.filename}.mp3`);
-        const file = props.record.blob as Blob;
+        const encrypted = await Encryption.encryptBinaryData(await (props.record.blob as Blob).arrayBuffer());
+        encryptedBlob.value = new Blob([encrypted.encryptedData], { type: "audio/ogg; codecs=opus" });
         const chunkSize = 700000;
-        const length = Math.floor(file.size / chunkSize);
+        const length = Math.floor(encryptedBlob.value.size / chunkSize);
         console.log(length);
         
         SocketIoClient.prepareVoiceMessage( {
@@ -67,30 +68,10 @@ import SocketIoClient from '../../../../utilites/SocketIoClient';
           length,
           binary: true,
           conversation_id: props.activeConversationId,
+          iv: encrypted.iv,
+          symmetric_key: encrypted.key,
         } );          
          
-      //   const timeout = 20;
-      //   let counter = 0;
-      //   reader.read().then( function readStramBlob (chunk) {
-      //     counter++;
-      //     if(counter > 20) {
-      //       return
-      //     }
-      //     console.log(chunk);
-      //     // SocketIoClient.sendVoiceMessage( chunk.value);
-      //     if (chunk.done) {
-      //       return;
-      //     }
-      //     return reader.read().then(readStramBlob(chunk));
-      // });
-        // SocketIoClient.sendVoiceMessage( props.record.blob);
-
-        // const headers = Object.assign(props.headers, {})
-        // @ts-ignore.
-        // headers['Content-Type'] = `multipart/form-data; boundary=${data._boundary}`
-
-        // emit('end-upload', { status: 'success', response: resp }
-        // 'end-upload', { status: 'fail', response: error }
       }
 
         return {
