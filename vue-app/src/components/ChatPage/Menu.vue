@@ -64,3 +64,13 @@ export default defineComponent({
         <!-- <Search :socket-io-client="socketIoClient"></Search> -->
     </div>
 </template>
+
+<style scoped>
+.card {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    border: none;
+    width: 100%;
+}
+</style>

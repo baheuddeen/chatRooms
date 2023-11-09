@@ -34,6 +34,9 @@ export async function getConversations({
 }) {
     const conversations = [];    
     const conversationsParticipants = await conversationParticipantsDBHandler.getConversationsByUserId(socket.user_data.id);
+    if(!conversationsParticipants) {
+        return;
+    }
     for (let conv of conversationsParticipants) {
         console.log(conv.conversation_id);
         conversations.push(await conversationDBHandler.show(conv.conversation_id));

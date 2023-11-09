@@ -224,3 +224,19 @@ span.info-label {
     white-space: nowrap;
     color: #007acc;
 }   
+
+.p-menu {
+  border: none !important;;
+}
+
+.messages .p-panel-header{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@media (max-width: 1400px) {
+  .card-desc {
+      display: none !important; /* Hide the text in mobile view */
+  }
+}

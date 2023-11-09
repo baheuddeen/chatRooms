@@ -8,10 +8,10 @@ export default class ConversationParticipant {
       const sql = 'SELECT * FROM conversation_participants WHERE id=($1)';
       const assets = await conn.query(sql, [id]);
       conn.release();
-      if (!assets.rows[0]) throw Error(`no conversation with id = ${id}`);
+      if (!assets.rows[0]) console.log(`no conversation with id = ${id}`);
       return assets.rows[0];
     } catch (err) {
-      throw new Error(`${err}`);
+       console.log(`${err}`);
     }
   }
 
@@ -27,7 +27,7 @@ export default class ConversationParticipant {
       // if (!conversations.rows[0]) throw Error(`no conversation with id = ${id}`);
       return users_id.rows;
     } catch (err) {
-      throw new Error(`${err}`); 
+      console.log(err);
     }
   }
 
@@ -40,7 +40,7 @@ export default class ConversationParticipant {
       // if (!conversations.rows[0]) throw Error(`no conversation with id = ${id}`);
       return conversations.rows;
     } catch (err) {
-      throw new Error(`${err}`); 
+      console.log(err);
     }
   }
 
@@ -62,7 +62,7 @@ export default class ConversationParticipant {
       conn.release();      
       return assets.rows[0];
     } catch (err) {
-      throw new Error(`Error: ${err}`);
+      console.log(`Error: ${err}`);
     }
   }
 }

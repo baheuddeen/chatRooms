@@ -13,7 +13,7 @@ dotenv.config();
 
 function parseCookies(cookie: string) {
   const cookies = {} as any;
-  cookie.split(';').forEach((item) => {
+  cookie?.split(';').forEach((item) => {
     const [key, value] = item.split('=');
     cookies[key.trim()] = value;
   });
