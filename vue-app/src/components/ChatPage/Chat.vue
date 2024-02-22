@@ -235,8 +235,10 @@ form {
     border-radius: 17px; */
 }
   .message-input-wrapper {
-    width: 85%;
-    left: 7%;
+    width: 90%;
+    margin: 5%;
+    left: 0px;
+    bottom: 0px;
   }
 
   .messages{
@@ -248,10 +250,7 @@ form {
   }
 
   .messages-wrapper {
-    width: 90%;
-    margin: 5%;
-    left: 0px;
-    bottom: 0px;
+    padding: 10px 0px;
   }
 }
 </style>
