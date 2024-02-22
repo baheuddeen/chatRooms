@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import Carousel from 'primevue/carousel';
 import Button from 'primevue/button';
-import CardFacet from './cardFacet';
+import CardFacet from './CardFacet';
 
 export default defineComponent({
   props: {
