@@ -129,5 +129,9 @@ select {
     select {
         width: 150px;
     }
+
+    .invite-link {
+        width: 300px;
+    }
 }
 </style>
