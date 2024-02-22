@@ -91,6 +91,7 @@ select {
     height: 3rem;
     font-size: larger !important;
     line-height: 2rem !important;
+    padding: 8px;
 }
 
 /* wrap .invite-link in a div to make it a block element */
@@ -123,5 +124,10 @@ select {
   .title {
     font-size: 20px;
   }
+
+  input,
+    select {
+        width: 150px;
+    }
 }
 </style>

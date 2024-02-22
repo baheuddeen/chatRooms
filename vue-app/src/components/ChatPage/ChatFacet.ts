@@ -47,6 +47,10 @@ export default class ChatFacet {
 
     public watchInputHeight: any;
 
+    public desktopView: Ref<boolean>;
+
+    public ConverstionParticipantVisible: Ref<boolean>;
+
     constructor() {
         this.state = ref({
             connected: false
@@ -67,6 +71,8 @@ export default class ChatFacet {
         this.voiceChatParticipants = ref([]);
         this.cashVoiceChatParticipants = ref({});
         const audioContext = new AudioContext();
+        this.desktopView = ref(window.innerWidth > 768);
+        this.ConverstionParticipantVisible = ref(false);
         if (audioContext.sampleRate) {
             this.sampleRate = audioContext.sampleRate;
         }
@@ -93,7 +99,7 @@ export default class ChatFacet {
         }
 
         if (event.key == 'Enter' && window.innerWidth > 768) {
-            this.onsubmit();          
+            this.onsubmit();       
         }
     }
 
@@ -225,11 +231,19 @@ export default class ChatFacet {
         });
     }
 
+    public watchWindowSize() {
+        window.addEventListener('resize', () => {
+            this.desktopView.value = window.innerWidth > 768;
+        });
+    }
+
     setup() {
         onMounted(() => {
             SocketIoClient.connect();
             this.getConversations();
         });
+
+        this.watchWindowSize();
 
         // get your crypto keys!
         Encryption.getCryptoKeyPair();
@@ -250,6 +264,8 @@ export default class ChatFacet {
             conversationParticipant: this.conversationParticipant,
             voiceChatParticipants: this.voiceChatParticipants,
             messagesLoaded: this.messagesLoaded,
+            desktopView: this.desktopView,
+            ConverstionParticipantVisible: this.ConverstionParticipantVisible,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

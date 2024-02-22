@@ -334,7 +334,8 @@ export default class SocketIoClient {
     }
 
     public static onConversationCreated(args) {
-        SocketIoClient.createConversationFacet.inviteLink.value = args.inviteLink;
+        const baseUrl = document.location.origin;
+        SocketIoClient.createConversationFacet.inviteLink.value = baseUrl + args.inviteLink;
     }
 
     public static updatePublicKey({

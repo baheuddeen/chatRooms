@@ -13,6 +13,8 @@ import VoiceCall from './VoiceCall.vue';
 import Avatar from 'primevue/avatar';
 import CreateConversation from './CreateConversation.vue';
 import ConversationSideBar from './ConversationSideBar.vue';
+import ConversationParticipants from './ConversationParticipants.vue';
+import Sidebar from 'primevue/sidebar';
 
 export default defineComponent({
   components: {
@@ -26,6 +28,8 @@ export default defineComponent({
     Avatar,
     CreateConversation,
     ConversationSideBar,
+    ConversationParticipants,
+    Sidebar,
 },
 
   props: {
@@ -73,7 +77,7 @@ export default defineComponent({
           <div class="message-input-wrapper">
             <form @submit.prevent="onsubmit">
               <div class="message-input d-flex">
-                <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.."  @keyup="onKeydown($event)" />
+                <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.."  @keydown="onKeydown($event)" @keyup="onKeydown($event)" />
                 <div v-if="message"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
                 <recorder v-else
                   :activeConversationId = "activeConversationId"
@@ -87,41 +91,23 @@ export default defineComponent({
           </div>
         </div>
 
-        <div class="col-lg-3 conversation-participants">
-          <div>
-            <div class="side-bar-title">
-              <b>Participants</b>
-            </div>
-          <div v-for="user of cashConversationParticipant[activeConversationId]">
-            <div class="user-participant">
-              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" :class="{
-                'mr-2': true,
-                'online': user.status == 'online',
-                'offline': user.status == 'offline',
-                }" shape="circle" />
-              <div class="flex flex-column align">
-                  <span class="font-bold">{{ user.user_name }}</span>
-                  <span class="text-sm" :key="user.email + user.status">{{ user.status == 'online' ? 'online' : 'offline' }}</span>
-              </div>
-            </div>
-           
-          </div>
-          </div>
-        <div class="side-bar-title">
-          <b>
-            In Voice Chat.
-          </b>
-          <div v-for="user of voiceChatParticipants">
-            <div class="user-participant">
-              <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" class="mr-2" shape="circle" />
-              <div class="flex flex-column align">
-                  <span class="font-bold">{{ user.user_name }}</span>
-              </div>
-            </div>
-          </div>
+        <div v-if = "desktopView" class="col-lg-3 conversation-participants">
+            <ConversationParticipants
+            :activeConversationId="activeConversationId"
+            :cashConversationParticipant="cashConversationParticipant"
+             :voiceChatParticipants="voiceChatParticipants"
+            />
         </div>
-        <voiceCall :activeConversationId="activeConversationId" />
-      </div>
+        <div class="show-conversation-participants-menu" v-else>
+            <span class="pi pi-phone show-conversation-participants-bar" @click="ConverstionParticipantVisible = true"></span>
+            <Sidebar v-model:visible="ConverstionParticipantVisible" class="color-black">
+              <ConversationParticipants
+              :activeConversationId="activeConversationId"
+              :cashConversationParticipant="cashConversationParticipant"
+              :voiceChatParticipants="voiceChatParticipants"
+            />
+            </Sidebar>
+        </div>
   
     </section>
     <section class="no-chat col-10 col-lg-9" v-else="!activeConversationId">
@@ -145,22 +131,10 @@ export default defineComponent({
   height: 100%;
 }
 
-.online{
-  border: 2px solid green;
-}
-.offline{
-  border: 2px solid red;
-}
-
 .no-chat {
   height: fit-content;
   margin-left: auto;
   margin-right: auto;
-}
-
-.user-participant {
-  display: flex;
-  padding: 5px;
 }
 
 .messages-wrapper {
@@ -170,7 +144,7 @@ export default defineComponent({
 .text-input{
   text-wrap: wrap;
   overflow: hidden;
-  width: 100%;
+  width: 90%;
   min-height: 2.5rem;
   height: 32px;
   padding: 5px;
@@ -178,6 +152,10 @@ export default defineComponent({
   background-color: transparent;
   border: transparent;
   color: white;
+}
+
+.color-black {
+  color: black;
 }
 
 .text-input:focus-visible {
@@ -237,21 +215,25 @@ input {
   z-index: 300;
 }
 
-.conversation-participants {
-  background-color: #0e100f;
-  border: white;
-  border: 1px solid #313131;
-  border-radius: 7px;
-}
-
-.side-bar-title {
-  font-size: 20px;
-}
-
 form {
   padding-top: 0px !important;
 }
 @media (max-width: 768px) {
+  .show-conversation-participants-bar {
+    font-size: 42px;
+    cursor: pointer;
+    color: #d1cfcf;
+  }
+
+  .show-conversation-participants-menu {
+    position: fixed;
+    right: 0px;
+    width: auto;
+    padding: 10px;
+    top: 0px;
+    /* border: 1px solid;
+    border-radius: 17px; */
+}
   .message-input-wrapper {
     width: 85%;
     left: 7%;
