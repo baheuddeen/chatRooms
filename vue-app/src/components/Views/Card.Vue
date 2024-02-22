@@ -2,12 +2,12 @@
 import { defineComponent } from 'vue';
 import Carousel from 'primevue/carousel';
 import Button from 'primevue/button';
-import CardFacet, { Card } from './cardFacet';
+import CardFacet from './cardFacet';
 
 export default defineComponent({
   props: {
     data: {
-      type: () => null as unknown as Card,
+      type: () => null as unknown as { title: string, desc: string, image: string }
     },
   },
   
