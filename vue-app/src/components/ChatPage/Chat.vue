@@ -248,7 +248,10 @@ form {
   }
 
   .messages-wrapper {
-    padding: 10px 0px;
+    width: 90%;
+    margin: 5%;
+    left: 0px;
+    bottom: 0px;
   }
 }
 </style>
