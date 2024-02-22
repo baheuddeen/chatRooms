@@ -88,13 +88,9 @@
         emit('stop-other-audios');   
         if (props.attempts && recorder.value.records.length >= props.attempts) {
           return
-        }
-
-        console.log(isRecording.value, isPause.value);
-        
+        }        
 
         if (!isRecording.value || (isRecording.value && isPause.value)) {
-          console.log('it should start recording !');
           selected.value = {};
           recorder.value.start()
         } else {
@@ -162,7 +158,6 @@
       });
 
       const stopOtherAudios = (args) => {
-        console.log(args);
         emit('stop-other-audios', args);
       }
 

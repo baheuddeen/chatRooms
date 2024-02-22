@@ -14,7 +14,6 @@ export default class CardFacet {
     }
 
     addAnimation() {
-        console.log('scroll: ', ScrollTrigger);
         const gsap = Util.getGSAP();
         const leftSection = this.cardElement.value.querySelector('.left-section');
         const rightSection = this.cardElement.value.querySelector('.right-section');

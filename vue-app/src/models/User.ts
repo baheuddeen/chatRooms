@@ -50,9 +50,7 @@ export default class User {
     public static async waitingForUser(): Promise<User> {
         return new Promise((res, rej) => {
             let counter = 0;
-            const waiting = setInterval(() => {
-                console.log(counter, User.instance);
-                
+            const waiting = setInterval(() => {                
                 if (counter++ > 20) {
                     clearInterval(waiting);
                     rej('can not get the user!');
@@ -67,9 +65,7 @@ export default class User {
         
     }
 
-    public static setUser(user: UserType) {
-        console.log('set User', user);
-        
+    public static setUser(user: UserType) {        
         User.instance = new User(user);
     }
 }

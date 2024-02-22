@@ -85,27 +85,23 @@ export default class SocketIoClient {
     }
 
     private static async onConnect(){
-        console.log('connected to socket!');
         User.users.push(await User.waitingForUser());
         SocketIoClient.chat.state.value.connected = true;
     }
 
     private static onDisConnect(){
-        console.log('disconnected to socket!');
         SocketIoClient.chat.state.value.connected = false;
     }
 
     private static async onMessage (args: any) {
-        console.log('recieved message ! mini');        
-        console.log(args); 
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
             SocketIoClient.chat.messages.value.push(await ChatFacet.prepareMessage(args));
         } else {
-            console.log('notifie other conversation');
+            
         }
 
         SocketIoClient.chat.cashMessages.value[args.conversation_id].push(args);
-        console.log('chashed', SocketIoClient.chat.cashMessages.value);
+        
     }
 
     public static async sendMessage(message: {
@@ -117,7 +113,7 @@ export default class SocketIoClient {
         for (let user of SocketIoClient.chat.cashConversationParticipant.value[message.conversation_id]) {
             
             try {
-                console.log('sent!', user);
+                
 
                 const public_key = await Encryption.importKey(user.public_key);
                 SocketIoClient.socket.send('message', {
@@ -147,12 +143,12 @@ export default class SocketIoClient {
     }
 
     public static getConversations() {
-        console.log('front, Get my Conversation!');
+        
         SocketIoClient.socket.emit('getConversations');
     }
 
     private static onSetConversations(args: any) {
-        console.log('received converstions:', args);  
+        
         SocketIoClient.chat.conversations.value = args.conversations;
         SocketIoClient.chat.conversations.value.forEach((conversation) => {
             SocketIoClient.joinConversation({
@@ -166,7 +162,7 @@ export default class SocketIoClient {
     }
 
     public static getMessages() {
-        console.log('front, Get my Messages!');
+        
         SocketIoClient.socket.emit('getMessages');
     }
 
@@ -177,7 +173,7 @@ export default class SocketIoClient {
 
     
     public static getConversationParticipants() {
-        console.log('front get conversation participants');
+        
         SocketIoClient.socket.emit('getConversationParticipant');
     }
 
@@ -265,11 +261,11 @@ export default class SocketIoClient {
     }
 
     public static onUpdateVoiceCallParticipants(args) {
-        console.log('new users on voice chat', args.users);
+        
         SocketIoClient.chat.cashVoiceChatParticipants.value[args.conversation_id] = args.users;
 
         if(SocketIoClient.voiceCall?.activeVoiceCallId?.value == args.conversation_id) {
-            console.log(args);
+            
             
             if (args.user.email === User.getUser().email && args.action == 'join') {  
                 SocketIoClient.voiceCall.call({
@@ -279,7 +275,7 @@ export default class SocketIoClient {
         }
 
         if (args.action == 'leave') {  
-            console.log('delete a stream', args);
+            
             
             SocketIoClient.voiceCall.removeStream({
                 streamId: args.stream_id,
@@ -309,7 +305,7 @@ export default class SocketIoClient {
     public static onAnswerVoiceCall({
         data,
     }){
-        console.log(SocketIoClient.voiceCall.socketPeer);
+        
         
         SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
     }
@@ -323,10 +319,7 @@ export default class SocketIoClient {
     public static createConversation({
         title,
         conversationType,
-    }) {
-        console.log('it should create a room', title);
-        console.log('type', conversationType);
-        
+    }) {        
         SocketIoClient.socket.emit('createConversation', {
             title,
             conversation_type: conversationType,

@@ -41,7 +41,6 @@ import Encryption from '../../../../utilites/Encryption';
 
         for (let start = 0; start < file.size; start += chunkSize) {
           const chunk = file.slice(start, start + chunkSize + 1);
-          console.log(chunk);
           SocketIoClient.sendVoiceMessage( {
             blob: chunk,
             num: num++,
@@ -61,7 +60,6 @@ import Encryption from '../../../../utilites/Encryption';
         encryptedBlob.value = new Blob([encrypted.encryptedData], { type: "audio/ogg; codecs=opus" });
         const chunkSize = 700000;
         const length = Math.floor(encryptedBlob.value.size / chunkSize);
-        console.log(length);
         
         SocketIoClient.prepareVoiceMessage( {
           filename: props.filename.split('/').pop(),

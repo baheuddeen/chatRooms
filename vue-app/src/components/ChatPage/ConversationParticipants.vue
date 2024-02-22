@@ -23,8 +23,6 @@ export default defineComponent({
     },
 
     setup(_props, {emit}) {
-        console.log('miin');
-        
         return {
         }
     }

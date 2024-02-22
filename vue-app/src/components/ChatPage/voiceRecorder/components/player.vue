@@ -36,9 +36,7 @@
       player.value = document.getElementById(props.playerUniqId);
 
       audioSource.value = await (async () => {
-        let url = props.src || props.record.url;
-        console.log('url', url);
-        
+        let url = props.src || props.record.url;        
         if (props.is_encrypted == 1) {
           const res = await fetch(props.src);
           const encryptedBlob = await res.blob() as Blob;
@@ -53,7 +51,6 @@
           const blob = new Blob([decryptedData],{ type: "audio/ogg; codecs=opus" });
           url = URL.createObjectURL(blob);        
         }
-        console.log('wow url', url);
         
         if (url) {
           return audioSource.value = url;
@@ -62,7 +59,6 @@
         }
       })();
 
-      console.log('wow', player);
       player.value.addEventListener('ended', () => {
         isPlaying.value = false
       });
@@ -80,7 +76,6 @@
       })
 
       const playback = () => {
-        console.log(audioSource.value);
         emit('stop-other-audios', props.playerUniqId);
         if (!audioSource.value) {
           return

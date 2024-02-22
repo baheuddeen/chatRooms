@@ -22,7 +22,6 @@ export default class {
     this._writeString(view, 36, 'data')                      // data chunk identifier
     view.setUint32(40, this.samples.length * 4, true)        // data chunk length
     this._writeFloat32(view, 44, this.samples)
-    console.log(view.getFloat32());
 
     const blob = new Blob([view], {type: 'audio/wav'})
 

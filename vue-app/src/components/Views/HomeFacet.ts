@@ -15,13 +15,11 @@ export default class {
         });
         let direction = true;
         const words = (this.title.value.querySelector('.content') as HTMLElement).innerText.split(' ');
-        console.log(words);
         words.map((word, wordIndex) => {
             const letters = word.split('').map((letter) => this.getLetterElement(letter));
             const wordElem = this.getWordElement(letters, wordIndex);
             this.title.value.appendChild(wordElem);
             letters.forEach((letter, letterIndex) => {
-                console.log(letter);
                 tl.from(letter, {
                     rotateY: letterIndex % 2 == 0 ? 0 :360,
                     rotateX: letterIndex % 2 == 0 ? 360 :0,

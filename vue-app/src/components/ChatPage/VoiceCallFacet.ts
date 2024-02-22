@@ -16,10 +16,7 @@ export default class VoiceCallFacet {
 
     public inactiveScreen() {
         document.addEventListener('visibilitychange', function(e){
-            e.stopImmediatePropagation();
-            console.log('visibilitychange');
-            
-            // alert('i am not active')
+            e.stopImmediatePropagation();            
         });
     }
 
@@ -60,22 +57,16 @@ export default class VoiceCallFacet {
     public removeStream({
         streamId
     }){
-        console.log('socketpeer', this.socketPeer);
         const stream = this.socketPeer?.otherStreams.find((stream) => {
             return stream.id == streamId;
         });
         if (!stream) {
-            console.log('can not find the stream!');
-            
             return;
         }
         const streamIndex = (this.socketPeer.peer._remoteStreams as any []).indexOf(stream);
-        if( streamIndex == -1) {
-            console.log('can not find the stream in remote streams!');
-            
+        if( streamIndex == -1) {            
             return;
         }
-        console.log('will remove stream', stream.id);
         
         this.socketPeer.peer._remoteStreams.splice(streamIndex, 1);
     }
@@ -102,10 +93,8 @@ export default class VoiceCallFacet {
         this.activeVoiceCallId.value = null;
             if (this.socketPeer.peer) {                
                 this.socketPeer.peer.destroy();    
-                console.log('peer is destroy!');
                 this.socketPeer = null;  
             } else {
-                console.log('peer not found!');
                 
             }      
         

@@ -86,7 +86,6 @@ export default class Encryption {
   
   // Encrypt a message using the public key
   public static async encryptMessage(message: string, publicKey: CryptoKey) {
-    console.log('i am here');
     if (!Encryption.keyPair) {
       await Encryption.getCryptoKeyPair();      
     }
@@ -94,9 +93,7 @@ export default class Encryption {
     const encodedMessage = new TextEncoder().encode(message);
     for(let i = 0; i < encodedMessage.length;  i += Encryption.bufferSize) {
       const end = Encryption.bufferSize > encodedMessage.length ? encodedMessage.length : Encryption.bufferSize;
-      const dataToEncrypt = encodedMessage.slice(0, end);
-      console.log(dataToEncrypt);
-      
+      const dataToEncrypt = encodedMessage.slice(0, end);      
       encryptedDataArray.push(await crypto.subtle.encrypt(
         {
           name: "RSA-OAEP"
@@ -126,7 +123,6 @@ export default class Encryption {
     for(let i = 0; i < encryptedMessage.byteLength;  i += 256) {
       
       const dataToDecrypt = encryptedMessage.slice(0, 256);
-      console.log(dataToDecrypt);      
       decryptedDataArray.push(await crypto.subtle.decrypt(
         {
           name: "RSA-OAEP"
@@ -195,8 +191,6 @@ export default class Encryption {
       symmetricKeyBuffer: ArrayBuffer,
       iv:ArrayBuffer,
     }): Promise<ArrayBuffer> {
-      console.log('i have symmetricKeyEncoded', symmetricKeyBuffer);
-
     const symmetricKey = await crypto.subtle.importKey(
       "raw",
       symmetricKeyBuffer,{
@@ -204,10 +198,7 @@ export default class Encryption {
       length: 128 
     },
     true,
-    ['encrypt', 'decrypt']);
-
-    console.log('i have symmetricKey', symmetricKey);
-    
+    ['encrypt', 'decrypt']);    
 
     const algorithm = {
       name: 'AES-GCM',

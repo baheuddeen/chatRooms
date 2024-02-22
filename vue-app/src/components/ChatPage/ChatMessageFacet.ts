@@ -27,9 +27,7 @@ export default class ChatMessage {
         const message = props.message;
         const conversation_id = props.conversation_id;
 
-        const onStopOtherAudios = () => {
-            console.log(' message.playerUniqId: ',  message.playerUniqId);
-            
+        const onStopOtherAudios = () => {            
             emit('stop-other-audios', props.message.filename.split('/').pop());
         }
                

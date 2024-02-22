@@ -13,12 +13,10 @@ export default class SigninForm {
 
 		const onsubmit = async (event: Event) => {
 			event.preventDefault();
-			console.log("onsubmit", event);
             const resp = await Services.login({
                 email: email.value.trim().toLowerCase(), 
                 password: password.value,
             });
-			console.log(resp);
 
 			if (resp.status != 200) {
 				errorMessage.value = (await resp.json()).msg;

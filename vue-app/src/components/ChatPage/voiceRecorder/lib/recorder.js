@@ -81,11 +81,9 @@ export default class {
     this.duration   = this._duration;
     this._startStopwatch();
     this.mediaRecorder.ondataavailable = (ev) => {
-      console.log('ondata:', ev);
       this.chunks.push(ev.data);
     };
     this.mediaRecorder.onstop = async (ev) => {
-      console.log('on stop');
       const blob = new Blob(this.chunks,  { type: "audio/ogg; codecs=opus" })
       this.chunks = []
       const record = {
@@ -95,8 +93,6 @@ export default class {
       }
       
       this.records.push(record);
-      console.log(this.records);
-
       
       this._duration = 0
       this.duration  = 0
@@ -120,7 +116,6 @@ export default class {
   }
   _startStopwatch() {
     if (!this.stopwatchInterval) {
-    //   console.log(this);
       this.startTime = new Date().getTime() - this.duration; // get the starting time by subtracting the elapsed paused time from the current time
       this.stopwatchInterval = setInterval(this._updateStopwatch.bind(this), 1000); // update every second
     }
@@ -128,7 +123,6 @@ export default class {
   _updateStopwatch() {
     const currentTime = new Date().getTime(); // get current time in milliseconds
     this.duration = (currentTime - this.startTime) / 1000; // calculate elapsed time in milliseconds
-    console.log(this.duration);
     // var seconds = Math.floor(this.duration / 1000) % 60; // calculate seconds
     // var minutes = Math.floor(this.duration / 1000 / 60) % 60; // calculate minutes
     // var hours = Math.floor(this.duration / 1000 / 60 / 60); // calculate hours

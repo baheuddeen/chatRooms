@@ -27,9 +27,7 @@ export default defineComponent({
     setup(_props, {emit}) {
         const visible = ref(false);
         const desktopView = ref(true);
-        const checkDesktop = () => {
-            console.log('mini', desktopView.value);
-            
+        const checkDesktop = () => {            
             if(window.innerWidth > 992) {
                 desktopView.value = true;
                 return;

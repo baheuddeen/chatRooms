@@ -23,14 +23,10 @@ export default class CreateConversationFacet {
         this.converstionType = ref(conversationTypeEnum.public);
     }
 
-    public onSubmit() {
-        console.log('hmmm');
-        
+    public onSubmit() {        
         if(!this.title.value) {
             return;
-        }
-        console.log(this.title.value);
-        
+        }        
 
         SocketIoClient.createConversation({
             title: this.title.value,

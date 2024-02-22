@@ -22,7 +22,6 @@ export default class SigninSignupPageFacet {
         return;
       }
       const user = await resp.json() as UserType;
-      console.log(user);
 				User.setUser(user);
         if (user.verified != 0) {
           const keys = await Encryption.getCryptoKeyPair();

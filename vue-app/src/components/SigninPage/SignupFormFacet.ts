@@ -7,7 +7,6 @@ import Encryption from "../../utilites/Encryption";
 
 export default class SingupFormFacet {
 	setup(emit: any) {
-        console.log("signup form mounted");
 		const email = ref("");
 		const password = ref("");
 		const failedToSignup = ref(false);
@@ -15,7 +14,6 @@ export default class SingupFormFacet {
 		const error = ref('');
 		const onsubmit = async (event: Event) => {
 			event.preventDefault();
-			console.log("onsubmit", event);
             try {
 				const keys = await Encryption.generateKeyPair();
 				const resp = await Services.signup({

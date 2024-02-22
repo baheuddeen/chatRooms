@@ -16,7 +16,6 @@ export default class {
     for (let i = 0; remaining >= 0; i += maxSamples) {
       const left = samples.subarray(i, i + maxSamples)
       const buffer = this.encoder.encodeBuffer(left);
-      console.log('high bitRate');
       this.dataBuffer.push(new Int8Array(buffer))
       remaining -= maxSamples
     }
