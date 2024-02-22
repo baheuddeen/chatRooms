@@ -150,10 +150,14 @@ export default class ChatFacet {
         const x = this.cashMessages.value[this.activeConversationId.value];
         const prepareMessages = [];
         this.messages.value = [];
+        console.log('it will sort messages!');
         for (const message of x) {
             const preparedMessage = await ChatFacet.prepareMessage(message);
             prepareMessages.push(preparedMessage);
-        }                
+        }         
+        prepareMessages.sort((a, b) => {            
+            return new Date(a.created).getTime() - new Date(b.created).getTime();
+        });       
         this.messages.value.push(...prepareMessages);
 
         if (!this.cashConversationParticipant.value[this.activeConversationId.value]){
