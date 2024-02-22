@@ -13,7 +13,7 @@
     }
 
     &__icon {
-      fill: #747474;
+      fill: white;
       width: 24px;
       height: 24px;
       border: 0;

@@ -15,7 +15,7 @@ export default class SigninForm {
 			event.preventDefault();
 			console.log("onsubmit", event);
             const resp = await Services.login({
-                email: email.value, 
+                email: email.value.trim().toLowerCase(), 
                 password: password.value,
             });
 			console.log(resp);

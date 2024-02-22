@@ -84,9 +84,9 @@ export default class SocketIoClient {
         SocketIoClient.voiceCall = voiceCall;
     }
 
-    private static onConnect(){
+    private static async onConnect(){
         console.log('connected to socket!');
-        User.users.push(User.getUser());
+        User.users.push(await User.waitingForUser());
         SocketIoClient.chat.state.value.connected = true;
     }
 
@@ -96,7 +96,7 @@ export default class SocketIoClient {
     }
 
     private static async onMessage (args: any) {
-        console.log('recieved message !');        
+        console.log('recieved message ! mini');        
         console.log(args); 
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
             SocketIoClient.chat.messages.value.push(await ChatFacet.prepareMessage(args));

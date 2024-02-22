@@ -34,7 +34,7 @@ export default defineComponent({
             <i class="pi pi-user"></i>
           </span>
           <InputText name="email" :value="email" @input="email = ($event.target as HTMLInputElement).value" required
-            class="p-inputtext-sm" placeholder="username" />
+            class="p-inputtext-sm" placeholder="Email" />
         </div>
         <div class="p-inputgroup flex-1">
           <span class="p-inputgroup-addon">

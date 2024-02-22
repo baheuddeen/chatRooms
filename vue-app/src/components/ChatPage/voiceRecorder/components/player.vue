@@ -201,10 +201,8 @@
     }
 
     &-actions {
-      width: 55%;
       display: flex;
       align-items: center;
-      justify-content: space-around;
     }
 
     &__progress {
@@ -213,7 +211,7 @@
     }
 
     &__time {
-      color: rgba(84,84,84,0.5);
+      color: white;
       font-size: 16px;
       width: 41px;
     }
@@ -232,6 +230,20 @@
           fill: #505050 !important;
         }
       }
+    }
+  }
+
+  @media (max-width: 766px) {
+    .ar-player__progress {
+      width: 80px !important;
+    }
+
+    .ar-player{
+      justify-content: left;
+    }
+    .ar-volume__icon,
+    .ar-volume-bar {
+      display: none
     }
   }
 

@@ -1,16 +1,13 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeMount } from 'vue';
 import Chat from './Chat.vue';
-import Menu from './Menu.vue';
 
 export default defineComponent({
   components: {
-    Chat,
-    Menu,
+    Chat
   },
   
-  setup() {
-    
+  setup() {        
     return {
     }
   }
@@ -20,7 +17,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <Menu > </Menu>
   <Chat > </Chat>
 </template>
 

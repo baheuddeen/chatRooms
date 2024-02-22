@@ -235,8 +235,42 @@ span.info-label {
   z-index: 100;
 }
 
-@media (max-width: 1400px) {
-  .card-desc {
-      display: none !important; /* Hide the text in mobile view */
-  }
+.p-button.p-component.p-button-contrast {
+  color: #ffffff !important;
+  background: #020617 !important;
+  border: 1px solid #020617 !important;
 }
+
+.p-button.p-component.p-button-contrast:hover {
+  background-color: rgb(24, 33, 51) !important;
+}
+
+.p-button.p-component.black {
+  color: #ffffff !important;
+  background: black !important;
+  border: 1px solid black !important;
+  width: 200px;
+}
+
+.p-button.p-component.black:hover {
+  background-color: rgb(26, 26, 26) !important;
+}
+
+
+.p-button.p-component.larg {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+.message .p-avatar img {
+  width: 28px;
+  margin-top: 15px;
+}
+
+@media (max-width: 1400px) {
+  /* .card-desc { */
+      /* display: none !important; /* Hide the text in mobile view */
+  /* } */
+}
+

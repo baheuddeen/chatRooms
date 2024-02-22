@@ -2,12 +2,17 @@
 import { defineComponent } from 'vue';
 import VoiceCallFacet from './VoiceCallFacet';
 import SocketIoClient from '../../utilites/SocketIoClient';
+import Button from 'primevue/button';
 
 export default defineComponent({
     props:{
         activeConversationId: {
             type: Number,
         }
+    },
+
+    components: {
+        Button,
     },
 
     setup(props) {
@@ -22,7 +27,7 @@ export default defineComponent({
 
 <template>
     <!-- this should render the voice call  as a dragable window and it should show the current connected people -->
-    <button @click="onJoin" v-if="!inVoiceCall"> Join </button>
-    <button @click="onLeave" v-if="inVoiceCall && activeVoiceCallId == activeConversationId"> Leave </button>
+    <Button @click="onJoin" v-if="!inVoiceCall" severity="contrast"> Join </button>
+    <Button @click="onLeave" v-if="inVoiceCall && activeVoiceCallId == activeConversationId" severity="contrast"> Leave </Button>
     <audio id="auido-stram" />
 </template>

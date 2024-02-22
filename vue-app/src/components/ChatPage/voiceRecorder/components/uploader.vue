@@ -94,6 +94,11 @@ import Encryption from '../../../../utilites/Encryption';
     height: fit-content;
     width: fit-content;
   }
+
+  .ar__uploader {
+    background: white !important;
+    color: black !important;
+  }
   @import '../scss/icons';
 </style>
 

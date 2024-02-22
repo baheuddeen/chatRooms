@@ -18,7 +18,7 @@ export default function({
         if(!(socket.user_data && socket.user_data.id)) {                
             return;
         }
-        console.log('hmmm', ChatServer.sessionsInfo);
+        console.log('hmmm');
         const sessionInfo = ChatServer.sessionsInfo.find(session => {
             return session.user_id == args.receiver_id
         });
@@ -33,8 +33,7 @@ export default function({
                 type: 0,
                 is_encrypted: args.is_encrypted,
                 receiver_id: args.receiver_id,
-            }); 
-            
+            });
         }
         console.log( 'arg: ', args );
         

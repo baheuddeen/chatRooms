@@ -7,6 +7,7 @@ import validateJWT from '../utilities/validateJWT';
 import voiceMessageValidate from '../utilities/voiceMessagesValidate';
 import path from 'path';
 import joinConversation from './handlers/Conversation';
+import history from 'connect-history-api-fallback';
 
 const dirAbs = path.resolve();
 var router = express.Router();
@@ -14,8 +15,9 @@ var router = express.Router();
 router.use(bodyParser.json());
 router.use(cookies());
 
-router.use(express.static(path.join(dirAbs, 'public')));
 router.use('/private', voiceMessageValidate, express.static(path.join(dirAbs, 'private')));
+
+
 
 router.get('/joinRoom/:id', joinConversation);
 
@@ -23,13 +25,26 @@ router.get('/joinRoom/:id', joinConversation);
 // users
 router.use('/api/users', user);
 
+router.use(history());
+
+router.use(express.static(path.join(dirAbs, 'public')));
+
 // TODO FIX THIS 
-router.get('/:something', function (req, res, next) {
-    if (req.url.startsWith('/api') || req.url.startsWith('/joinRoom')) {
-        next()
-    }
-    res.redirect('/');
-});
+// router.get('/:something', history(), function (req, res, next) {
+//     const whiteListedRoutes = [
+//         '/api',
+//         '/joinRoom',
+//     ]
+//     let isWhiteListedRoute = whiteListedRoutes.reduce((previous, current) => {
+//         return req.url.startsWith(current) || previous
+//     }, false);
+//     console.log('isWhiteListed: ', isWhiteListedRoute);
+    
+//     if (isWhiteListedRoute) {
+//         next();
+//     }
+//     res.redirect('/');
+// });
 
 
 

@@ -17,12 +17,12 @@ export default class SingupFormFacet {
 			event.preventDefault();
 			console.log("onsubmit", event);
             try {
-				await Encryption.getCryptoKeyPair();
+				const keys = await Encryption.generateKeyPair();
 				const resp = await Services.signup({
-					email: email.value.trim(),
+					email: email.value.trim().toLowerCase(),
 					user_name: userName.value.trim(),
 					password: password.value,
-					public_key: Encryption.exportedKeyText,
+					public_key: await Encryption.exportKey(keys.publicKey),
 				});
 				if(resp.status !== 200) {
 					failedToSignup.value = true;

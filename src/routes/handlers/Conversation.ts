@@ -17,13 +17,13 @@ const joinConversation =async (req:IRequest, res: Response) => {
     
     if (isAlreadyParticipat) {
         console.log('you have joined this conv before!');
-        return res.redirect('/');
+        return res.redirect('/chat');
     }
     await conversationParticipant.create({
         conversation_id: req.conversationId!,
         user_id: req.user_data.id!,
     });
-    res.redirect('/');   
+    res.redirect('/chat');   
 }
 
 router.use(validateJWT, validateConversationInviteJWT, joinConversation);

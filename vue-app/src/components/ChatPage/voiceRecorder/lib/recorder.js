@@ -50,6 +50,7 @@ export default class {
   }
 
   stop () {
+    if(!this.mediaRecorder) return;
     this.mediaRecorder.stop();
     clearInterval(this.stopwatchInterval); // stop the interval
     this.duration = new Date().getTime() - this.startTime; // calculate elapsed paused time

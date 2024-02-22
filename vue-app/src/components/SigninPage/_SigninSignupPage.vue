@@ -26,6 +26,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="sign-in-page"></div>
     <div v-if="isLoading">Loading....</div>
     <TabView v-if="!isLoading && !showVerify" class="login-page">
         <TabPanel header="Log in">

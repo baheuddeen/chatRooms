@@ -72,5 +72,6 @@ export default defineComponent({
     right: 0px;
     border: none;
     width: 100%;
+    z-index: 200;
 }
 </style>

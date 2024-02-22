@@ -42,7 +42,7 @@ export default defineComponent({
             No Active conversation .. 
         </div>
         <div v-if="conversationLoaded && conversations.length != 0" v-for="conversation of conversations">
-            <Button :data-conversation-id="conversation.id" @click="onSelectConversation"> {{  conversation.title  }}</Button>
+            <Button :data-conversation-id="conversation.id" @click="onSelectConversation" class="black"> {{  conversation.title  }}</Button>
         </div>
     </section>
 </template>

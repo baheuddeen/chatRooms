@@ -54,14 +54,15 @@ export default defineComponent({
 
 
 <template>
-        <div v-if = "desktopView" class="card flex justify-content-start col-lg-2">
+        <div v-if = "desktopView" class="col-lg-3"></div>
+        <div v-if = "desktopView" class="card flex justify-content-start col-lg-3">
             <ConversationBar 
                 :conversations="conversations"
                 :conversationLoaded="conversationLoaded"
                 @select-conversation="onSelectConversation"
             />
         </div>
-        <div v-else>
+        <div class="show-chats-menu" v-else>
             <span class="pi pi-align-justify show-chats-side-bar" @click="visible = true"></span>
             <Sidebar v-model:visible="visible">
                 <ConversationBar 
@@ -76,11 +77,29 @@ export default defineComponent({
 
 <style scoped>
 .show-chats-side-bar{
-    position: fixed;
-    top: 9px;
     font-size: 42px;
     left: 10px;
     cursor: pointer;
+    color: rgb(209, 207, 207);
+}
+
+.show-chats-menu {
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    background: black;
+    top: 0px;
+    padding: 10px;
+}
+.card {
+    background: rgb(33, 33, 33);
+    height: 100vh;
+    border-radius: 0px;
+    position: fixed;
+    height: 100vh;
+    top: 0px;
+    padding-top: 65px;
+    color: white;
 }
 </style>
 

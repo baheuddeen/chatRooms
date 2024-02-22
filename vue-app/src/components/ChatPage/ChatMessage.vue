@@ -4,11 +4,13 @@ import { defineComponent } from 'vue';
 import Fieldset  from 'primevue/fieldset';
 import ChatMessage from './ChatMessageFacet';
 import audioPlayer from './voiceRecorder/components/player.vue'
+import Avatar from 'primevue/avatar';
 
 export default defineComponent({
   components: {
     Fieldset ,
     audioPlayer,
+    Avatar,
   },
 
   props: {
@@ -35,27 +37,36 @@ export default defineComponent({
 </script>
 
 <template>
-    <div v-if="sender_id ? true : false" :class="{
+    <div v-if="sender_id" :class="{
+          'message': true,
           'message-sender': isSender,
           'message-reciver': !isSender,
         }">
-        <Fieldset  :legend="nickName"  v-if="message.type == 0">
-          {{decodedMessage}}
-        </Fieldset >
-        <Fieldset  :legend="nickName"  v-if="message.type == 1">
-          <audioPlayer 
-           :is_encrypted="message.is_encrypted"
-           :playerUniqId="message.filename.split('/').pop()"
-           :src="'/private/_uid-' + conversation_id + '/' + message.filename"
-           :iv="message.iv"
-           :symmetricKey="message.symmetric_key"
-           @stop-other-audios="onStopOtherAudios"
-           />
-        </Fieldset >
-
+        <div class="d-flex">
+          <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" :class="{
+              'mr-2': true,
+              }" shape="circle" />
+          <div class="flex flex-column align message-right">
+            <div class="sender-info">
+              <span>{{isSender ? 'You' : nickName}}</span>
+            <!-- <span>{{message.created}}</span> -->    
+            </div>
+            <div class="message-text" v-if="message.type == 0">
+              {{decodedMessage}}
+            </div >
+            <div  v-if="message.type == 1">
+              <audioPlayer 
+              :is_encrypted="message.is_encrypted"
+              :playerUniqId="message.filename.split('/').pop()"
+              :src="'/private/_uid-' + conversation_id + '/' + message.filename"
+              :iv="message.iv"
+              :symmetricKey="message.symmetric_key"
+              @stop-other-audios="onStopOtherAudios"
+              />
+            </div >
+          </div>
+        </div>
     </div>
-    <p v-else>{{decodedMessage}}</p>
-
 </template>
 
 <style scoped>
@@ -74,4 +85,25 @@ input {
   width: 80%;
   margin: 5px;
 }
+
+.sender-info {
+  font-size: 17px;
+  font-weight: 600;
+  padding: 5px 6px;
+}
+
+.message-text {
+  font-size: 15px;
+  padding: 0px 7px;
+}
+.message {
+  margin: 0px 10px;
+  padding: 10px;
+  width: 90%;
+  word-wrap: break-word;
+}
+.message-right{
+  width: 100%;
+}
+
 </style>

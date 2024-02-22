@@ -1,8 +1,7 @@
 .ar-icon {
-  fill: #747474;
+  fill: white;
   border-radius: 50%;
-  border: 1px solid #05CBCD;
-  background-color: #FFFFFF;
+  background-color: #171717e5;
   padding: 5px;
   cursor: pointer;
   transition: .2s;
@@ -19,7 +18,7 @@
 
   &--rec {
     fill: white;
-    background-color: #FF6B64;
+    // background-color: #FF6B64;
     border-color: transparent;
   }
 
@@ -57,6 +56,5 @@
     width: 45px;
     height: 45px;
     line-height: 45px;
-    box-shadow: 0 2px 5px 1px rgba(158,158,158,0.5);
   }
 }

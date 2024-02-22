@@ -28,12 +28,12 @@ const show = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const newConversation = req.body;
+  const newUser = req.body;
   
-  console.log('new', newConversation);
+  console.log('new', newUser);
   
   try {
-    const createdUser = await user.create(newConversation);
+    const createdUser = await user.create(newUser);
     res.cookie('_jwt', generateJWT(createdUser));
     const verifiedUser = createdUser;
     verifiedUser.verified = 1;

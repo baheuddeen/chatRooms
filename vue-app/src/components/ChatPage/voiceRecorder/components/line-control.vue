@@ -59,12 +59,12 @@
     position: relative;
     height: 8px;
     border-radius: 5px;
-    background-color: #E6E6E6;
+    background-color: #616161;
 
     &__head {
       position: absolute;
       height: inherit;
-      background-color: #616161;
+      background-color: white;
       border-radius: inherit;
     }
   }

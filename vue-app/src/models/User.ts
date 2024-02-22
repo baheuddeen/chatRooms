@@ -33,6 +33,13 @@ export default class User {
         this.conversation_id = [];
     }
 
+    public static getLoggedInStatus() {
+        if (!User.instance) {
+            return false;
+        }
+        return true;
+    }
+
     public static getUser(): User {
         if (!User.instance) {
             throw('no user set yet')

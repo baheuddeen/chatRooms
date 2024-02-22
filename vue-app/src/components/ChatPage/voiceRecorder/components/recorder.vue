@@ -201,7 +201,7 @@
       <div class="ar-spinner__dot"></div>
     </div>
 
-    <div class="ar-content" :class="{'ar__blur': isUploading}">
+    <div class="ar-content" :class="{'ar__blur': isUploading,  'ar-content-uploader': selected.id}">
       <div class="ar-recorder">
         <icon-button
           class="ar-icon ar-icon__lg"
@@ -218,7 +218,7 @@
       </div>
 
       <!-- <div class="ar-recorder__records-limit" v-if="attempts">Attempts: {{attemptsLeft}}/{{attempts}}</div> -->
-      <div class="ar-recorder__duration">{{recordedTime}}</div>
+      <div v-if="recordedTime != '00:00'" class="ar-recorder__duration">{{recordedTime}}</div>
       <!-- <div class="ar-recorder__time-limit" v-if="time">Record duration is limited: {{time}}m</div> -->
 <!-- 
       <div class="ar-records">
@@ -250,19 +250,18 @@
       width: fit-content;
       font-family: Roboto,sans-serif;
       border-radius: 16px;
-      background-color: #fafafa;
+      background-color: #171717e5;
       box-shadow: 0 4px 18px #0000002b;
       box-sizing: content-box;
       margin-left: auto;
       margin-right: auto;
       height: fit-content;
 
-      position: fixed;
-      left: 0px;
-      bottom: 0px;
+      position: absolute;
+      right: 10px;
+      top: 5px;
 
     &-content {
-      padding: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -431,6 +430,29 @@
   .ar-recorder svg {
     position: relative;
     top: -4px;
+  }
+
+  .ar-content-uploader {
+    position: fixed;
+    left: 27%;
+    bottom: 10px;
+    background: black;
+    width: 53%;
+  }
+
+  @media (max-width: 768px){
+    .ar-content-uploader {
+    position: fixed;
+    left: 0px;
+    bottom: 20px;
+    background: #000;
+    border: #313131;
+    width: 100%;
+  }
+
+  .ar-content-uploader .ar-player {
+    justify-content: center;
+  } 
   }
   @import '../scss/icons';
 </style>

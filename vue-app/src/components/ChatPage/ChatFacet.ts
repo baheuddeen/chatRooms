@@ -1,7 +1,5 @@
 import { Ref, ref, onMounted, watch } from "vue";
-import { io } from "socket.io-client";
 import Services from "../../utilites/Services";
-import { MenuItem } from "primevue/menuitem";
 import SocketIoClient from "../../utilites/SocketIoClient";
 import { Conversation, Message } from "../../models/Types";
 import User, { UserType } from "../../models/User";
@@ -75,32 +73,28 @@ export default class ChatFacet {
     }
 
     public watchMessageInputHeight(x: any) {
-        let rows = Math.floor(this.messageInput.value.scrollHeight / this.rowHeight) + 1;
         if (!this.rowHeight) {
             this.rowHeight = this.messageInput.value.getBoundingClientRect().height;
         }
-        if (this.trackScrollHeight && this.messageInput.value.scrollHeight <  this.trackScrollHeight) {
-            rows -= 1;            
-            this.messageInput.value.style.height = rows * this.rowHeight + 'px';
-        }
+        this.messageInput.value.style.height = 'auto';
         this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
-        this.trackScrollHeight = this.messageInput.value.scrollHeight;
         if ( this.messageInput.value.scrollHeight == this.messageInput.value.getBoundingClientRect().height) {
             clearInterval(this.watchInputHeight);
             this.watchInputHeight = null;
         }
     }
 
+    
 
-    public onKeydown(event: KeyboardEvent) {        
+
+    public onKeydown(event: KeyboardEvent) {     
         if (!this.watchInputHeight) {
             this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
         }
 
-        if (event.key == 'Enter') {
-            return;          
+        if (event.key == 'Enter' && window.innerWidth > 768) {
+            this.onsubmit();          
         }
-        // update typing state
     }
 
     public async onsubmit() {  
@@ -118,7 +112,7 @@ export default class ChatFacet {
             type: 0,
             is_encrypted: 1,
         });
-        this.message.value = ''
+        this.message.value = '';
         return true;
     }
 

@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import './style.css';
+import './assets/gsap.min.js';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
 import router from './route/index';
