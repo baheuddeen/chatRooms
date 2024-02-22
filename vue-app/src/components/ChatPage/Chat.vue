@@ -216,6 +216,7 @@ input {
 form {
   padding-top: 0px !important;
 }
+
 @media (max-width: 768px) {
   .show-conversation-participants-bar {
     font-size: 42px;
@@ -257,6 +258,12 @@ form {
     left: 0px;
     bottom: 0px;
     background: black;
+  }
+}
+
+@media (max-height: 700px) {
+  .messages{
+    height: 60vh !important;
   }
 }
 </style>
