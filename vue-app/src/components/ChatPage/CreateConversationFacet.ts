@@ -14,8 +14,7 @@ export default class CreateConversationFacet {
     public converstionType: Ref<string>;
 
     public onCopy() {
-        const baseUrl = document.location.origin;
-        navigator.clipboard.writeText(baseUrl + this.inviteLink.value);
+        navigator.clipboard.writeText(this.inviteLink.value);
     }
 
     constructor() {
