@@ -74,20 +74,22 @@ export default defineComponent({
               <ChatMessage @stop-other-audios="onStopOtherAudios" :key="message.created + '_' + message.sender_id" :message="message" :conversation_id="activeConversationId"> </ChatMessage>
             </div>
           </div>
-          <div class="message-input-wrapper">
-            <form @submit.prevent="onsubmit">
-              <div class="message-input d-flex">
-                <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.."  @keydown="onKeydown($event)" @keyup="onKeydown($event)" />
-                <div v-if="message"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
-                <recorder v-else
-                  :activeConversationId = "activeConversationId"
-                  upload-url="YOUR_API_URL"
-                  :time="2"
-                  :sampleRate="sampleRate" 
-                  @stop-other-audios="onStopOtherAudios"
-                />  
-              </div>
-            </form>
+          <div class="message-form-wrapper">
+            <div class="message-input-wrapper">
+              <form @submit.prevent="onsubmit">
+                <div class="message-input d-flex">
+                  <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.."  @keydown="onKeydown($event)" @keyup="onKeydown($event)" />
+                  <div v-if="message"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+                  <recorder v-else
+                    :activeConversationId = "activeConversationId"
+                    upload-url="YOUR_API_URL"
+                    :time="2"
+                    :sampleRate="sampleRate" 
+                    @stop-other-audios="onStopOtherAudios"
+                  />  
+                </div>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -174,10 +176,6 @@ export default defineComponent({
   background-color: #0e100f;
   border: 1px solid #313131;
   border-radius: 7px;
-  margin-top: 40px;
-  position: fixed;
-  width: 50%;
-  bottom: 20px;
 }
 .submit-input {
   border-radius: 13px;
@@ -242,7 +240,7 @@ form {
   }
 
   .messages{
-    height: 85vh;
+    height: 80vh;
   }
 
   .conversation-participants{
@@ -251,6 +249,14 @@ form {
 
   .messages-wrapper {
     padding: 10px 0px;
+  }
+
+  .message-form-wrapper {
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    bottom: 0px;
+    background: black;
   }
 }
 </style>

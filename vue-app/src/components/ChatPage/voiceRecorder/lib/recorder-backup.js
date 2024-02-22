@@ -119,7 +119,6 @@ export default class {
     this.duration   = this._duration
     this.input      = this.context.createMediaStreamSource(stream);
     this.stream     = stream;
-    console.log('test', this.context.audioWorklet);
     await this.context.audioWorklet.addModule("./processWorklet.js");
     this.randomNoiseNode = new AudioWorkletNode(
       this.context,
@@ -133,7 +132,6 @@ export default class {
     //     alert('wrong sample rate');
     //   }
 
-    //   console.log(ev.inputBuffer.sampleSize);
 
 
     //   let sum = 0.0

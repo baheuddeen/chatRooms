@@ -252,9 +252,7 @@
       margin-right: auto;
       height: fit-content;
 
-      position: absolute;
-      right: 10px;
-      top: 5px;
+      position: relative;
 
     &-content {
       display: flex;
