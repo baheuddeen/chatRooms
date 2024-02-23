@@ -45,6 +45,11 @@ export default defineComponent({
   display: block;
   margin-top: 60px;
 }
+
+.card-section {
+  overflow: hidden;
+}
+
 .card-image {
     width: 200px;
 }
