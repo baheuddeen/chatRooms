@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import { Conversation } from '../../models/Types';
 import Button from 'primevue/button';
+import router from '../../route';
 
 export default defineComponent({
     components: {
@@ -24,8 +25,12 @@ export default defineComponent({
         const onSelectConversation = (e) => {
             emit("selectConversation", e)
         }
+        const onEncryptionKeyConfigure = () => {
+            router.push("/keys-config");
+        }
         return {
             onSelectConversation,
+            onEncryptionKeyConfigure,
         }
     }
 
@@ -34,6 +39,8 @@ export default defineComponent({
 
 <template>
     <section>
+        <h2> Encryption Key</h2>
+        <Button @click="onEncryptionKeyConfigure" class="black"> Configure </Button>
         <h2> Chats </h2>
         <div v-if="!conversationLoaded">
             loading...

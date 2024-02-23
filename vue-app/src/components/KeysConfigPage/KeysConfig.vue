@@ -5,39 +5,101 @@ import KeysConfigFacet from './KeysConfigFacet';
 import Button from 'primevue/button';
 
 export default defineComponent({
-  components: {
-    Button,
-  },
+    components: {
+        Button,
+    },
 
-  setup() {
-    const keysConfigFacet = new KeysConfigFacet();
-    return keysConfigFacet.setup();
-  },
+    setup() {
+        const keysConfigFacet = new KeysConfigFacet();
+        return keysConfigFacet.setup();
+    },
 
 });
 
 </script>
 
 <template>
-        <section>
+    <section class="black-bg-main-section">
+        <div class="crypto-keys-config-section">
             <h1>
-                Crypto Keys Configuration. 
+                Crypto Keys Configuration.
             </h1>
-            <h2>
-                it should have more information about what we are doing here!
-            </h2>
             <p>
-                what is importatnt now you have two choices one is to create new Public and Private Keys Or To upload your Private Key
+
             </p>
-            <Button @click="onCreateKeys" v-if="!generated">
-                create New Keys
-            </Button>
-            <div v-if="generated">
-                private Key
-                <div>
-                    {{ privateKeyToExport }}
-                </div>
-                <Button> Copy Your Private Key</Button>
+            <div v-if="!generated" class="row">
+                <Button class="black btn" @click="onCreateKeys" v-if="!generated">
+                    Create New Keys
+                </Button>
+                <Button class="black btn" @click="onUploadKeys" v-if="!generated">
+                    upload Your Private Key
+                </Button>
             </div>
-        </section>
+            
+            <div v-if="generated">
+                private Key (Save it somewhere safe, you will not be able to see it again!)
+                <textarea class="text-wrapper">
+                    {{ privateKeyToExport }}
+                </textarea>
+                <Button class="black btn" @click="onCopyPrivateKey"> Copy Your Private Key</Button>
+                <Button class="black btn" @click="onGoToChat"> Go To Chat </Button>
+            </div>
+        </div>
+    </section>
 </template>
+
+<style>
+.crypto-keys-config-section {
+    background-color: rgb(14,16,15);
+    color: white;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.black-bg-main-section {
+    background-color: black;
+    color: white;
+    min-height: 100vh;
+    position: fixed;
+    width: 100%;
+}
+
+.btn {
+    font-size: 15px !important;
+    padding: 10px 10px !important;
+    width: fit-content !important;
+}
+
+.text-wrapper {
+    background-color: black;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    resize: none;
+    height: 200px;
+    margin: 20px;
+}
+</style>

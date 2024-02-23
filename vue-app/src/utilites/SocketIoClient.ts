@@ -22,13 +22,12 @@ export default class SocketIoClient {
 
 
     public static connect(listenToEvents: boolean = true) {
-        if (!SocketIoClient.socket) {
-            const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-            SocketIoClient.socket = io(URL);   
-        }
-        if (!listenToEvents) {
+        if (SocketIoClient.socket) {
             return;
         }
+        console.log('mini, connect');
+        const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
+        SocketIoClient.socket = io(URL);   
         SocketIoClient.socket.on('otherDeviceIsLoggedIn', SocketIoClient.onOtherDeviceIsLoggedIn);
         SocketIoClient.socket.on("connect", SocketIoClient.onConnect);
         SocketIoClient.socket.on('disconnect', SocketIoClient.onDisConnect);
