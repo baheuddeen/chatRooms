@@ -185,5 +185,13 @@ export default defineComponent({
   .why-wee h1{
     font-size: 35px;
   }
+
+  .title {
+    font-size: 60px;
+  }
+
+  .card-text {
+    font-size: 50px;
+  }
 }
 </style>
