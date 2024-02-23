@@ -13,22 +13,22 @@ export default class CardFacet {
     constructor() {
     }
 
-    addAnimation() {
-        const gsap = Util.getGSAP();
+    async addAnimation() {
+        const gsap = await Util.getGSAP();
         const leftSection = this.cardElement.value.querySelector('.left-section');
         const rightSection = this.cardElement.value.querySelector('.right-section');
 
         gsap.from(leftSection, {
-            translateX: -800,
+            translateX: -400,
             scrollTrigger: this.cardElement.value,
-            duration: 3,
+            duration: 2,
             opacity: 0,
         });
 
         gsap.from(rightSection, {
-            translateX: 800,
+            translateX: 400,
             scrollTrigger: this.cardElement.value,
-            duration: 3,
+            duration: 2,
             opacity: 0,
         });
     }

@@ -8,8 +8,8 @@ export default class {
         this.animateTitle();
     }
 
-    animateTitle() {
-        const gsap = Util.getGSAP();
+    async animateTitle() {
+        const gsap = await Util.getGSAP();
         const tl = gsap.timeline({
             duration: 0.2,
         });
