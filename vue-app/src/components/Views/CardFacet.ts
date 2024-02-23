@@ -23,6 +23,7 @@ export default class CardFacet {
             scrollTrigger: this.cardElement.value,
             duration: 2,
             opacity: 0,
+            display: 'none',
         });
 
         gsap.from(rightSection, {
@@ -30,6 +31,7 @@ export default class CardFacet {
             scrollTrigger: this.cardElement.value,
             duration: 2,
             opacity: 0,
+            display: 'none',
         });
     }
 
