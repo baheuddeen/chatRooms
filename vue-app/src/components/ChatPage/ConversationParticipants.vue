@@ -85,6 +85,9 @@ export default defineComponent({
   padding: 5px;
 }
 
+.user-participant span {
+  font-size: 14px;
+}
 
 .online{
   border: 2px solid green;

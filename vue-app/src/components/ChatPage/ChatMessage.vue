@@ -5,12 +5,14 @@ import Fieldset  from 'primevue/fieldset';
 import ChatMessage from './ChatMessageFacet';
 import audioPlayer from './voiceRecorder/components/player.vue'
 import Avatar from 'primevue/avatar';
+import ImageMessage from './ImageMessage.vue';
 
 export default defineComponent({
   components: {
     Fieldset ,
     audioPlayer,
     Avatar,
+    ImageMessage,
   },
 
   props: {
@@ -63,6 +65,14 @@ export default defineComponent({
               :symmetricKey="message.symmetric_key"
               @stop-other-audios="onStopOtherAudios"
               />
+            </div >
+            <div  v-if="message.type == 2">
+              <ImageMessage
+                :is_encrypted="message.is_encrypted"
+                :iv="message.iv"
+                :symmetricKey="message.symmetric_key"
+                :src="'/private/_uid-' + conversation_id + '/' + message.filename"
+                />
             </div >
           </div>
         </div>

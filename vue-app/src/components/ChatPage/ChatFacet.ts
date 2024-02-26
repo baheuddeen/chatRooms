@@ -53,7 +53,7 @@ export default class ChatFacet {
 
     constructor() {
         this.state = ref({
-            connected: false
+            connected: false,
         });
         this.otherDeviceIsLoggedIn = ref(false);
         this.rows = ref(1);

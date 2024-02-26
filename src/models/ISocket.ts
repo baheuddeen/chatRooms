@@ -18,5 +18,18 @@ export default interface ISocket extends Socket{
             }
         ]
     };
+    imageMessage?: {
+        length: number,
+        filename: string,
+        binary: boolean,
+        conversation_id: string, 
+        iv: ArrayBuffer,
+        symmetric_keys: [
+            {
+                receiver_id: number,
+                symmetric_key: ArrayBuffer,
+            }
+        ]
+    };
     activeVoiceCallId?: number;
 }

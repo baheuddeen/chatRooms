@@ -28,20 +28,25 @@ export default defineComponent({
 
             </p>
             <div v-if="!generated" class="row">
-                <Button class="black btn" @click="onCreateKeys" v-if="!generated">
+                <Button class="black btn" @click="onCreateKeys" v-if="!generated && !keysSynced">
                     Create New Keys
                 </Button>
-                <Button class="black btn" @click="onUploadKeys" v-if="!generated">
+                <p v-if="keysSynced">
+                    Your Private Key is Updated!, You can now go to chat.
+                </p>
+                <input type="file" ref="KeysUploader" class="d-none"/>
+                <Button class="black btn" @click="onUploadKeys" v-if="!generated && !keysSynced">
                     upload Your Private Key
                 </Button>
+                <Button v-if="keysSynced" class="black btn mg-auto" @click="onGoToChat"> Go To Chat </Button>
             </div>
             
             <div v-if="generated">
-                private Key (Save it somewhere safe, you will not be able to see it again!)
+                Your Keys(Save it somewhere safe, you will not be able to see it again!)
                 <textarea class="text-wrapper">
-                    {{ privateKeyToExport }}
+                    {{ keysToStore }}
                 </textarea>
-                <Button class="black btn" @click="onCopyPrivateKey"> Copy Your Private Key</Button>
+                <Button class="black btn" @click="onSaveKeys"> Save Your Keys</Button>
                 <Button class="black btn" @click="onGoToChat"> Go To Chat </Button>
             </div>
         </div>
@@ -79,6 +84,10 @@ export default defineComponent({
     font-size: 15px !important;
     padding: 10px 10px !important;
     width: fit-content !important;
+}
+
+.mg-auto {
+    margin: auto !important;
 }
 
 .text-wrapper {

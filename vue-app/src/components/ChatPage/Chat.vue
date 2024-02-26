@@ -15,6 +15,7 @@ import CreateConversation from './CreateConversation.vue';
 import ConversationSideBar from './ConversationSideBar.vue';
 import ConversationParticipants from './ConversationParticipants.vue';
 import Sidebar from 'primevue/sidebar';
+import SendImage from './SendImage.vue';
 
 export default defineComponent({
   components: {
@@ -30,6 +31,7 @@ export default defineComponent({
     ConversationSideBar,
     ConversationParticipants,
     Sidebar,
+    SendImage,
 },
 
   props: {
@@ -77,11 +79,12 @@ export default defineComponent({
           </div>
           <div class="message-form-wrapper">
             <div class="message-input-wrapper">
-              <form @submit.prevent="onsubmit">
+              <form class="d-flex" @submit.prevent="onsubmit">
+                <SendImage v-if="!message.length" :activeConversationId="activeConversationId"/>
                 <div class="message-input d-flex">
                   <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.." @keyup="onKeydown($event)" />
-                  <div v-if="message"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
-                  <recorder v-else
+                  <div v-if="message.length"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+                  <recorder v-if="!message.length"
                     :activeConversationId = "activeConversationId"
                     upload-url="YOUR_API_URL"
                     :time="2"
@@ -178,7 +181,7 @@ export default defineComponent({
   padding: 10px;
   background-color: #0e100f;
   border: 1px solid #313131;
-  border-radius: 7px;
+  border-radius: 20px;
 }
 .submit-input {
   border-radius: 13px;
@@ -220,6 +223,10 @@ form {
   padding-top: 0px !important;
 }
 
+.message-input {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   .show-conversation-participants-bar {
     font-size: 42px;
@@ -233,8 +240,6 @@ form {
     width: auto;
     padding: 10px;
     top: 0px;
-    /* border: 1px solid;
-    border-radius: 17px; */
 }
   .message-input-wrapper {
     width: 90%;
@@ -261,6 +266,7 @@ form {
     left: 0px;
     bottom: 0px;
     background: black;
+    z-index: 100;
   }
 }
 

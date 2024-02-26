@@ -25,6 +25,8 @@ import onLeaveVoiceCall from './Helper/onLeaveVoiceCall';
 import onCreateConversation from './Helper/onCreateConversation';
 import SocketPeer from './SocketPeer';
 import onUpdatePublicKey from './Helper/onUpdatePublicKey';
+import onImageMessage from './Helper/onImageMessage';
+import onPrepareImageMessage from './Helper/onPrepareImageMessage';
 
 type SessionInfo = {
     user_name: string,
@@ -98,6 +100,14 @@ export default class ChatServer {
             messageDBHandler: this.messageDBHandler,
         })
         onPrepareVoiceMessage({
+            socket,
+        });
+        onImageMessage({
+            socket,
+            io: this.io!,
+            messageDBHandler: this.messageDBHandler,
+        });
+        onPrepareImageMessage({
             socket,
         });
         onGetMessages({

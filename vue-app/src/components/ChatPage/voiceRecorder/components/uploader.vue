@@ -40,7 +40,7 @@ import Encryption from '../../../../utilites/Encryption';
         let num = 0;
 
         for (let start = 0; start < file.size; start += chunkSize) {
-          const chunk = file.slice(start, start + chunkSize + 1);
+          const chunk = file.slice(start, start + chunkSize);
           SocketIoClient.sendVoiceMessage( {
             blob: chunk,
             num: num++,

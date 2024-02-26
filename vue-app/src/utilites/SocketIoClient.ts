@@ -16,6 +16,7 @@ export default class SocketIoClient {
     private static chat: ChatFacet;
     private static search: SearchFacet;
     private static sendingBinaryData: Ref<boolean>;
+    private static sendingBinaryDataImage: Ref<boolean>;
     private static voiceCall: VoiceCallFacet;
     private static createConversationFacet: CreateConversationFacet;
 
@@ -23,6 +24,7 @@ export default class SocketIoClient {
 
     public static connect(listenToEvents: boolean = true) {
         if (SocketIoClient.socket) {
+            this.chat.state.value.connected = true;
             return;
         }
         console.log('mini, connect');
@@ -36,6 +38,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('setMessages', SocketIoClient.onSetMessages);
         SocketIoClient.socket.on('searchResult', SocketIoClient.onGetSearchResult);
         SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
+        SocketIoClient.socket.on('startSendingTheImageMessage', SocketIoClient.onStartSendingImageMessage);
         SocketIoClient.socket.on('setConversationParticipant', SocketIoClient.onSetConversationParticipant);
         SocketIoClient.socket.on('answerVoiceCall', SocketIoClient.onAnswerVoiceCall);
         SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
@@ -65,6 +68,14 @@ export default class SocketIoClient {
         search: SearchFacet
     }) {
         SocketIoClient.search = search;
+    }
+
+    public static subscribeImageUpload({
+        sendingBinaryDataImage,
+    }: {
+        sendingBinaryDataImage: Ref<boolean>,
+    }) {
+        SocketIoClient.sendingBinaryDataImage = sendingBinaryDataImage;
     }
 
     public static subscribeUpload({
@@ -249,6 +260,55 @@ export default class SocketIoClient {
             return;
         }
         SocketIoClient.sendingBinaryData.value = true;
+    }
+
+    public static async prepareImageMessage({
+        length,
+        filename,
+        binary,
+        conversation_id,
+        iv,
+        symmetric_key,
+    }) {
+        const symmetric_keys = [];
+        for (let user of SocketIoClient.chat.cashConversationParticipant.value[conversation_id]) {
+            const userPublicKey = await Encryption.importKey(user.public_key);
+            const key = await Encryption.encryptSymmetricKey(symmetric_key, userPublicKey);
+            try {
+                symmetric_keys.push({
+                    receiver_id: user.id,
+                    symmetric_key: key,
+                })
+             } catch(err) {
+                console.log(err);  
+            }
+        }
+        SocketIoClient.socket.emit('prepareImageMessage', {
+            length,
+            filename,
+            binary,
+            conversation_id,
+            iv,
+            symmetric_keys,
+        });
+    }
+
+    public static sendImageMessage({
+        blob,
+        num,
+    }) {
+        SocketIoClient.socket.emit('sendImageMessage', {
+            binay: true,
+            num: num,
+            data: blob,
+        });
+    }
+
+    public static onStartSendingImageMessage() {        
+        if (!SocketIoClient.sendingBinaryDataImage) {
+            return;
+        }
+        SocketIoClient.sendingBinaryDataImage.value = true;
     }
 
     public static joinVoiceCall({

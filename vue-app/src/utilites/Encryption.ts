@@ -38,8 +38,8 @@ export default class Encryption {
       localStorage.setItem("publicKey", await Encryption.exportKey(Encryption.keyPair.publicKey));
   }
 
-  public static async getCryptoKeyPair() {
-    if (Encryption.keyPair) {
+  public static async getCryptoKeyPair(forceUpdate = false) {
+    if (Encryption.keyPair && !forceUpdate) {
       return Encryption.keyPair;
     }
     // Check The Local Storage
@@ -172,6 +172,9 @@ export default class Encryption {
       AESKey,
       data
     );
+
+    console.log('encryptedData From Encryption', encryptedData);
+    console.log('iv', iv);    
     
 
     return {
@@ -198,13 +201,17 @@ export default class Encryption {
       length: 128 
     },
     true,
-    ['encrypt', 'decrypt']);    
+    ['encrypt', 'decrypt']);        
 
     const algorithm = {
       name: 'AES-GCM',
       iv: iv
     };
-  
+
+    console.log('date to decrypt', encryptedData);
+    console.log('iv', iv);
+
+
     // Decrypt the voice note
     const decryptedData = await crypto.subtle.decrypt(
       algorithm,
