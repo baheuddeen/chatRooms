@@ -13,7 +13,7 @@ export default function({
     socket: ISocket,
     io: socketio.Server,
 }) {
-    socket.on('joinVoiceCall', async (args) => {
+    socket.on('joinVoiceCall', async (args) => {        
         if (!socket.user_data) {
             return;
         }

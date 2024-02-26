@@ -1,4 +1,4 @@
-import { Ref, ref } from 'vue';
+import { Ref, watch, ref } from 'vue';
 import SocketIoClient from '../../utilites/SocketIoClient';
 import SocketPeer from '../../utilites/SocketPeer';
 import Peer from 'simple-peer';
@@ -6,7 +6,7 @@ import User from '../../models/User';
 
 
 export default class VoiceCallFacet {
-    public activeConversationId: number;
+    public activeConversationId: Ref<number>;
     public activeVoiceCallId?: Ref<number>;
     public socketPeer?: SocketPeer;
     public inVoiceCall: Ref<boolean>;
@@ -47,10 +47,10 @@ export default class VoiceCallFacet {
         if (!this.stream) {
             await this.getUserMedia();
         }
+        this.activeVoiceCallId.value = this.activeConversationId.value;
         SocketIoClient.joinVoiceCall({
-            conversation_id: this.activeConversationId,
+            conversation_id: this.activeConversationId.value,
         });
-        this.activeVoiceCallId.value = this.activeConversationId;
         this.inVoiceCall.value = true;
     }
 
@@ -104,6 +104,7 @@ export default class VoiceCallFacet {
     constructor() {
         this.inVoiceCall = ref(false);
         this.activeVoiceCallId = ref(null);
+        this.activeConversationId = ref(null);
 
         // move it some where else
         var myAudio = new Audio('/assets/one-minute-of-sielnce.ogg'); 
@@ -114,9 +115,15 @@ export default class VoiceCallFacet {
             myAudio.play();
     }
 
-    public setup(props) {
+    public setup(props: {
+        activeConversationId: number,
+    }) {
         this.inactiveScreen();
-        this.activeConversationId = props.activeConversationId;
+        this.activeConversationId.value = props.activeConversationId;
+        watch(() => props.activeConversationId, (newVal) => {
+            this.activeConversationId.value = newVal;
+        });
+
         return {
             activeVoiceCallId: this.activeVoiceCallId,
             onJoin: this.onJoin.bind(this),

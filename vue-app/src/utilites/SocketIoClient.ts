@@ -313,7 +313,11 @@ export default class SocketIoClient {
 
     public static joinVoiceCall({
         conversation_id,
+    }: {
+        conversation_id: number,
     }) {
+        console.log('joinVoiceCall', conversation_id);
+        
         SocketIoClient.socket.emit('joinVoiceCall', {
             conversation_id,
         });

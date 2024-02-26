@@ -69,11 +69,13 @@ export function leaveVoiceCall({
    
     console.log('voiceCallSession after', voiceCallSession, socket.activeVoiceCallId.toString());
 
-    io.to(socket.activeVoiceCallId as any).emit('updateVoiceCallParticipants', {
-        action: 'leave',
-        conversation_id: socket.activeVoiceCallId,
-        users: voiceCallSession.users, 
-        user: socket.user_data,
-        stream_id: socketPeer.stream.id,
-    });
+    if (socketPeer?.stream?.id) {
+        io.to(socket.activeVoiceCallId as any).emit('updateVoiceCallParticipants', {
+            action: 'leave',
+            conversation_id: socket.activeVoiceCallId,
+            users: voiceCallSession.users, 
+            user: socket.user_data,
+            stream_id: socketPeer.stream.id,
+        });
+    }
 }
