@@ -81,20 +81,26 @@ export async function sendEmail({
     await transporter.sendMail({
         from: "verify@wee-whisper.com",
         to: email,
-        subject: "Verify",
-        text: `
+        subject: "Welcome to WeeWhisper! Please Verify Your Account",
+        html: `
         Dear ${username},
- 
-        Thank you for joining WeeWhisper, the chat app where your conversations and connections whisper softly into the vast expanse of digital space. We're thrilled to have you!
-         
-        Before you dive into the world of whispers, we need a tiny moment of your time to verify your account. This small step is a giant leap towards securing your digital presence and ensuring your whispers reach the right ears.
-         
-        Please click the link below to verify your account and officially start your whispering journey:
-         
-        https://www.wee-whisper.com/api/users/verify?jwt=${jwt}
 
-        Didn't expect this email? If you didn't sign up for WeeWhisper or you believe this email has reached you by mistake, please safely ignore it. However, if you feel something is amiss, whisper to us at support@wee-whisper.com—we're here to listen and assist. 
-        thanks for choosing WeeWhisper,
+        <div style="margin: 20px 0;">
+            <p>
+            Thank you for joining WeeWhisper, the chat app where your conversations and connections whisper softly into the vast expanse of digital space. We're thrilled to have you!
+            Before you dive into the world of whispers, we need a tiny moment of your time to verify your account. This small step is a giant leap towards securing your digital presence and ensuring your whispers reach the right ears.
+            </p>
+            <p style="text-align: center;">
+            Your verification code is:
+            </p>
+                <div style="font-size: 22px; color: #333; letter-spacing: 3px; padding: 10px; text-align: center; background-color: #c5c5c5;">
+                    123456
+                </div>
+            <p/>
+            Didn't expect this email? If you didn't sign up for WeeWhisper or you believe this email has reached you by mistake, please safely ignore it. However, if you feel something is amiss, whisper to us at support@wee-whisper.com—we're here to listen and assist. 
+            thanks for choosing WeeWhisper,
+            </p>
+        </div>
         `,
       });
     console.log('email sent');
