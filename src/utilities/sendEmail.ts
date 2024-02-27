@@ -62,11 +62,11 @@ dotenv.config();
 export async function sendEmail({
     email,
     username,
-    jwt,
+    verificationCode,
 }: {
     email: string,
     username: string,
-    jwt: string,
+    verificationCode: number,
 }) {
     const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com",
@@ -93,8 +93,8 @@ export async function sendEmail({
             <p style="text-align: center;">
             Your verification code is:
             </p>
-                <div style="font-size: 22px; color: #333; letter-spacing: 3px; padding: 10px; text-align: center; background-color: #c5c5c5;">
-                    123456
+                <div style="font-size: 22px; color: #000000; letter-spacing: 3px; padding: 10px; text-align: center; background-color: #c5c5c5;">
+                    ${verificationCode}
                 </div>
             <p/>
             Didn't expect this email? If you didn't sign up for WeeWhisper or you believe this email has reached you by mistake, please safely ignore it. However, if you feel something is amiss, whisper to us at support@wee-whisper.com—we're here to listen and assist. 

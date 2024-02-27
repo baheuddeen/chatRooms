@@ -58,9 +58,9 @@ export default class User {
       const salt = bcrypt.genSaltSync(10);
       const password = bcrypt.hashSync(newUser.password, salt);
       const conn = await client.connect();
-      const sql = `INSERT INTO users(email, password, user_name, public_key)
-      VALUES ($1, $2, $3, $4) RETURNING *`;      
-      const assets = await conn.query(sql, [newUser.email, password, newUser.user_name, newUser.public_key]);
+      const sql = `INSERT INTO users(email, password, user_name, public_key, verification_code)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`;      
+      const assets = await conn.query(sql, [newUser.email, password, newUser.user_name, newUser.public_key, newUser.verification_code]);
       conn.release();      
       return assets.rows[0];
     } catch (err) {
@@ -143,4 +143,5 @@ export type UserType = {
   password: string,
   verified: number,
   public_key: string,
+  verification_code: string,
 }

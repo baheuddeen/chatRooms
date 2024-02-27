@@ -36,11 +36,14 @@ export default defineComponent({
             <SignupForm @signup-success="waitingForVerification"></SignupForm>
         </TabPanel>
     </TabView>
-    <section v-if="showVerify">
-      <div> this section will be replaced with verify email component!</div>
+    <section v-if="showVerify" style="text-align: center; padding-top: 200px;">
       <h1>
-        Account Created Please verify your Email ..
+        Please Enter Verification Code Sent To Your Email "<span class="email">{{ email }}</span>"
       </h1>
+      <div class="verificationCode" ref="verificationCode">
+        <input v-for="i of [...Array(6).keys()]" type="text" :index="i + 1" maxlength="1" @keydown="moveFocus" @input="onPast"/>
+      </div>
+      <button @click="verifyCode">Verify</button>
     </section>
 </template>
 
@@ -48,5 +51,27 @@ export default defineComponent({
 .login-page {
   max-width: 600px;
   margin: auto;
+}
+.email {
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.verificationCode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.verificationCode input {
+  font-size: 20px;
+  text-align: center;
+  width: 40px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 </style>

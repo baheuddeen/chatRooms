@@ -33,33 +33,20 @@ const create = async (req: Request, res: Response) => {
   console.log('new', newUser);
   
   try {
+    const verificationCode = Math.floor(Math.random() * 1000000);
+    newUser.verification_code = verificationCode.toString();
     const createdUser = await user.create(newUser);
     res.cookie('_jwt', generateJWT(createdUser));
-    const verifiedUser = createdUser;
-    verifiedUser.verified = 1;
     await sendEmail({
       email: req.body.email,
       username: req.body.user_name,
-      jwt: generateJWT(verifiedUser),
+      verificationCode,
     })
     return res.json({success: true});
   } catch (err) {
     return res.status(400).send({ status: false, err: `${err}` });
   }
 };
-
-const verify = async (req:IRequest, res: Response) => {  
-  try {
-    if(!req.user_data) {
-      throw new Error('unvalid token')
-    }
-    const reqUser = await user.verifyUser(req.user_data.email);  
-    res.cookie('_jwt', generateJWT(reqUser));
-    return res.redirect('/');
-  } catch (err) {
-    return res.status(400).send({ status: false, err: `${err}` });
-  }
-}
 
 const check = async (req: IRequest, res: Response) => {
   try {
@@ -91,10 +78,30 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
+const verify = async (req:IRequest, res: Response) => {  
+  try {
+    if(!req.user_data) {
+      throw new Error('unvalid token')
+    }
+    const reqUser = await user.getUserByEmail(req.body.email);    
+    console.log(req.body.verificationCode, reqUser.verification_code);
+    
+    const valid = req.body.verificationCode == reqUser.verification_code;   
+    if (!valid) {
+      return res.status(401).json({ msg: 'wrong verification code' });
+    }
+    await user.verifyUser(req.body.email);
+    res.cookie('_jwt', generateJWT(reqUser));
+    return res.status(200).send({ msg: 'verified' });
+  } catch (err) {
+    return res.status(400).send({ status: false, err: `${err}` });
+  }
+}
+
 // TODO ADD Admin constrian
 // router.get('/', validateJWT, index); 
 router.get('/check', validateJWT, check);
-router.get('/verify', validateJWT, verify);
+router.post('/verify', validateJWT, verify);
 router.get('/:id', validateJWT, show); 
 router.post('/create', verifySignup, create);
 router.post('/login', login);
