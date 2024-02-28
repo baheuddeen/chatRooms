@@ -50,12 +50,12 @@ export default defineComponent({
           <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" :class="{
               'mr-2': true,
               }" shape="circle" />
-          <div class="flex flex-column align message-right">
+          <div class="flex flex-column message-right">
             <div class="sender-info">
               <span>{{nickName}}</span>
             <!-- <span>{{message.created}}</span> -->    
             </div>
-            <div :class="{'message-wrapper': true, 'is-sender': isSender}">
+            <div :class="{'message-wrapper': true, 'is-sender': isSender, 'text': message.type == 0}">
               <div class="message-text" v-if="message.type == 0">
               {{decodedMessage}}
             </div >
@@ -116,6 +116,10 @@ input {
   align-items: end;
 }
 
+.message-sender .message-right div{
+  align-self: flex-end;
+}
+
 .message-sender .sender-info {
   width: fit-content;
   padding-right: 10px;
@@ -131,13 +135,12 @@ input {
   word-wrap: break-word;
 }
 .message-right{
-  width: 100%;
+  width: 90%;
 }
 
 .message-wrapper {
   padding: 10px;
   border-radius: 10px;
-  background-color: #161616;
   margin: 5px 0px;
   display: flex;
   flex-direction: column;
@@ -145,6 +148,10 @@ input {
   justify-content: center;
   max-width: 85%;
   word-wrap: break-word;
+}
+
+.message-wrapper.text{
+  background-color: #161616;
 }
 
 </style>

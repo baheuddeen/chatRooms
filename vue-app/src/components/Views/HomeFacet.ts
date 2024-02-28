@@ -49,7 +49,8 @@ export default class {
     getWordElement(letters: HTMLElement[], index: number) {
         const elem = document.createElement('div');
         elem.classList.add('d-flex');
-        elem.style.justifyContent = index % 2 == 0 ? 'left' : 'right';
+        elem.classList.add(index % 2 == 0 ? 'justify-content-left' : 'justify-content-end');
+
         letters.forEach((letter) => {
             elem.appendChild(letter);
         })
