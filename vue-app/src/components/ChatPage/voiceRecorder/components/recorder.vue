@@ -264,7 +264,6 @@
       height: 138px;
       padding-top: 1px;
       overflow-y: auto;
-      margin-bottom: 20px;
 
       &__record {
         width: 320px;
@@ -294,9 +293,14 @@
       align-items: center;
 
       &__duration {
-        color: #AEAEAE;
         font-size: 15px;
         font-weight: 500;
+        position: absolute;
+        top: -44px;
+        color: white;
+        background: #ff0000eb;
+        border-radius: 50px;
+        padding: 5px;
       }
 
       &__stop {
@@ -437,7 +441,7 @@
     .ar-content-uploader {
     position: fixed;
     left: 0px;
-    bottom: 20px;
+    bottom: 15px;
     background: #000;
     border: #313131;
     width: 100%;

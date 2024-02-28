@@ -15,6 +15,7 @@ export default class SingupFormFacet {
 		const onsubmit = async (event: Event) => {
 			event.preventDefault();
             try {
+				Encryption.removeCryptoKeyPair();
 				const keys = await Encryption.generateKeyPair();
 				const resp = await Services.signup({
 					email: email.value.trim().toLowerCase(),

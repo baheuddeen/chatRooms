@@ -221,4 +221,9 @@ export default class Encryption {
   
     return decryptedData;
   }
+
+  public static removeCryptoKeyPair() {
+    localStorage.removeItem('privateKey');
+    localStorage.removeItem('publicKey');
+  }
 }

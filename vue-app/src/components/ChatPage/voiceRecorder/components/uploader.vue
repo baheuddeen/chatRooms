@@ -87,7 +87,8 @@ import Encryption from '../../../../utilites/Encryption';
 <style lang="scss">
   .send-button.btn-success {
     position: absolute;
-    top: -63px;
+    top: -50px;
+    right: 50px;
     font-size: medium;
     height: fit-content;
     width: fit-content;

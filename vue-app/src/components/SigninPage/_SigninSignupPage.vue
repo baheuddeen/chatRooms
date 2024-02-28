@@ -6,6 +6,7 @@ import TabPanel from 'primevue/tabpanel';
 import SigninForm from './SigninForm.vue';
 import SignupForm from './SignupForm.vue';
 import SigninSignupPageFacet from './_SigninSignupPageFacet';
+import Button from 'primevue/button';
 
 export default defineComponent({
   components: {
@@ -13,6 +14,7 @@ export default defineComponent({
     SignupForm,
     TabView,
     TabPanel,
+    Button,
   },
   
 
@@ -43,7 +45,9 @@ export default defineComponent({
       <div class="verificationCode" ref="verificationCode">
         <input v-for="i of [...Array(6).keys()]" type="text" :index="i + 1" maxlength="1" @keydown="moveFocus" @input="onPast"/>
       </div>
-      <button @click="verifyCode">Verify</button>
+      <Button @click="verifyCode">Verify</Button>
+      <Button @click="removeJWT" class="red">Change Email</Button>
+
     </section>
 </template>
 
@@ -55,15 +59,21 @@ export default defineComponent({
 .email {
   color: black;
   font-family: Arial, sans-serif;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.red {
+  background-color: red !important;
+  color: white !important;
+  border: none !important;
 }
 
 .verificationCode {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0px;
 }
 
 .verificationCode input {

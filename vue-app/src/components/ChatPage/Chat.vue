@@ -80,11 +80,11 @@ export default defineComponent({
           <div class="message-form-wrapper">
             <div class="message-input-wrapper">
               <form class="d-flex" @submit.prevent="onsubmit">
-                <SendImage v-if="!message.length" :activeConversationId="activeConversationId"/>
+                <SendImage v-if="!isTyping" :activeConversationId="activeConversationId"/>
                 <div class="message-input d-flex">
-                  <textarea  type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.." @keyup="onKeydown($event)" />
-                  <div v-if="message.length"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
-                  <recorder v-if="!message.length"
+                  <textarea type="text" class="text-input" :rows="rows" ref="messageInput" v-model="message" placeholder="Type your message.." @keyup="onKeydown($event)" />
+                  <div v-if="isTyping"  @click="onsubmit" class="submit-input ar"><svg width="35" height="35" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+                  <recorder v-if="!isTyping"
                     :activeConversationId = "activeConversationId"
                     upload-url="YOUR_API_URL"
                     :time="2"
@@ -249,7 +249,8 @@ form {
   }
 
   .messages{
-    height: 80vh;
+    height: 77vh;
+    margin-top: 20px;
   }
 
   .conversation-participants{

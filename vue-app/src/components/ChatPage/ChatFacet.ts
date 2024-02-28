@@ -51,6 +51,8 @@ export default class ChatFacet {
 
     public ConverstionParticipantVisible: Ref<boolean>;
 
+    public isTyping: Ref<boolean>;
+
     constructor() {
         this.state = ref({
             connected: false,
@@ -73,6 +75,7 @@ export default class ChatFacet {
         const audioContext = new AudioContext();
         this.desktopView = ref(window.innerWidth > 768);
         this.ConverstionParticipantVisible = ref(false);
+        this.isTyping = ref(false);
         if (audioContext.sampleRate) {
             this.sampleRate = audioContext.sampleRate;
         }
@@ -93,7 +96,12 @@ export default class ChatFacet {
     
 
 
-    public onKeydown(event: KeyboardEvent) {     
+    public onKeydown(event: KeyboardEvent) {   
+        if (this.messageInput.value.value) {
+            this.isTyping.value = true;
+        } else {
+            this.isTyping.value = false;
+        }
         if (!this.watchInputHeight) {
             this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
         }
@@ -266,6 +274,7 @@ export default class ChatFacet {
             messagesLoaded: this.messagesLoaded,
             desktopView: this.desktopView,
             ConverstionParticipantVisible: this.ConverstionParticipantVisible,
+            isTyping: this.isTyping,
             onsubmit: this.onsubmit.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onSelectConversation: this.onSelectConversation.bind(this),

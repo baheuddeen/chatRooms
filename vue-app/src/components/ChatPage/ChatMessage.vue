@@ -41,19 +41,22 @@ export default defineComponent({
 <template>
     <div v-if="sender_id" :class="{
           'message': true,
-          'message-sender': isSender,
-          'message-reciver': !isSender,
         }">
-        <div class="d-flex">
+        <div :class="{
+            'd-flex': true, 
+            'message-sender': isSender,
+            'message-reciver': !isSender,
+          }">
           <Avatar image="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" :class="{
               'mr-2': true,
               }" shape="circle" />
           <div class="flex flex-column align message-right">
             <div class="sender-info">
-              <span>{{isSender ? 'You' : nickName}}</span>
+              <span>{{nickName}}</span>
             <!-- <span>{{message.created}}</span> -->    
             </div>
-            <div class="message-text" v-if="message.type == 0">
+            <div :class="{'message-wrapper': true, 'is-sender': isSender}">
+              <div class="message-text" v-if="message.type == 0">
               {{decodedMessage}}
             </div >
             <div  v-if="message.type == 1">
@@ -74,6 +77,7 @@ export default defineComponent({
                 :src="'/private/_uid-' + conversation_id + '/' + message.filename"
                 />
             </div >
+            </div>
           </div>
         </div>
     </div>
@@ -105,6 +109,20 @@ input {
 .message-text {
   font-size: 15px;
   padding: 0px 7px;
+  width: 100%;
+}
+
+.message-sender .message-right{
+  align-items: end;
+}
+
+.message-sender .sender-info {
+  width: fit-content;
+  padding-right: 10px;
+}
+
+.message-sender {
+  flex-direction: row-reverse;
 }
 .message {
   margin: 0px 10px;
@@ -114,6 +132,19 @@ input {
 }
 .message-right{
   width: 100%;
+}
+
+.message-wrapper {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #161616;
+  margin: 5px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 85%;
+  word-wrap: break-word;
 }
 
 </style>

@@ -97,6 +97,13 @@ export default class SigninSignupPageFacet {
     router.push('/chat');
   }
 
+  public removeJWT() {
+    document.cookie = '_jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    Encryption.removeCryptoKeyPair();
+    this.getLoginStatus();
+    this.showVerify.value = false;
+  }
+
   public moveFocus(e: KeyboardEvent) {
     const target = (e.target as HTMLInputElement);
     const current = parseInt(target.getAttribute('index'), 10);      
@@ -138,6 +145,7 @@ export default class SigninSignupPageFacet {
       showVerify: this.showVerify,
       verificationCode: this.verificationCode,
       email: this.email,
+      removeJWT: this.removeJWT.bind(this),
       getLoginStatus: this.getLoginStatus.bind(this),
       waitingForVerification: this.waitingForVerification.bind(this),
       moveFocus: this.moveFocus.bind(this),

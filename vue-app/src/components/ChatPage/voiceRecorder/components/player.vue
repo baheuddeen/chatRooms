@@ -137,7 +137,7 @@
 
 <template>
   <div class="ar-player">
-    <div class="ar-player-actions">
+    <div class="ar-player-actions d-none">
       <IconButton
         id="play"
         class="ar-icon ar-icon__lg ar-player__play"
@@ -146,7 +146,7 @@
         @click.native="playback"/>
     </div>
 
-    <div class="ar-player-bar">
+    <div class="ar-player-bar d-none">
       <div class="ar-player__time">{{playedTime}}</div>
       <line-control
         class="ar-player__progress"
@@ -156,7 +156,7 @@
       <div class="ar-player__time">{{duration}}</div>
       <volume-control @change-volume="_onChangeVolume"/>
     </div>
-    <audio :id="playerId" :src="audioSource"></audio>
+    <audio class="audio-player-native" controls :id="playerId" :src="audioSource"></audio>
   </div>
 </template>
 
@@ -166,7 +166,7 @@
     top: -5px;
   } 
   .ar-player {
-    width: 380px;
+    width: fit-content;
     height: unset;
     border: 0;
     border-radius: 0;
@@ -240,6 +240,14 @@
     .ar-volume-bar {
       display: none
     }
+  }
+
+  .audio-player-native {
+    display: block;
+    border: 1px solid white;
+    border-radius: 30px;
+    max-width: 100%;
+    height: 50ox;
   }
 
   @import '../scss/icons';
