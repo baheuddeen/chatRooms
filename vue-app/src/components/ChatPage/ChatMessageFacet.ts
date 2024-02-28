@@ -10,7 +10,8 @@ export default class ChatMessage {
     public scrollMessagesY() {
         const messagesElem = document.querySelector('.messages');
         messagesElem.scroll({
-            top: messagesElem.scrollHeight,
+            top: messagesElem.scrollHeight * 1.1,
+            left: 0,
             behavior: 'smooth',
         })
     }
