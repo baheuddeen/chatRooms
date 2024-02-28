@@ -127,6 +127,7 @@ export default class ChatFacet {
             is_encrypted: 1,
         });
         this.message.value = '';
+        this.isTyping.value = false;
         return true;
     }
 
@@ -241,7 +242,7 @@ export default class ChatFacet {
 
     public watchWindowSize() {
         window.addEventListener('resize', () => {
-            this.desktopView.value = window.innerWidth > 768;
+            this.desktopView.value = window.innerWidth > 1200;
         });
     }
 

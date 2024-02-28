@@ -18,6 +18,7 @@ export default class ChatMessage {
 
     setup(props: any, emit ) {        
         onMounted (() => {
+            window.addEventListener('resize', this.scrollMessagesY);
             this.scrollMessagesY();
         });
 
