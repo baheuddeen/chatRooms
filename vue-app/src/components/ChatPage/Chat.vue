@@ -271,9 +271,9 @@ form {
   }
 }
 
-@media (max-height: 700px) {
+@media (max-height: 500px) {
   .messages{
-    height: 70vh !important;
+    height: 60vh !important;
   }
 }
 </style>
