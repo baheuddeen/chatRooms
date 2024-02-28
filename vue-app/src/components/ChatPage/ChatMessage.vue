@@ -152,6 +152,7 @@ input {
 
 .message-wrapper.text{
   background-color: #161616;
+  max-width: 80%;
 }
 
 </style>
