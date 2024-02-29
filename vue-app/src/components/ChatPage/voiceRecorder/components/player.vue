@@ -244,11 +244,28 @@
 
   .audio-player-native {
     display: block;
-    border: 1px solid white;
     border-radius: 30px;
     max-width: 100%;
     height: 50ox;
   }
+
+  audio {
+      min-width: 250px;
+      &::-webkit-media-controls-panel {
+        background: transparent;
+      }
+      &::-webkit-media-controls-time-remaining-display {
+        color: grey;
+      }
+      &::-webkit-media-controls-current-time-display {
+        color: cornflowerblue;
+      }
+      &::-webkit-media-controls-play-button,
+      &::-webkit-media-controls-mute-button {
+        color: white;
+        cursor: pointer;
+      }
+    }   
 
   @import '../scss/icons';
 </style>

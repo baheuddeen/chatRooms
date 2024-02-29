@@ -13,7 +13,11 @@ export default class ChatMessage {
             top: messagesElem.scrollHeight * 1.1,
             left: 0,
             behavior: 'smooth',
-        })
+        });
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth',
+        });
     }
 
 
