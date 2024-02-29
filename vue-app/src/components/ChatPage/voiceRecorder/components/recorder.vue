@@ -8,7 +8,8 @@
   import Recorder    from '../lib/recorder';
   import Uploader    from './uploader.vue';
   import UploaderPropsMixin from '../mixins/uploader-props'
-  import { convertTimeMMSS }  from '../lib/utils'
+  import { convertTimeMMSS }  from '../lib/utils';
+  import fixWebmDuration from 'fix-webm-duration';
 
   export default defineComponent({
     components: {
@@ -56,7 +57,7 @@
       const isUploading   = ref(false);
       const  recorder      = ref(_initRecorder());
       let  recordList    = ref([]);
-      let  selected      = ref({});
+      let  selected      = ref({} as any);
       const  uploadStatus = ref(null);
 
       const attemptsLeft = computed (() => {
@@ -74,10 +75,11 @@
         return recorder.value.isRecording;
       });
       const recordedTime = computed(() => {
-        if (props.time && recorder.value.duration >= props.time * 60) {
+        if (props.time && recorder.value.duration/1000 >= props.time * 60) {
           stopRecorder()
         }
-        return convertTimeMMSS(recorder.value.duration)
+        console.log('recordedTime:', convertTimeMMSS(recorder.value.duration));
+        return convertTimeMMSS(recorder.value.duration);
       });
 
       const volume = computed(() => {
@@ -99,11 +101,24 @@
           recorder.value.stop();
           const timeout = 100;
           let counter = 0;
-          const waitForRecord = setInterval((() => {
+          const waitForRecord = setInterval((async () => {
             selected.value = recorder.value.recordList().pop();
             if(!selected.value && counter++ < timeout) {
               return;
             }
+            const [minutes, seconds] = selected.value.duration.split(':').map(Number);
+            const totalMilliseconds = (minutes * 60 + seconds) * 1000;
+            const fixedBlob = await fixWebmDuration(selected.value.blob, totalMilliseconds);
+            const fixedBlobUrl = URL.createObjectURL(fixedBlob);   
+            selected.value = {
+              url: fixedBlobUrl,
+              blob: fixedBlob,
+              duration: selected.value.duration,
+              id: selected.value.id,
+              fixed: true,
+            };     
+            console.log('selected.value:', selected.value);
+            
             clearInterval(waitForRecord);
           }), 200)
           // so that i can play before i send it !
@@ -227,7 +242,7 @@
       </div> -->
 
       <uploader
-              v-if="selected.id"
+              v-if="selected.id && selected.fixed"
               class="ar__uploader"
               @reset-record="resetRecord"
               :activeConversationId="activeConversationId"
@@ -235,7 +250,7 @@
               :filename="selected.url"
               :upload-url="uploadUrl"/>
 
-      <audio-player v-if="selected.url" :playerUniqId="`main-recorder`" :record="selected"  @stop-other-audios="stopOtherAudios"/>
+      <audio-player v-if="selected.url && selected.fixed" :playerUniqId="`main-recorder`" :record="selected"  @stop-other-audios="stopOtherAudios"/>
     </div>
   </div>
 </template>

@@ -1,4 +1,4 @@
-import { convertTimeMMSS } from './utils'
+import { convertTimeMMSS } from './utils';
 import Encryption from '../../../../utilites/Encryption';
 
 export default class {
@@ -26,7 +26,6 @@ export default class {
     this._duration = 0
     this.startTime; // to keep track of the start time
     this.stopwatchInterval; // to keep track of the interval
-    this.duration = 0
   }
 
   start () {
@@ -77,14 +76,16 @@ export default class {
   }
 
   _micCaptured (stream) {
-    this.mediaRecorder = new MediaRecorder(stream);
+    this.mediaRecorder = new MediaRecorder(stream, {
+      mimeType: 'audio/webm; codecs=opus'
+    });
     this.duration   = this._duration;
     this._startStopwatch();
     this.mediaRecorder.ondataavailable = (ev) => {
       this.chunks.push(ev.data);
     };
     this.mediaRecorder.onstop = async (ev) => {
-      const blob = new Blob(this.chunks,  { type: "audio/ogg; codecs=opus" })
+      const blob = new Blob(this.chunks,  { type: "audio/webm; codecs=opus"});
       this.chunks = []
       const record = {
         id   : Date.now(),
@@ -92,6 +93,7 @@ export default class {
         url  : URL.createObjectURL(blob),
       }
       
+      record.duration = convertTimeMMSS(this.duration);
       this.records.push(record);
       
       this._duration = 0
@@ -122,7 +124,7 @@ export default class {
   }
   _updateStopwatch() {
     const currentTime = new Date().getTime(); // get current time in milliseconds
-    this.duration = (currentTime - this.startTime) / 1000; // calculate elapsed time in milliseconds
+    this.duration = (currentTime - this.startTime); // calculate elapsed time in milliseconds
     // var seconds = Math.floor(this.duration / 1000) % 60; // calculate seconds
     // var minutes = Math.floor(this.duration / 1000 / 60) % 60; // calculate minutes
     // var hours = Math.floor(this.duration / 1000 / 60 / 60); // calculate hours

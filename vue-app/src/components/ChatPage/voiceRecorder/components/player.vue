@@ -31,6 +31,7 @@
       const player = ref(null);
       const playerId = ref(props.playerUniqId);
       const audioSource = ref(null);
+      const audioNative = ref(null);
 
       onMounted(async () => {
       player.value = document.getElementById(props.playerUniqId);
@@ -48,7 +49,7 @@
             symmetricKeyBuffer: symmetricKey,
             iv, 
           });
-          const blob = new Blob([decryptedData],{ type: "audio/ogg; codecs=opus" });
+          const blob = new Blob([decryptedData],{ type: "audio/webm; codecs=opus" });
           url = URL.createObjectURL(blob);        
         }
         
@@ -62,11 +63,11 @@
       player.value.addEventListener('ended', () => {
         isPlaying.value = false
       });
-
+      
       player.value.addEventListener('loadeddata', (ev) => {
         _resetProgress()
-        duration.value = convertTimeMMSS(player.value.duration)
       });
+
 
       player.value.addEventListener('timeupdate', _onTimeUpdate)
 
@@ -129,6 +130,7 @@
         audioSource,
         playBtnIcon,
         playerId,
+        audioNative,
       }
     }
 })
@@ -156,7 +158,7 @@
       <div class="ar-player__time">{{duration}}</div>
       <volume-control @change-volume="_onChangeVolume"/>
     </div>
-    <audio class="audio-player-native" controls :id="playerId" :src="audioSource"></audio>
+    <audio ref="audioNative" class="audio-player-native" type="audio/webm" controls :id="playerId" :src="audioSource" preload="auto"></audio>
   </div>
 </template>
 
