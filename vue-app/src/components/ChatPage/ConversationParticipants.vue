@@ -74,6 +74,12 @@ export default defineComponent({
   border: white;
   border: 1px solid #313131;
   border-radius: 7px;
+  margin-top: 20px !important;
+  height: 80vh;
+  overflow-y: scroll;
+  margin-right: 30px;
+  position: absolute;
+  right: 0px;
 }
 
 .side-bar-title {

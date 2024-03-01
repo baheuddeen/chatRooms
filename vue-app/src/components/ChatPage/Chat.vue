@@ -70,6 +70,9 @@ export default defineComponent({
       :conversations="conversations"
       :conversationLoaded="conversationLoaded && messagesLoaded"
       />
+      <div class="show-conversation-participants-menu" v-if="!desktopView && activeConversationId" >
+        <span class="pi pi-phone show-conversation-participants-bar" @click="ConverstionParticipantVisible = true"></span>
+      </div>
       <section class="chat col-12 col-lg-9 row" v-if="activeConversationId">
         <div class=" col-12 col-lg-9 messages-wrapper" >
           <div class="messages">
@@ -104,8 +107,7 @@ export default defineComponent({
              :voiceChatParticipants="voiceChatParticipants"
             />
         </div>
-        <div class="show-conversation-participants-menu" v-else>
-            <span class="pi pi-phone show-conversation-participants-bar" @click="ConverstionParticipantVisible = true"></span>
+        <div v-else>
             <Sidebar v-model:visible="ConverstionParticipantVisible" class="color-black">
               <ConversationParticipants
               :activeConversationId="activeConversationId"
@@ -122,15 +124,15 @@ export default defineComponent({
     </div> 
 
   </div>
-
 </template>
 
 <style scoped>
 .chat {
-  margin-left: auto;
-  margin-right: auto;
-  height: fit-content;
   background: black;
+  height: 100vh;
+  position: fixed;
+  right: 0px;
+  padding-top: 50px;
 }
 .chat .p-panel-content,
 .chat [role="region"] {
@@ -141,6 +143,7 @@ export default defineComponent({
   height: fit-content;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 50px;
 }
 
 .messages-wrapper {
@@ -200,11 +203,11 @@ input {
 
 .chat-container {
   height: 100vh;
-  padding-top: 20px;
   margin-left: auto;
   margin-right: auto;
   background-color: black;
   color: white;
+
 }
 
 .connect-status {
@@ -240,6 +243,7 @@ form {
     width: auto;
     padding: 10px;
     top: 0px;
+    z-index: 100;
 }
   .message-input-wrapper {
     width: 90%;
@@ -250,7 +254,6 @@ form {
 
   .messages{
     height: 77vh;
-    margin-top: 20px;
   }
 
   .conversation-participants{
@@ -267,7 +270,7 @@ form {
     left: 0px;
     bottom: 0px;
     background: black;
-    z-index: 100;
+    z-index: 150;
   }
 }
 

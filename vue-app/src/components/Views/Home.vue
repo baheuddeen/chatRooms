@@ -17,7 +17,7 @@ export default defineComponent({
 <template>
   <div class="home">
     <nav class="navbar navbar-dark  flex-column flex-md-row bd-navbar">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img :src="'/app_logo.svg'" width="30" height="30" class="d-inline-block align-top" alt="" />
         WeeWhisper
       </a>

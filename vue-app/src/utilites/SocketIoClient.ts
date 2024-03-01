@@ -10,14 +10,18 @@ import Peer from 'simple-peer';
 import VoiceCallFacet from "../components/ChatPage/VoiceCallFacet";
 import CreateConversationFacet from "../components/ChatPage/CreateConversationFacet";
 import Encryption from "./Encryption";
+import PopupFacet from "../components/ChatPage/popupFacet";
+import SendImageFacet from "../components/ChatPage/SendImageFacet";
 
 export default class SocketIoClient {
     public static socket: Socket ;
-    private static chat: ChatFacet;
+    public static voiceCall: VoiceCallFacet;
+    public static chat: ChatFacet;
+    public static popup: PopupFacet;
+    public static sendImage: SendImageFacet;
     private static search: SearchFacet;
     private static sendingBinaryData: Ref<boolean>;
     private static sendingBinaryDataImage: Ref<boolean>;
-    private static voiceCall: VoiceCallFacet;
     private static createConversationFacet: CreateConversationFacet;
 
 
@@ -92,6 +96,22 @@ export default class SocketIoClient {
         voiceCall:VoiceCallFacet,
     }) {
         SocketIoClient.voiceCall = voiceCall;
+    }
+
+    public static subscribePopupImage({
+        popup,
+    }: {
+        popup: PopupFacet,
+    }) {
+        SocketIoClient.popup = popup;
+    };
+
+    public static subscribeSendImage({
+        sendImage,
+    }: {
+        sendImage: SendImageFacet,
+    }) {
+        SocketIoClient.sendImage = sendImage;
     }
 
     private static async onConnect(){

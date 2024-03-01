@@ -21,7 +21,7 @@ export default class SendImageFacet {
     }
 
     async onUploadImage() {
-        if (!this.imagePreview.value.src) {
+        if (!SocketIoClient.popup.popupImage.value.src) {
             return
         }
         const image = this.imageUploader.value.files[0];
@@ -32,7 +32,7 @@ export default class SendImageFacet {
         const length = Math.floor(this.encryptedBlob.value.size / chunkSize);
         const _uid = new Date().getTime();
         SocketIoClient.prepareImageMessage( {
-            filename: this.imagePreview.value.src.split('/').pop() + _uid,
+            filename: SocketIoClient.popup.popupImage.value.src.split('/').pop() + _uid,
             length,
             binary: true,
             conversation_id: this.activeConversationId.value,
@@ -43,19 +43,11 @@ export default class SendImageFacet {
     
     async previewImage () {
         if (this.imageUploader.value.files && this.imageUploader.value.files[0]) {
-            this.isPreviewing.value = true;
             // Create a blob URL
             const imgURL = URL.createObjectURL(this.imageUploader.value.files[0]);
-            console.log(imgURL);
-            
-            // Update the image preview
-            this.imagePreview.value.src = imgURL;
-            this.imagePreview.value.style.display = 'block';
-
-            // Optional: Revoke the blob URL to free up resources after the image is loaded
-            this.imagePreview.value.onload = function() {
-                URL.revokeObjectURL(imgURL);
-            };
+            SocketIoClient.popup.isPreview.value = true;
+            SocketIoClient.popup.showUpload.value = true;
+            SocketIoClient.popup.popupImage.value.src = imgURL;
         }         
     }
     
@@ -95,7 +87,8 @@ export default class SendImageFacet {
             } );          
           }
           this.sendingBinaryData.value = false;
-          this.isPreviewing.value = false;
+          SocketIoClient.popup.isPreview.value = false;
+          SocketIoClient.popup.showUpload.value = false;
         });
 
 

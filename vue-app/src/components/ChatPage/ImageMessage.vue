@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import Encryption from '../../utilites/Encryption';
+import SocketIoClient from '../../utilites/SocketIoClient';
 
 export default defineComponent({
     props: {
@@ -13,6 +14,11 @@ export default defineComponent({
     setup(props) {
         let url = ref(props.src);
         const isPreview = ref(false);
+
+        const showImage = () => {
+            SocketIoClient.popup.isPreview.value = true;
+            SocketIoClient.popup.popupImage.value.src = url.value;
+        };
 
         onMounted(async () => {
             if (props.is_encrypted == 1) {
@@ -34,17 +40,14 @@ export default defineComponent({
         return {
             url,
             isPreview,
+            showImage,
         };
     }
 });
 
 </script>
 <template>
-    <div :class="{'image-popup': true, 'd-none': !isPreview}">
-        <img :src="url"/>
-        <div class="close" @click="isPreview = false"><span class="pi pi-times"></span></div>
-    </div>
-    <div class="image-massage" @click="isPreview = true">
+    <div class="image-massage" @click="showImage">
         <img :src="url"/>
     </div>
 </template>

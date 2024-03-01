@@ -102,6 +102,8 @@ export default class VoiceCallFacet {
         this.inVoiceCall.value = false;
     }
     constructor() {
+        console.log('VoiceCallFacet');
+        
         this.inVoiceCall = ref(false);
         this.activeVoiceCallId = ref(null);
         this.activeConversationId = ref(null);

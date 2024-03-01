@@ -3,10 +3,12 @@
 import { defineComponent } from 'vue';
 import KeysConfigFacet from './KeysConfigFacet';
 import Button from 'primevue/button';
+import NavBar from '../NavBar.vue';
 
 export default defineComponent({
     components: {
         Button,
+        NavBar,
     },
 
     setup() {
@@ -19,6 +21,7 @@ export default defineComponent({
 </script>
 
 <template>
+    <NavBar></NavBar>
     <section class="black-bg-main-section">
         <div class="crypto-keys-config-section">
             <h1>
@@ -78,6 +81,7 @@ export default defineComponent({
     min-height: 100vh;
     position: fixed;
     width: 100%;
+    padding-top: 100px;
 }
 
 .btn {

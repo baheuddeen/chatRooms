@@ -79,15 +79,17 @@ export default defineComponent({
     left: 10px;
     cursor: pointer;
     color: rgb(209, 207, 207);
+    display: block;
 }
 
 .show-chats-menu {
     position: fixed;
     height: 60px;
-    width: 100%;
+    width: fit-content;
     background: black;
     top: 0px;
     padding: 10px;
+    z-index: 100;
 }
 .card {
     background: rgb(33, 33, 33);

@@ -75,10 +75,11 @@
         return recorder.value.isRecording;
       });
       const recordedTime = computed(() => {
-        if (props.time && recorder.value.duration/1000 >= props.time * 60) {
+        console.log('recorder.value:', recorder.value);
+        
+        if (props.time && recorder.value?.duration/1000 >= props.time * 60) {
           stopRecorder()
         }
-        console.log('recordedTime:', convertTimeMMSS(recorder.value.duration));
         return convertTimeMMSS(recorder.value.duration);
       });
 
