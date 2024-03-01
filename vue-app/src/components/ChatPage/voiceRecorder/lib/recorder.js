@@ -77,7 +77,9 @@ export default class {
 
   _micCaptured (stream) {
     console.log('stream', stream);
-    this.mediaRecorder = new MediaRecorder(stream);
+    this.mediaRecorder = new MediaRecorder(stream, {
+      mimeType: "audio/mp4;codecs=mp4a"
+    });
     console.log('this.mediaRecorder', this.mediaRecorder);
     this.duration   = this._duration;
     this._startStopwatch();
