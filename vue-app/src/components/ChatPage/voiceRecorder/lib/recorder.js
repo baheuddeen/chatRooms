@@ -79,6 +79,7 @@ export default class {
     this.mediaRecorder = new MediaRecorder(stream, {
       mimeType: 'audio/webm; codecs=opus'
     });
+    console.log('this.mediaRecorder', this.mediaRecorder);
     this.duration   = this._duration;
     this._startStopwatch();
     this.mediaRecorder.ondataavailable = (ev) => {
