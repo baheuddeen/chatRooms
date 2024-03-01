@@ -49,7 +49,7 @@
             symmetricKeyBuffer: symmetricKey,
             iv, 
           });
-          const blob = new Blob([decryptedData],{ type: 'audio/webm;codecs=opus' });
+          const blob = new Blob([decryptedData],{ type: 'audio/ogg;codecs=opus' });
 
           url = URL.createObjectURL(blob);        
         }
