@@ -27,7 +27,6 @@ export default defineComponent({
 
 
 <template>
-    test ! {{ inVoiceCall }}
     <!-- this should render the voice call  as a dragable window and it should show the current connected people -->
     <Button @click="onJoin" v-if="!inVoiceCall" severity="contrast"> Join </button>
     <Button @click="onLeave" v-if="inVoiceCall && activeVoiceCallId == activeConversationId" severity="contrast"> Leave </Button>
