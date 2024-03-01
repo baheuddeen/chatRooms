@@ -76,6 +76,7 @@ export default class {
   }
 
   _micCaptured (stream) {
+    console.log('stream', stream);
     this.mediaRecorder = new MediaRecorder(stream, {
       mimeType: 'audio/webm; codecs=opus'
     });
