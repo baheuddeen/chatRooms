@@ -57,7 +57,7 @@ import Encryption from '../../../../utilites/Encryption';
 
         emit('start-upload');
         const encrypted = await Encryption.encryptBinaryData(await (props.record.blob as Blob).arrayBuffer());
-        encryptedBlob.value = new Blob([encrypted.encryptedData], { type: "audio/webm; codecs=opus" });
+        encryptedBlob.value = new Blob([encrypted.encryptedData], { type: "audio/ogg; codecs=opus" });
         const chunkSize = 700000;
         const length = Math.floor(encryptedBlob.value.size / chunkSize);
         

@@ -78,7 +78,7 @@ export default class {
   _micCaptured (stream) {
     console.log('stream', stream);
     this.mediaRecorder = new MediaRecorder(stream, {
-      mimeType: 'audio/webm; codecs=opus'
+      mimeType: 'audio/ogg; codecs=opus'
     });
     console.log('this.mediaRecorder', this.mediaRecorder);
     this.duration   = this._duration;
@@ -87,7 +87,7 @@ export default class {
       this.chunks.push(ev.data);
     };
     this.mediaRecorder.onstop = async (ev) => {
-      const blob = new Blob(this.chunks,  { type: "audio/webm; codecs=opus"});
+      const blob = new Blob(this.chunks,  { type: "audio/ogg; codecs=opus"});
       this.chunks = []
       const record = {
         id   : Date.now(),

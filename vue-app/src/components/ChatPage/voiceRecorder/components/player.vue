@@ -49,7 +49,7 @@
             symmetricKeyBuffer: symmetricKey,
             iv, 
           });
-          const blob = new Blob([decryptedData],{ type: "audio/webm; codecs=opus" });
+          const blob = new Blob([decryptedData],{ type: "audio/ogg; codecs=opus" });
           url = URL.createObjectURL(blob);        
         }
         
@@ -158,7 +158,7 @@
       <div class="ar-player__time">{{duration}}</div>
       <volume-control @change-volume="_onChangeVolume"/>
     </div>
-    <audio ref="audioNative" class="audio-player-native" type="audio/webm" controls :id="playerId" :src="audioSource" preload="auto"></audio>
+    <audio ref="audioNative" class="audio-player-native" type="audio/ogg" controls :id="playerId" :src="audioSource" preload="auto"></audio>
   </div>
 </template>
 
