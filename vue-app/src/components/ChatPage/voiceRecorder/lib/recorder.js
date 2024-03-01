@@ -85,7 +85,7 @@ export default class {
       this.chunks.push(ev.data);
     };
     this.mediaRecorder.onstop = async (ev) => {
-      const blob = new Blob(this.chunks,  { type: 'audio/mp4;codecs=mp4a'});
+      const blob = new Blob(this.chunks,  { type: 'audio/mp4'});
       this.chunks = []
       const record = {
         id   : Date.now(),
