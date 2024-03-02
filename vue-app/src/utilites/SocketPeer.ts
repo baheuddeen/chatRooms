@@ -39,6 +39,8 @@ export default class SocketPeer {
             if (this.stream.id == stream.id) {
                 return;
             }
+            console.log('recieved stream !', stream);
+            
             this.otherStreams.push(stream);
             let audio =  new Audio();
             audio.setAttribute('id', stream.id);
