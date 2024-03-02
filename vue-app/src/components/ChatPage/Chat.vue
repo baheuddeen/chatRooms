@@ -148,6 +148,7 @@ export default defineComponent({
 
 .messages-wrapper {
   padding: 10px 40px;
+  height: 100%;
 }
 
 .text-input{
@@ -175,7 +176,7 @@ export default defineComponent({
 
 .messages{
   width: 100%;
-  height: 80vh;
+  height: 85%;
   padding-bottom: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -271,9 +272,12 @@ form {
     z-index: 150;
   }
 
-  .messages{
-    height: 100vh;
-    padding-bottom: 160px;
+  .chat {
+    padding-bottom: 105px;
+  }
+
+  .messages {
+    height: 100%;
   }
 }
 </style>
