@@ -1,9 +1,32 @@
-import Mp3Encoder from './mp3-encoder'
-import WavEncoder from './wav-encoder'
-import { convertTimeMMSS } from './utils'
+import Mp3Encoder from './mp3-encoder';
+import WavEncoder from './wav-encoder';
+import { convertTimeMMSS } from './utils';
+import RecorderProcessorUrl from "./audio-processor.js?url";
 
 export default class {
-  constructor (options = {}) {
+  public duration: number;
+  public volume: string | number;
+  public records: any[];
+  public isPause: boolean;
+  public isRecording: boolean;
+  public wavSamples: any[];
+  public _duration: number;
+  public lameEncoder: any;
+  public encoderOptions: { bitRate: any; sampleRate: any; };
+  public bufferSize: number;
+  public format: any;
+  public micFailed: any;
+  public afterRecording: any;
+  public pauseRecording: any;
+  public beforeRecording: any;
+  public processor: any;
+  public input: any;
+  public context: any;
+  public stream: any;
+  public recorderProcessor: AudioWorkletNode;
+
+
+  constructor (options: any = {}) {
     this.beforeRecording = options.beforeRecording
     this.pauseRecording  = options.pauseRecording
     this.afterRecording  = options.afterRecording
@@ -27,6 +50,20 @@ export default class {
     this.wavSamples = []
 
     this._duration = 0
+  }
+
+  public async createWorkletNode(
+    context: BaseAudioContext,
+    name: string,
+    url: string
+  ) {
+    const x = 'wow';
+    try {
+      return new AudioWorkletNode(context, name);
+    } catch (err) {
+      await context.audioWorklet.addModule(url);
+      return new AudioWorkletNode(context, name);
+    }
   }
 
   start () {
@@ -65,7 +102,7 @@ export default class {
   stop () {
     this.stream.getTracks().forEach((track) => track.stop())
     this.input.disconnect()
-    this.processor.disconnect()
+    this.recorderProcessor.disconnect()
     this.context.close()
 
     let record = null
@@ -97,7 +134,7 @@ export default class {
   pause () {
     this.stream.getTracks().forEach((track) => track.stop())
     this.input.disconnect()
-    this.processor.disconnect()
+    this.recorderProcessor.disconnect()
 
     this._duration = this.duration
     this.isPause = true
@@ -114,22 +151,18 @@ export default class {
   }
 
   async _micCaptured (stream) {
-    this.context    = new(window.AudioContext || window.webkitAudioContext)()
+    this.context    = new(window.AudioContext || (window as any).webkitAudioContext)()
     this.duration   = this._duration
     this.input      = this.context.createMediaStreamSource(stream);
-    this.processor  = this.context.createScriptProcessor(this.bufferSize, 1, 1);
+
+    this.recorderProcessor = await this.createWorkletNode(this.context, "recorder-processor", RecorderProcessorUrl);
+
     this.stream     = stream;
     
-    this.processor.onaudioprocess = (ev) => {
-      const sample = ev.inputBuffer.getChannelData(0);
-      if (this.encoderOptions.sampleRate != ev.inputBuffer.sampleRate) {
-        alert('wrong sample rate');
-      }
-
-
-
-      let sum = 0.0
-
+    this.recorderProcessor.port.onmessage = (ev) => {
+      
+      const sample = ev.data[0][0];
+      let sum = 0.0;
       if (this._isMp3()) {
         this.lameEncoder.encode(sample)
       } else {
@@ -140,17 +173,16 @@ export default class {
         sum += sample[i] * sample[i]
       }
 
-      this.duration = parseFloat(this._duration) + parseFloat(this.context.currentTime.toFixed(2))
+      this.duration = parseFloat(`${this._duration}`) + parseFloat(this.context.currentTime.toFixed(2))
       this.volume = Math.sqrt(sum / sample.length).toFixed(2)
     }
-
     const gainNode = this.context.createGain();
     console.log('mini', 'before', gainNode.gain.value);
     gainNode.gain.value = 10;
     console.log('after', gainNode.gain.value);
     this.input.connect(gainNode);
-    gainNode.connect(this.processor);
-    this.processor.connect(this.context.destination)
+    gainNode.connect(this.recorderProcessor);
+    this.recorderProcessor.connect(this.context.destination)
   }
 
   _micError (error) {

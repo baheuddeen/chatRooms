@@ -82,7 +82,7 @@
       });
 
       const volume = computed(() => {
-        return parseFloat(recorder.value.volume)
+        return parseFloat(recorder.value.volume as string)
       });
 
       const toggleRecorder = () => {     
