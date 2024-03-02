@@ -189,7 +189,7 @@ export default class {
     this.micFailed && this.micFailed(error)
   }
 
-  _isMp3 () {
+  _isMp3 () { 
     return this.format.toLowerCase() === 'mp3'
   }
 }
