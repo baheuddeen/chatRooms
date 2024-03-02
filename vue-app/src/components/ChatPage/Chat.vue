@@ -175,7 +175,8 @@ export default defineComponent({
 
 .messages{
   width: 100%;
-  height: 82vh;
+  height: 80vh;
+  padding-bottom: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -230,6 +231,7 @@ form {
   width: 100%;
 }
 
+
 @media (max-width: 768px) {
   .show-conversation-participants-bar {
     font-size: 42px;
@@ -252,10 +254,6 @@ form {
     bottom: 0px;
   }
 
-  .messages{
-    height: 77vh;
-  }
-
   .conversation-participants{
     display: none;
   }
@@ -272,11 +270,10 @@ form {
     background: black;
     z-index: 150;
   }
-}
 
-@media (max-height: 500px) {
   .messages{
-    height: 60vh !important;
+    height: 100vh;
+    padding-bottom: 160px;
   }
 }
 </style>

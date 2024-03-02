@@ -177,6 +177,10 @@ export default defineComponent({
   font-size: larger;
 }
 
+.navbar-brand {
+  margin: auto;
+}
+
 @media (max-width: 766px) {
   .enc-img img {
     width: 35px;
