@@ -117,11 +117,10 @@ export default class {
     this.context    = new(window.AudioContext || window.webkitAudioContext)()
     this.duration   = this._duration
     this.input      = this.context.createMediaStreamSource(stream);
-    this.processor  = this.context.createScriptProcessor(this.bufferSize, 1, 1)
+    this.processor  = this.context.createScriptProcessor(this.bufferSize, 1, 1);
     this.stream     = stream;
     
     this.processor.onaudioprocess = (ev) => {
-      console.log(ev);
       const sample = ev.inputBuffer.getChannelData(0);
       if (this.encoderOptions.sampleRate != ev.inputBuffer.sampleRate) {
         alert('wrong sample rate');
@@ -145,7 +144,12 @@ export default class {
       this.volume = Math.sqrt(sum / sample.length).toFixed(2)
     }
 
-    this.input.connect(this.processor)
+    const gainNode = this.context.createGain();
+    console.log('mini', 'before', gainNode.gain.value);
+    gainNode.gain.value = 10;
+    console.log('after', gainNode.gain.value);
+    this.input.connect(gainNode);
+    gainNode.connect(this.processor);
     this.processor.connect(this.context.destination)
   }
 

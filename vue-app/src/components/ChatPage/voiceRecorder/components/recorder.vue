@@ -74,9 +74,7 @@
       const isRecording = computed(() => {        
         return recorder.value.isRecording;
       });
-      const recordedTime = computed(() => {
-        console.log('recorder.value:', recorder.value);
-        
+      const recordedTime = computed(() => {        
         if (props.time && recorder.value?.duration/1000 >= props.time * 60) {
           stopRecorder()
         }
@@ -119,7 +117,6 @@
               fixed: true,
             };     
             console.log('selected.value:', selected.value);
-            
             clearInterval(waitForRecord);
           }), 200)
           // so that i can play before i send it !
