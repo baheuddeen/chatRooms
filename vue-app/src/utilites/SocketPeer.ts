@@ -38,15 +38,17 @@ export default class SocketPeer {
         this.peer.on("stream", (stream: MediaStream) => {
             if (this.stream.id == stream.id) {
                 return;
-            }
-            console.log('recieved stream !', stream);
-            
+            }            
             this.otherStreams.push(stream);
-            let audio =  new Audio();
-            audio.setAttribute('id', stream.id);
-            audio.srcObject = stream;
-            document.body.appendChild(audio);            
-            audio.play();
+            let videoElement = document.createElement('video');
+            videoElement.srcObject = stream;
+            document.body.appendChild(videoElement);
+            videoElement.play();
+            // let audio =  new Audio();
+            // audio.setAttribute('id', stream.id);
+            // audio.srcObject = stream;
+            // document.body.appendChild(audio);            
+            // audio.play();
         });
 
         this.peer.on("track", (streamTrack: MediaStreamTrack) => {
