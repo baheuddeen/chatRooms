@@ -278,3 +278,11 @@ span.info-label {
   /* } */
 }
 
+video {
+  position: fixed;
+  top: 25%;
+  left: 0;
+  width: 50%;
+  height: 50%;
+}
+

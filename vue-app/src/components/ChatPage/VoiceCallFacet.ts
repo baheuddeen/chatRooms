@@ -47,6 +47,7 @@ export default class VoiceCallFacet {
         if (!this.stream) {
             await this.getUserMedia();
         }
+        
         this.activeVoiceCallId.value = this.activeConversationId.value;
         SocketIoClient.joinVoiceCall({
             conversation_id: this.activeConversationId.value,

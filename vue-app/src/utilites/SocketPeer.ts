@@ -36,6 +36,7 @@ export default class SocketPeer {
         this.peer.on("data", (data) => console.log("data:", data));
 
         this.peer.on("stream", (stream: MediaStream) => {
+            console.log('recieved stream !');
             if (this.stream.id == stream.id) {
                 return;
             }            
