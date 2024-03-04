@@ -74,12 +74,15 @@ export default class VoiceCallFacet {
 
     private async getUserMedia() {
         const constraints = {
-            video: true,
+            video: {
+                width: 1280,
+                height: 720
+            },
             audio: {
               channelCount: 1,
-              echoCancellation: false,
+              echoCancellation: true,
             }
-          }
+          } as MediaStreamConstraints;
           try {
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             this.stream = stream;
