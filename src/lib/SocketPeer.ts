@@ -14,16 +14,15 @@ export default class SocketPeer {
 
     constructor({ conversationId, secondPeerEmail, socket} :{ conversationId: number, secondPeerEmail: string, socket: ISocket }) {
         this.socket = socket;
-        this.peer = new Peer({  initiator: true, wrtc, });
-        this.peer.on
         this.activeConversationId = conversationId;        
         this.secondPeerEmail = secondPeerEmail;
+        this.peer = new Peer({  initiator: true, wrtc, });
         this.connect();
     }
 
     private connect() {    
         this.peer.on('signal', data  => {
-            // console.log('wow data', data);   
+            console.log('wow signal data', data);   
 
             this.socket.emit('answerVoiceCall', { 
                 data,
@@ -57,6 +56,8 @@ export default class SocketPeer {
         // this.peer.addStream(stream);
 
         otherSocketPeers.forEach((socketPeer) => {
+            console.log('recieved stream', stream);
+            
             if(socketPeer.secondPeerEmail == this.socket.user_data.email) {
                 return;
             }

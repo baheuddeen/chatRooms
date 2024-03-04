@@ -76,7 +76,11 @@ export default class VoiceCallFacet {
         const constraints = {
             video: {
                 width: 1280,
-                height: 720
+                height: 720,
+                frameRate: {
+                    ideal: 60,
+                    min: 10
+                }
             },
             audio: {
               channelCount: 1,
@@ -118,7 +122,7 @@ export default class VoiceCallFacet {
                 this.currentTime = 0;
                 this.play();
             }, false);
-            myAudio.play();
+        myAudio.play();
     }
 
     public setup(props: {

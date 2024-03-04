@@ -388,8 +388,6 @@ export default class SocketIoClient {
     public static onAnswerVoiceCall({
         data,
     }){
-        
-        
         SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
     }
 
