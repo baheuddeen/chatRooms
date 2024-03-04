@@ -53,7 +53,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="otherDeviceIsLoggedIn">
+  <div class="other-device-connected" v-if="otherDeviceIsLoggedIn">
     <h1>
       Other Device is logged in
     </h1>
@@ -127,6 +127,14 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.other-device-connected {
+  background: black;
+    width: 100%;
+    height: 100vh;
+    padding-top: 200px;
+    color: white;
+    padding: 200px 50px;
+}
 .chat {
   background: black;
   height: 100vh;
