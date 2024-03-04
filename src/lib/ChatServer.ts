@@ -70,6 +70,7 @@ export default class ChatServer {
     public onConnection (socket: ISocket){
         preventMultipleConnections({
             socket,
+            io: this.io!,
         });
         onDisconnect({
             socket,
