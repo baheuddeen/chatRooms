@@ -273,7 +273,7 @@ form {
   }
 
   .chat {
-    padding-bottom: 105px;
+    padding-bottom: 150px;
   }
 
   .messages {
