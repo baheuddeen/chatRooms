@@ -13,8 +13,8 @@ export default function({
         return sessionInfo.email == socket.user_data!.email
     });
     if (sessionInfo) {
-        socket.emit('otherDeviceIsLoggedIn', sessionInfo);
-        socket.disconnect();
+        // socket.emit('otherDeviceIsLoggedIn', sessionInfo);
+        // socket.disconnect();
         return;
     }
     ChatServer.sessionsInfo.push({
