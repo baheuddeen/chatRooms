@@ -36,15 +36,23 @@ export default class SocketPeer {
         this.peer.on("data", (data) => console.log("data:", data));
 
         this.peer.on("stream", (stream: MediaStream) => {
-            console.log('recieved stream !');
+            console.log('recieved stream !', stream);
+            // if (this.stream.id == stream.id) {
+            //     return;
+            // }            
+            // this.otherStreams.push(stream);
+            (window as any).x = stream;
+            
             if (this.stream.id == stream.id) {
-                return;
-            }            
-            this.otherStreams.push(stream);
-            let videoElement = document.createElement('video');
-            videoElement.srcObject = stream;
-            document.body.appendChild(videoElement);
-            videoElement.play();
+                // my stream
+                // remove audio track
+                stream.removeTrack(stream.getAudioTracks()[0]);
+            } 
+            SocketIoClient.videos.streams.value.push(stream);
+            // let videoElement = document.createElement('video');
+            // videoElement.srcObject = stream;
+            // document.body.appendChild(videoElement);
+            // videoElement.play();
             // let audio =  new Audio();
             // audio.setAttribute('id', stream.id);
             // audio.srcObject = stream;

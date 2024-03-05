@@ -44,10 +44,10 @@ export default class VoiceCallFacet {
     }
 
     public async onJoin() {
-        if (!this.stream) {
-            await this.getUserMedia();
-        }
-        
+        await this.getUserMedia();
+        console.log('onJoin stream', this.stream);
+        console.log('tranks', this.stream.getTracks());
+
         this.activeVoiceCallId.value = this.activeConversationId.value;
         SocketIoClient.joinVoiceCall({
             conversation_id: this.activeConversationId.value,
@@ -84,7 +84,7 @@ export default class VoiceCallFacet {
             },
             audio: {
               channelCount: 1,
-              echoCancellation: true,
+              echoCancellation: false,
             }
           } as MediaStreamConstraints;
           try {
@@ -105,7 +105,11 @@ export default class VoiceCallFacet {
             } else {
                 
             }      
-        
+        this.stream.getTracks().forEach((track) => {
+            track.stop();
+            this.stream.removeTrack(track);
+        });
+        SocketIoClient.videos.streams.value = [];
         SocketIoClient.leaveVoiceCall();
         this.inVoiceCall.value = false;
     }

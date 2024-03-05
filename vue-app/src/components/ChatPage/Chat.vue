@@ -16,6 +16,7 @@ import ConversationSideBar from './ConversationSideBar.vue';
 import ConversationParticipants from './ConversationParticipants.vue';
 import Sidebar from 'primevue/sidebar';
 import SendImage from './SendImage.vue';
+import Videos from './Videos.vue';
 
 export default defineComponent({
   components: {
@@ -32,6 +33,7 @@ export default defineComponent({
     ConversationParticipants,
     Sidebar,
     SendImage,
+    Videos,
 },
 
   props: {
@@ -122,7 +124,7 @@ export default defineComponent({
        <CreateConversation />
     </section>
     </div> 
-
+    <Videos />
   </div>
 </template>
 

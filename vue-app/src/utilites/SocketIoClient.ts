@@ -12,6 +12,7 @@ import CreateConversationFacet from "../components/ChatPage/CreateConversationFa
 import Encryption from "./Encryption";
 import PopupFacet from "../components/ChatPage/popupFacet";
 import SendImageFacet from "../components/ChatPage/SendImageFacet";
+import VideosFacet from "../components/ChatPage/VideosFacet";
 
 export default class SocketIoClient {
     public static socket: Socket ;
@@ -19,6 +20,7 @@ export default class SocketIoClient {
     public static chat: ChatFacet;
     public static popup: PopupFacet;
     public static sendImage: SendImageFacet;
+    public static videos: VideosFacet;
     private static search: SearchFacet;
     private static sendingBinaryData: Ref<boolean>;
     private static sendingBinaryDataImage: Ref<boolean>;
@@ -44,7 +46,7 @@ export default class SocketIoClient {
         SocketIoClient.socket.on('startSendingTheVoiceMessage', SocketIoClient.onStartSendingVoiceMessage);
         SocketIoClient.socket.on('startSendingTheImageMessage', SocketIoClient.onStartSendingImageMessage);
         SocketIoClient.socket.on('setConversationParticipant', SocketIoClient.onSetConversationParticipant);
-        SocketIoClient.socket.on('answerVoiceCall', SocketIoClient.onAnswerVoiceCall);
+        SocketIoClient.socket.on('signal', SocketIoClient.onSignal);
         SocketIoClient.socket.on('setVoiceCallParticipants', SocketIoClient.setVoiceCallParticipants);
         SocketIoClient.socket.on('updateVoiceCallParticipants', SocketIoClient.onUpdateVoiceCallParticipants);
         SocketIoClient.socket.on('conversationCreated', SocketIoClient.onConversationCreated);
@@ -112,6 +114,14 @@ export default class SocketIoClient {
         sendImage: SendImageFacet,
     }) {
         SocketIoClient.sendImage = sendImage;
+    }
+
+    public static subscribeVideos({
+        videos,
+    }: {
+        videos: VideosFacet,
+    }) {
+        SocketIoClient.videos = videos;
     }
 
     private static async onConnect(){
@@ -385,9 +395,11 @@ export default class SocketIoClient {
         });  
     }
 
-    public static onAnswerVoiceCall({
+    public static onSignal({
         data,
     }){
+        // console.log('onSignal', data);
+        
         SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
     }
 
