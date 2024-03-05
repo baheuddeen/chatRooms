@@ -77,6 +77,7 @@ export default class VoiceCallFacet {
             video: {
                 width: 1280,
                 height: 720,
+                facingMode: "user",
                 frameRate: {
                     ideal: 60,
                     min: 10
