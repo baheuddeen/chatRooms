@@ -25,8 +25,6 @@ export default class VoiceCallFacet {
     }: {
         conversation_id,
     }) {
-        
-
         const peer = new Peer({ 
             initiator: false,
             trickle: false,

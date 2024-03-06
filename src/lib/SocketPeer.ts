@@ -16,7 +16,11 @@ export default class SocketPeer {
         this.socket = socket;
         this.activeConversationId = conversationId;        
         this.secondPeerEmail = secondPeerEmail;
-        this.peer = new Peer({  initiator: true, wrtc, });
+        this.peer = new Peer({  
+            initiator: true,
+            wrtc,
+            config: { iceServers: [{ urls: 'stun:wee-whisper.com:3478' }, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
+        });
         this.connect();
     }
 
