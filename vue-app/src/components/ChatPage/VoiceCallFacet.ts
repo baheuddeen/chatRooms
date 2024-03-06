@@ -27,7 +27,12 @@ export default class VoiceCallFacet {
     }) {
         
 
-        const peer = new Peer({ initiator: false, trickle: false, stream: this.stream, });
+        const peer = new Peer({ 
+            initiator: false,
+            trickle: false,
+            stream: this.stream,
+            config: { iceServers: [{ urls: 'stun:wee-whisper.com:3478' }, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
+        });
         const socketPeer = new SocketPeer({ 
             peer,
             activeConversationId: conversation_id,

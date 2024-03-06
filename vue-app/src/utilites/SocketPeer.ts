@@ -2,13 +2,14 @@ import peer from 'simple-peer';
 import SocketIoClient from './SocketIoClient';
 import * as process from 'process';
 import User from '../models/User';
+import { IMediaStream } from '../components/ChatPage/VideosFacet';
 
 export default class SocketPeer {
     public peer: any;
     public activeConversationId: number;
     public secondPeerEmail: string;
-    public stream: MediaStream;
-    public otherStreams: MediaStream[] = [];
+    public stream: IMediaStream;
+    public otherStreams: IMediaStream[] = [];
 
     constructor({ peer, activeConversationId} :{peer?: any, activeConversationId: number }) {
         if (!window['process']) {
@@ -35,7 +36,7 @@ export default class SocketPeer {
 
         this.peer.on("data", (data) => console.log("data:", data));
 
-        this.peer.on("stream", (stream: MediaStream) => {
+        this.peer.on("stream", (stream: IMediaStream) => {
             console.log('recieved stream !', stream);
             // if (this.stream.id == stream.id) {
             //     return;
@@ -48,6 +49,7 @@ export default class SocketPeer {
                 // remove audio track
                 stream.removeTrack(stream.getAudioTracks()[0]);
             } 
+            stream.isMainStream = false;
             SocketIoClient.videos.streams.value.push(stream);
             // let videoElement = document.createElement('video');
             // videoElement.srcObject = stream;

@@ -17,7 +17,12 @@ export default defineComponent({
 
 <template>
   <div class="videos">
-    <video v-for="stream of streams" :key="stream.id" :srcObject="stream" autoplay="true"></video>
+    <video v-for="stream of streams" :key="stream.id" :srcObject="stream" autoplay="true" :class="{
+      'active': stream.isMainStream
+    }"
+    :test="stream.isMainStream ? 'main' : 'not main'"
+    @click="onVideoClick(stream.id)"
+    ></video>
   </div>
 </template>
 
@@ -31,6 +36,11 @@ export default defineComponent({
     max-height: 50%;
 }
 video {
+    width: 100%;
+    height: 150px;
+}
+
+video.active{
     width: 100%;
     height: 100%;
 }
