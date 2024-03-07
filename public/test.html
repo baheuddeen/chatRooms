@@ -2,79 +2,107 @@
 <html>
 
 <head>
-    <title>Simple WebRTC with TURN</title>
+    <title>WebRTC Test</title>
 </head>
 
 <body>
-    <h2>Peer A</h2>
-    <video id="videoA" autoplay playsinline></video>
-    <button id="startA">Start A</button>
+    <h2>WebRTC Offer/Answer Test</h2>
 
-    <h2>Peer B</h2>
-    <video id="videoB" autoplay playsinline></video>
-    <button id="startB">Start B</button>
+    <textarea id="offer" placeholder="Copy offer here" rows="5" cols="60"></textarea>
+    <button id="createOffer">Create Offer</button>
+    <button id="setOffer">Set Offer</button>
+
+    <br><br>
+
+    <textarea id="answer" placeholder="Copy answer here" rows="5" cols="60"></textarea>
+    <button id="createAnswer">Create Answer</button>
+    <button id="setAnswer">Set Answer</button>
+
+    <video id="localVideo" autoplay playsinline></video>
+    <video id="remoteVideo" autoplay playsinline></video>
 
     <script>
-        const config = {
-            iceServers: [
-                {
-                    urls: "turn:wee-whisper.com:3478", // Replace with your TURN server URL
-                    username: "turnuser", // Replace with your TURN username
-                    credential: "123456" // Replace with your TURN password
+        let localPeer = null;
+        let remotePeer = null;
+
+        // Assuming you have video elements in your HTML for local and remote videos
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+
+        // Helper function to start media stream
+        async function startMedia() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = stream;
+                return stream;
+            } catch (error) {
+                console.error('Error accessing media devices.', error);
+            }
+        }
+
+        document.getElementById('createOffer').addEventListener('click', async () => {
+            localPeer = new RTCPeerConnection({
+                configuration: {
+                    iceServers: [
+                    { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
+
+                    ]
                 }
-            ]
-        };
+            });
 
-        // Peer connection instances
-        const peerA = new RTCPeerConnection(config);
-        const peerB = new RTCPeerConnection(config);
+            const stream = await startMedia();
+            stream.getTracks().forEach(track => localPeer.addTrack(track, stream));
 
-        // HTML elements
-        const videoA = document.getElementById('videoA');
-        const videoB = document.getElementById('videoB');
-        const startAButton = document.getElementById('startA');
-        const startBButton = document.getElementById('startB');
+            localPeer.ontrack = event => {
+                if (remoteVideo.srcObject !== event.streams[0]) {
+                    remoteVideo.srcObject = event.streams[0];
+                }
+            };
 
-        // Handlers for start buttons
-        startAButton.onclick = startA;
-        startBButton.onclick = startB;
+            localPeer.onicecandidate = event => {
+                if (event.candidate === null) {
+                    document.getElementById('offer').value = JSON.stringify(localPeer.localDescription);
+                }
+            };
 
-        // Starting Peer A's stream
-        async function startA() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            videoA.srcObject = stream;
-            stream.getTracks().forEach(track => peerA.addTrack(track, stream));
-            console.log("Peer A started");
-        }
+            const offer = await localPeer.createOffer();
+            await localPeer.setLocalDescription(offer);
+        });
 
-        // Starting Peer B
-        function startB() {
-            peerA.createOffer().then(offer => peerA.setLocalDescription(offer))
-                .then(() => peerB.setRemoteDescription(peerA.localDescription))
-                .then(() => peerB.createAnswer()).then(answer => peerB.setLocalDescription(answer))
-                .then(() => peerA.setRemoteDescription(peerB.localDescription));
-            console.log("Peer B connected");
-        }
+        document.getElementById('setOffer').addEventListener('click', async () => {
+            const offer = JSON.parse(document.getElementById('offer').value);
+            remotePeer = new RTCPeerConnection({
+                configuration: {
+                    iceServers: [
+                    { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
+                    ]
+                }
+            });
 
-        // When Peer B receives a track, play it in videoB
-        peerB.ontrack = function (event) {
-            videoB.srcObject = event.streams[0];
-        };
+            remotePeer.ontrack = event => {
+                if (remoteVideo.srcObject !== event.streams[0]) {
+                    remoteVideo.srcObject = event.streams[0];
+                }
+            };
 
-        // ICE candidate handling
-        peerA.onicecandidate = event => {
-            if (event.candidate) {
-                peerB.addIceCandidate(event.candidate);
-            }
-        };
+            remotePeer.onicecandidate = event => {
+                if (event.candidate === null) {
+                    document.getElementById('answer').value = JSON.stringify(remotePeer.localDescription);
+                }
+            };
 
-        peerB.onicecandidate = event => {
-            if (event.candidate) {
-                peerA.addIceCandidate(event.candidate);
-            }
-        };
+            await remotePeer.setRemoteDescription(offer);
+            const stream = await startMedia();
+            stream.getTracks().forEach(track => remotePeer.addTrack(track, stream));
 
-        console.log("Script loaded. Please start Peer A, then Peer B.");
+            const answer = await remotePeer.createAnswer();
+            await remotePeer.setLocalDescription(answer);
+        });
+
+        document.getElementById('setAnswer').addEventListener('click', async () => {
+            const answer = JSON.parse(document.getElementById('answer').value);
+            await localPeer.setRemoteDescription(answer);
+        });
 
     </script>
 </body>
