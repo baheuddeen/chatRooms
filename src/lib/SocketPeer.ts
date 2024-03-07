@@ -23,7 +23,7 @@ export default class SocketPeer {
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
                 { urls: 'stun:wee-whisper.com:3478' },
-                { urls: 'turn:wee-whisper.com:3478' },
+                { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
             ] },
         });
         this.connect();
