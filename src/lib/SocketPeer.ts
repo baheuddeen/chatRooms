@@ -18,6 +18,7 @@ export default class SocketPeer {
         this.secondPeerEmail = secondPeerEmail;
         this.peer = new Peer({  
             initiator: true,
+            trickle: true,
             wrtc,
             config: { iceServers: [
                 { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},

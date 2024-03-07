@@ -27,7 +27,7 @@ export default class VoiceCallFacet {
     }) {
         const peer = new Peer({ 
             initiator: false,
-            trickle: false,
+            trickle: true,
             stream: this.stream,
             config: { iceServers: [
                 { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
