@@ -29,6 +29,12 @@ export default class VoiceCallFacet {
             initiator: false,
             trickle: false,
             stream: this.stream,
+            config: { iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+                { urls: 'stun:wee-whisper.com:3478' },
+                { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
+            ] },
         });
         const socketPeer = new SocketPeer({ 
             peer,
