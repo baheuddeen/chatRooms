@@ -19,7 +19,12 @@ export default class SocketPeer {
         this.peer = new Peer({  
             initiator: true,
             wrtc,
-            config: { iceServers: [{ urls: 'stun:wee-whisper.com:3478' }, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
+            config: { iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+                { urls: 'stun:wee-whisper.com:3478' },
+                { urls: 'turn:wee-whisper.com:3478' },
+            ] },
         });
         this.connect();
     }
