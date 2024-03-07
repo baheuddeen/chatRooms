@@ -41,14 +41,11 @@
         }
 
         document.getElementById('createOffer').addEventListener('click', async () => {
-            localPeer = new RTCPeerConnection({
-                configuration: {
-                    iceServers: [
+            localPeer =  new RTCPeerConnection({
+                iceServers: [
                     { urls: 'stun:wee-whisper.com:3478'},
                     { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
-
                     ]
-                }
             });
 
             const stream = await startMedia();
@@ -73,12 +70,10 @@
         document.getElementById('setOffer').addEventListener('click', async () => {
             const offer = JSON.parse(document.getElementById('offer').value);
             remotePeer = new RTCPeerConnection({
-                configuration: {
-                    iceServers: [
+                iceServers: [
                     { urls: 'stun:wee-whisper.com:3478'},
                     { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
                     ]
-                }
             });
 
             remotePeer.ontrack = event => {
