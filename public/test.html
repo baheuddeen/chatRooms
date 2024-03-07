@@ -44,7 +44,7 @@
             localPeer =  new RTCPeerConnection({
                 iceServers: [
                     { urls: 'stun:wee-whisper.com:3478'},
-                    { urls: 'turn:wee-whisper.com:3478', username: 'turnusesr', credential: '123456'},
+                    { urls: 'turn:wee-whisper.com:3478', username: 'turnuser', credential: '123456'},
                     ]
             });
 
@@ -58,6 +58,15 @@
             };
 
             localPeer.onicecandidate = event => {
+                if (event.candidate) {
+                    console.log("ICE Candidate:", event.candidate);
+                    if(event.candidate.type === "relay") {
+                    console.log("Relay candidate found:", event.candidate);
+                    }
+                } else {
+                    // ICE gathering is complete.
+                    console.log("ICE Gathering Complete");
+                }
                 if (event.candidate === null) {
                     document.getElementById('offer').value = JSON.stringify(localPeer.localDescription);
                 }
