@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple WebRTC with TURN</title>
+</head>
+
+<body>
+    <h2>Peer A</h2>
+    <video id="videoA" autoplay playsinline></video>
+    <button id="startA">Start A</button>
+
+    <h2>Peer B</h2>
+    <video id="videoB" autoplay playsinline></video>
+    <button id="startB">Start B</button>
+
+    <script>
+        const config = {
+            iceServers: [
+                {
+                    urls: "turn:wee-whisper.com:3478", // Replace with your TURN server URL
+                    username: "turnuser", // Replace with your TURN username
+                    credential: "123456" // Replace with your TURN password
+                }
+            ]
+        };
+
+        // Peer connection instances
+        const peerA = new RTCPeerConnection(config);
+        const peerB = new RTCPeerConnection(config);
+
+        // HTML elements
+        const videoA = document.getElementById('videoA');
+        const videoB = document.getElementById('videoB');
+        const startAButton = document.getElementById('startA');
+        const startBButton = document.getElementById('startB');
+
+        // Handlers for start buttons
+        startAButton.onclick = startA;
+        startBButton.onclick = startB;
+
+        // Starting Peer A's stream
+        async function startA() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            videoA.srcObject = stream;
+            stream.getTracks().forEach(track => peerA.addTrack(track, stream));
+            console.log("Peer A started");
+        }
+
+        // Starting Peer B
+        function startB() {
+            peerA.createOffer().then(offer => peerA.setLocalDescription(offer))
+                .then(() => peerB.setRemoteDescription(peerA.localDescription))
+                .then(() => peerB.createAnswer()).then(answer => peerB.setLocalDescription(answer))
+                .then(() => peerA.setRemoteDescription(peerB.localDescription));
+            console.log("Peer B connected");
+        }
+
+        // When Peer B receives a track, play it in videoB
+        peerB.ontrack = function (event) {
+            videoB.srcObject = event.streams[0];
+        };
+
+        // ICE candidate handling
+        peerA.onicecandidate = event => {
+            if (event.candidate) {
+                peerB.addIceCandidate(event.candidate);
+            }
+        };
+
+        peerB.onicecandidate = event => {
+            if (event.candidate) {
+                peerA.addIceCandidate(event.candidate);
+            }
+        };
+
+        console.log("Script loaded. Please start Peer A, then Peer B.");
+
+    </script>
+</body>
+
+</html>
