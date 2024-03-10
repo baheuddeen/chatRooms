@@ -84,7 +84,7 @@ export default class VoiceCallFacet {
             video: false,
             audio: {
               channelCount: 1,
-              echoCancellation: true,
+              echoCancellation: false,
             }
           } as MediaStreamConstraints;
           try {
