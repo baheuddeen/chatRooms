@@ -43,7 +43,7 @@ export default defineComponent({
         Please Enter Verification Code Sent To Your Email "<span class="email">{{ email }}</span>"
       </h1>
       <div class="verificationCode" ref="verificationCode">
-        <input v-for="i of [...Array(6).keys()]" type="text" :index="i + 1" maxlength="1" @keydown="moveFocus" @input="onPast"/>
+        <input v-for="i of [...Array(6).keys()]" type="text" :index="i + 1" @keydown="moveFocus" @input="onPast"/>
       </div>
       <Button @click="verifyCode">Verify</Button>
       <Button @click="removeJWT" class="red">Change Email</Button>

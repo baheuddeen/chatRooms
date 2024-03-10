@@ -60,11 +60,12 @@ export default class SigninSignupPageFacet {
     console.log('pasting', pastValue);
     pastValue.split('').forEach((char, index) => {
       if (index + current > 6) return;
+      target.removeAttribute('maxlength');
       const currentTarget = (document.querySelector(`[index="${(index + current)}"]`) as HTMLInputElement);
       currentTarget.focus();
       currentTarget.value = char;
+      target.setAttribute('maxlength', '1');
     });
-    target.setAttribute('maxlength', '1');
   }
 
   public async verifyCode() {
@@ -107,6 +108,7 @@ export default class SigninSignupPageFacet {
   public moveFocus(e: KeyboardEvent) {
     const target = (e.target as HTMLInputElement);
     const current = parseInt(target.getAttribute('index'), 10);      
+    target.removeAttribute('maxlength');
 
     if (e.key === 'Enter') {
       this.verifyCode();
@@ -127,6 +129,7 @@ export default class SigninSignupPageFacet {
     if (e.key === 'Backspace' || e.key === 'Delete') {
       if (!target.value && current > 1) {
         (document.querySelector(`[index="${(current - 1)}"]`) as HTMLInputElement)?.focus();
+        (document.querySelector(`[index="${(current - 1)}"]`) as HTMLInputElement)?.removeAttribute('maxlength');
       }
       target.value = '';
       return;

@@ -86,6 +86,14 @@ export default class ChatFacet {
             this.rowHeight = this.messageInput.value.getBoundingClientRect().height;
         }
         this.messageInput.value.style.height = 'auto';
+        const futureHeight = this.messageInput.value.scrollHeight;
+        if (futureHeight > this.rowHeight * 4) {
+            this.messageInput.value.style.height =  this.rowHeight * 4 + 'px';
+            this.messageInput.value.style.overflowY = 'scroll';
+            clearInterval(this.watchInputHeight);
+            this.watchInputHeight = null;
+            return;
+        }
         this.messageInput.value.style.height = this.messageInput.value.scrollHeight + 'px';
         if ( this.messageInput.value.scrollHeight == this.messageInput.value.getBoundingClientRect().height) {
             clearInterval(this.watchInputHeight);
@@ -97,6 +105,13 @@ export default class ChatFacet {
 
 
     public onKeydown(event: KeyboardEvent) {   
+        if (event.key == 'Enter' && window.innerWidth > 768 && !event.shiftKey) {
+            event.preventDefault();
+            this.onsubmit();       
+            this.message.value = '';
+            this.isTyping.value = false;
+            this.messageInput.value.value = '';       
+        }
         if (this.messageInput.value.value) {
             this.isTyping.value = true;
         } else {
@@ -104,10 +119,6 @@ export default class ChatFacet {
         }
         if (!this.watchInputHeight) {
             this.watchInputHeight = setInterval(this.watchMessageInputHeight.bind(this), 10);            
-        }
-
-        if (event.key == 'Enter' && window.innerWidth > 768) {
-            this.onsubmit();       
         }
     }
 
@@ -128,6 +139,7 @@ export default class ChatFacet {
         });
         this.message.value = '';
         this.isTyping.value = false;
+        this.messageInput.value.value = '';        
         return true;
     }
 

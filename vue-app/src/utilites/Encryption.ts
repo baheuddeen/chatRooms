@@ -14,7 +14,7 @@ export default class Encryption {
       },
       true, // Can export the private key
       ["encrypt", "decrypt"]
-    );  
+    );
     Encryption.saveToLocalStorage();
     return Encryption.keyPair;
   }
@@ -30,12 +30,12 @@ export default class Encryption {
       { name: "RSA-OAEP", hash: { name: "SHA-256" } },
       true,
       ["encrypt"]
-    ); 
+    );
   }
 
-  private static async saveToLocalStorage() {    
-      localStorage.setItem("privateKey", await Encryption.exportKey(Encryption.keyPair.privateKey));
-      localStorage.setItem("publicKey", await Encryption.exportKey(Encryption.keyPair.publicKey));
+  private static async saveToLocalStorage() {
+    localStorage.setItem("privateKey", await Encryption.exportKey(Encryption.keyPair.privateKey));
+    localStorage.setItem("publicKey", await Encryption.exportKey(Encryption.keyPair.publicKey));
   }
 
   public static async getCryptoKeyPair(forceUpdate = false) {
@@ -51,7 +51,7 @@ export default class Encryption {
         privateKey: null,
         publicKey: null,
       };
-      
+
 
       Encryption.keyPair.privateKey = await crypto.subtle.importKey(
         "jwk",
@@ -59,7 +59,7 @@ export default class Encryption {
         { name: "RSA-OAEP", hash: { name: "SHA-256" } },
         true,
         ["decrypt"]
-      );      
+      );
 
       Encryption.keyPair.publicKey = await crypto.subtle.importKey(
         "jwk",
@@ -68,7 +68,7 @@ export default class Encryption {
         true,
         ["encrypt"]
       );
-      
+
       return Encryption.keyPair;
     }
     return null;
@@ -83,17 +83,18 @@ export default class Encryption {
       symmetricKey
     );
   }
-  
+
   // Encrypt a message using the public key
   public static async encryptMessage(message: string, publicKey: CryptoKey) {
     if (!Encryption.keyPair) {
-      await Encryption.getCryptoKeyPair();      
+      await Encryption.getCryptoKeyPair();
     }
-    const encryptedDataArray: ArrayBuffer[] = [];
+    const encryptedDataArray = [];
     const encodedMessage = new TextEncoder().encode(message);
-    for(let i = 0; i < encodedMessage.length;  i += Encryption.bufferSize) {
-      const end = Encryption.bufferSize > encodedMessage.length ? encodedMessage.length : Encryption.bufferSize;
-      const dataToEncrypt = encodedMessage.slice(0, end);      
+
+    for (let i = 0; i < encodedMessage.length; i += Encryption.bufferSize) {
+      const end = Math.min(i + Encryption.bufferSize, encodedMessage.length);
+      const dataToEncrypt = encodedMessage.slice(i, end);
       encryptedDataArray.push(await crypto.subtle.encrypt(
         {
           name: "RSA-OAEP"
@@ -103,15 +104,16 @@ export default class Encryption {
       ));
     }
 
-      const encryptedData = new ArrayBuffer(encryptedDataArray.length * encryptedDataArray[0].byteLength);
-      const destView = new Uint8Array(encryptedData);
-      encryptedDataArray.forEach((data, index) => {
-        const source =  new Uint8Array(data);
-        destView.set(source, index * source.byteLength);
-      });    
+
+    const encryptedData = new ArrayBuffer(encryptedDataArray.length * encryptedDataArray[0].byteLength);
+    const destView = new Uint8Array(encryptedData);
+    encryptedDataArray.forEach((data, index) => {
+      const source = new Uint8Array(data);
+      destView.set(source, index * source.byteLength);
+    });
     return encryptedData;
   }
-  
+
   // Decrypt the encrypted message using the private key
   public static async decryptMessage(encryptedMessage: ArrayBuffer): Promise<ArrayBuffer> {
     if (!Encryption.keyPair) {
@@ -120,8 +122,8 @@ export default class Encryption {
 
     const decryptedDataArray: ArrayBuffer[] = [];
 
-    for(let i = 0; i < encryptedMessage.byteLength;  i += 256) {
-      
+    for (let i = 0; i < encryptedMessage.byteLength; i += 256) {
+
       const dataToDecrypt = encryptedMessage.slice(0, 256);
       decryptedDataArray.push(await crypto.subtle.decrypt(
         {
@@ -132,22 +134,22 @@ export default class Encryption {
       ));
     }
 
-      const decryptedData = new ArrayBuffer(decryptedDataArray.length * decryptedDataArray[0].byteLength);
-      const destView = new Uint8Array(decryptedData);
-      decryptedDataArray.forEach((data, index) => {
-        const source =  new Uint8Array(data);
-        destView.set(source, index * source.byteLength);
-      });  
+    const decryptedData = new ArrayBuffer(decryptedDataArray.length * decryptedDataArray[0].byteLength);
+    const destView = new Uint8Array(decryptedData);
+    decryptedDataArray.forEach((data, index) => {
+      const source = new Uint8Array(data);
+      destView.set(source, index * source.byteLength);
+    });
 
-      return decryptedData;
+    return decryptedData;
   }
 
 
-  public static async encryptBinaryData(data: ArrayBuffer): Promise< {
-      encryptedData: ArrayBuffer,
-      key: ArrayBuffer,
-      iv: ArrayBuffer,
-    }> {
+  public static async encryptBinaryData(data: ArrayBuffer): Promise<{
+    encryptedData: ArrayBuffer,
+    key: ArrayBuffer,
+    iv: ArrayBuffer,
+  }> {
     const AESKey = await crypto.subtle.generateKey(
       {
         name: 'AES-GCM',
@@ -158,13 +160,13 @@ export default class Encryption {
     );
 
     const key = await crypto.subtle.exportKey('raw', AESKey);
-    const ivLength = 12; 
+    const ivLength = 12;
     const iv = crypto.getRandomValues(new Uint8Array(ivLength));
 
     const algorithm = {
-        name: 'AES-GCM',
-        iv: iv
-      };
+      name: 'AES-GCM',
+      iv: iv
+    };
 
     // Encrypt the voice note
     const encryptedData = await crypto.subtle.encrypt(
@@ -174,34 +176,34 @@ export default class Encryption {
     );
 
     console.log('encryptedData From Encryption', encryptedData);
-    console.log('iv', iv);    
-    
+    console.log('iv', iv);
+
 
     return {
       encryptedData,
       key,
       iv,
-    } 
+    }
   }
 
-  public static async decryptBinaryData( {
-      encryptedData,
-      symmetricKeyBuffer,
-      iv,
+  public static async decryptBinaryData({
+    encryptedData,
+    symmetricKeyBuffer,
+    iv,
   }:
     {
       encryptedData: ArrayBuffer,
       symmetricKeyBuffer: ArrayBuffer,
-      iv:ArrayBuffer,
+      iv: ArrayBuffer,
     }): Promise<ArrayBuffer> {
     const symmetricKey = await crypto.subtle.importKey(
       "raw",
-      symmetricKeyBuffer,{
+      symmetricKeyBuffer, {
       name: 'AES-GCM',
-      length: 128 
+      length: 128
     },
-    true,
-    ['encrypt', 'decrypt']);        
+      true,
+      ['encrypt', 'decrypt']);
 
     const algorithm = {
       name: 'AES-GCM',
@@ -218,7 +220,7 @@ export default class Encryption {
       symmetricKey,
       encryptedData
     );
-  
+
     return decryptedData;
   }
 

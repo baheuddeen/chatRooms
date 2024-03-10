@@ -153,8 +153,6 @@ export default class SocketIoClient {
         for (let user of SocketIoClient.chat.cashConversationParticipant.value[message.conversation_id]) {
             
             try {
-                
-
                 const public_key = await Encryption.importKey(user.public_key);
                 SocketIoClient.socket.send('message', {
                     text: await Encryption.encryptMessage(message.text, public_key),
