@@ -11,11 +11,12 @@ export default class SocketPeer {
     public stream: IMediaStream;
     public otherStreams: IMediaStream[] = [];
 
-    constructor({ peer, activeConversationId} :{peer?: any, activeConversationId: number }) {
+    constructor({ peer, activeConversationId, secondPeerEmail} :{peer?: any, activeConversationId: number, secondPeerEmail?: string}) {
         if (!window['process']) {
             window['process'] = process;
         }
         this.peer = peer;
+        this.secondPeerEmail = secondPeerEmail;
         this.activeConversationId = activeConversationId;        
     }
 
@@ -25,7 +26,6 @@ export default class SocketPeer {
                     data,
                     activeConversationId: this.activeConversationId,
                 });
-
         });
 
         this.peer.on('connect', () => {

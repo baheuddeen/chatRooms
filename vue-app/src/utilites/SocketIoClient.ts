@@ -345,7 +345,6 @@ export default class SocketIoClient {
         conversation_id: number,
     }) {
         console.log('joinVoiceCall', conversation_id);
-        
         SocketIoClient.socket.emit('joinVoiceCall', {
             conversation_id,
         });
@@ -361,6 +360,7 @@ export default class SocketIoClient {
             if (args.user.email === User.getUser().email && args.action == 'join') {  
                 SocketIoClient.voiceCall.call({
                     conversation_id: args.conversation_id,
+                    user: args.user,
                 });
             }
         }
@@ -368,13 +368,12 @@ export default class SocketIoClient {
         if (args.action == 'leave') {  
             
             
-            SocketIoClient.voiceCall.removeStream({
-                streamId: args.stream_id,
-            })
+            // SocketIoClient.voiceCall.removeStream({
+            //     streamId: args.stream_id,
+            // })
         }
         
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
-            
             SocketIoClient.chat.voiceChatParticipants.value = args.users;
         }
     }
@@ -395,10 +394,11 @@ export default class SocketIoClient {
 
     public static onSignal({
         data,
+        user,
     }){
         // console.log('onSignal', data);
         
-        SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
+        // SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
     }
 
     public static onOtherDeviceIsLoggedIn() {

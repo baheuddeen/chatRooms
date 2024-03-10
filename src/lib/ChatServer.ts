@@ -23,7 +23,6 @@ import onJoinVoiceCall from './Helper/onJoinVoiceCall';
 import onGetVoiceCallParticipants from './Helper/onGetVoiceCallParticipants';
 import onLeaveVoiceCall from './Helper/onLeaveVoiceCall';
 import onCreateConversation from './Helper/onCreateConversation';
-import SocketPeer from './SocketPeer';
 import onUpdatePublicKey from './Helper/onUpdatePublicKey';
 import onImageMessage from './Helper/onImageMessage';
 import onPrepareImageMessage from './Helper/onPrepareImageMessage';
@@ -38,7 +37,6 @@ type SessionInfo = {
 export type voiceCallSession = {
     conversation_id: number,
     users: UserType[],
-    socketPeers: SocketPeer[],
 }
 
 export default class ChatServer {
