@@ -82,7 +82,6 @@ export default class VoiceCallFacet {
 
     private async getUserMedia() {
         const constraints = {
-            video: true,
             audio: {
               channelCount: 1,
               echoCancellation: false,
