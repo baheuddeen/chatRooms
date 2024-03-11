@@ -104,7 +104,7 @@ export default class VoiceCallFacet {
             return socketPeer.secondPeerEmail == secondPeerEmail;
         });
         if (!socketPeer) {
-            console.log('socketPeer not found');
+            console.log('socketPeer not found..');
             return;
         }
         socketPeer.peer.destroy();
