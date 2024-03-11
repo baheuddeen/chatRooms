@@ -3,6 +3,7 @@ import SocketIoClient from './SocketIoClient';
 import * as process from 'process';
 import User from '../models/User';
 import { IMediaStream } from '../components/ChatPage/VideosFacet';
+import { log } from 'console';
 
 export default class SocketPeer {
     public peer: any;
@@ -10,22 +11,25 @@ export default class SocketPeer {
     public secondPeerEmail: string;
     public stream: IMediaStream;
     public otherStreams: IMediaStream[] = [];
+    public isInitiator: boolean;
 
-    constructor({ peer, activeConversationId, secondPeerEmail} :{peer?: any, activeConversationId: number, secondPeerEmail?: string}) {
+    constructor({ peer, activeConversationId, secondPeerEmail, isInitiator} :{peer?: any, activeConversationId: number, secondPeerEmail?: string, isInitiator?: boolean}) {
         if (!window['process']) {
             window['process'] = process;
         }
         this.peer = peer;
         this.secondPeerEmail = secondPeerEmail;
-        this.activeConversationId = activeConversationId;        
+        this.activeConversationId = activeConversationId;   
+        this.isInitiator = isInitiator;     
     }
 
     public connect() {    
         this.peer.on('signal', data => {
-                SocketIoClient.requestVoiceCall({
-                    data,
-                    activeConversationId: this.activeConversationId,
-                });
+            SocketIoClient.signal({
+                data,
+                activeConversationId: this.activeConversationId,
+                secondPeerEmail: this.secondPeerEmail,
+            });
         });
 
         this.peer.on('connect', () => {

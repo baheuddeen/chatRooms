@@ -72,7 +72,6 @@ export default class {
       audio: {
         channelCount: 1,
         echoCancellation: false,
-
       }
     }
 

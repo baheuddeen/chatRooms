@@ -8,7 +8,7 @@ import User from '../../models/User';
 export default class VoiceCallFacet {
     public activeConversationId: Ref<number>;
     public activeVoiceCallId?: Ref<number>;
-    public socketPeers: SocketPeer[];
+    public socketPeers: SocketPeer[] = [];
     public inVoiceCall: Ref<boolean>;
     public stream: any = null;
     public activeConversationUsers = [];
@@ -22,8 +22,12 @@ export default class VoiceCallFacet {
 
     public answerCall({
         conversation_id,
+        secondPeerEmail,
+        data,
     }: {
         conversation_id,
+        secondPeerEmail,
+        data,
     }) {
         const peer = new Peer({ 
             initiator: false,
@@ -38,22 +42,27 @@ export default class VoiceCallFacet {
         const socketPeer = new SocketPeer({ 
             peer,
             activeConversationId: conversation_id,
+            secondPeerEmail: secondPeerEmail,
         });
         // remove this logic to socket peer
         socketPeer.stream = this.stream;
         this.socketPeers.push(socketPeer);
         socketPeer.connect();
+        socketPeer.peer.signal(data);
     }
 
     public call({
         conversation_id,
-        user,
+        secondPeerEmail,
     }: {
         conversation_id,
-        user,
+        secondPeerEmail,
     }) {
-        console.log('calling', user.email);
-        
+        if (User.getUser().email == secondPeerEmail) {
+            console.log('cannot call yourself');
+            return;
+        }
+        console.log('calling', secondPeerEmail);
         const peer = new Peer({ 
             initiator: true,
             trickle: false,
@@ -67,7 +76,8 @@ export default class VoiceCallFacet {
         const socketPeer = new SocketPeer({ 
             peer,
             activeConversationId: conversation_id,
-            secondPeerEmail: user.email,
+            secondPeerEmail: secondPeerEmail,
+            isInitiator: true,
         });
         socketPeer.stream = this.stream;
         this.socketPeers.push(socketPeer);
@@ -87,42 +97,25 @@ export default class VoiceCallFacet {
         this.inVoiceCall.value = true;
     }
 
-    // public removeStream({
-    //     streamId
-    // }){
-    //     const stream = this.socketPeer?.otherStreams.find((stream) => {
-    //         return stream.id == streamId;
-    //     });
-    //     if (!stream) {
-    //         return;
-    //     }
-    //     const streamIndex = (this.socketPeer.peer._remoteStreams as any []).indexOf(stream);
-    //     if( streamIndex == -1) {            
-    //         return;
-    //     }
+    public removeSocketPeer({
+        secondPeerEmail,
+    }){
+        const socketPeer = this.socketPeers.find((socketPeer) => {
+            return socketPeer.secondPeerEmail == secondPeerEmail;
+        });
+        if (!socketPeer) {
+            console.log('socketPeer not found');
+            return;
+        }
+        socketPeer.peer.destroy();
+        this.socketPeers.splice(this.socketPeers.indexOf(socketPeer), 1);
+        console.log('socketPeer removed', this.socketPeers);
         
-    //     this.socketPeer.peer._remoteStreams.splice(streamIndex, 1);
-    // }
+    }
 
     private async getUserMedia() {
         const constraints = {
-            video: {
-                width: {
-                    ideal: 1280,
-                    max: 1920,
-                    min: 0,
-                },
-                height: {
-                    ideal: 720,
-                    max: 1080,
-                    min: 0,
-                },
-                facingMode: "user",
-                frameRate: {
-                    ideal: 60,
-                    min: 0,
-                }
-            },
+            video: false,
             audio: {
               channelCount: 1,
               echoCancellation: true,
@@ -140,20 +133,18 @@ export default class VoiceCallFacet {
 
 
     public onLeave() {
-        // this.activeVoiceCallId.value = null;
-        //     if (this.socketPeer.peer) {                
-        //         this.socketPeer.peer.destroy();    
-        //         this.socketPeer = null;  
-        //     } else {
-                
-        //     }      
-        // this.stream.getTracks().forEach((track) => {
-        //     track.stop();
-        //     this.stream.removeTrack(track);
-        // });
-        // SocketIoClient.videos.streams.value = [];
-        // SocketIoClient.leaveVoiceCall();
-        // this.inVoiceCall.value = false;
+        this.activeVoiceCallId.value = null;
+        this.socketPeers.forEach((socketPeer) => {
+            socketPeer.peer.destroy();             
+        });
+        this.socketPeers = [];  
+        this.stream.getTracks().forEach((track) => {
+            track.stop();
+            this.stream.removeTrack(track);
+        });
+        SocketIoClient.videos.streams.value = [];
+        SocketIoClient.leaveVoiceCall();
+        this.inVoiceCall.value = false;
     }
     constructor() {
         console.log('VoiceCallFacet');

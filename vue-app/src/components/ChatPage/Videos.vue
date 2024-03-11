@@ -17,12 +17,12 @@ export default defineComponent({
 
 <template>
   <div class="videos">
-    <video v-for="stream of streams" :key="stream.id" :srcObject="stream" autoplay="true" :class="{
+    <audio v-for="stream of streams" :key="stream.id" :srcObject="stream" autoplay="true" :class="{
       'active': stream.isMainStream
     }"
     :test="stream.isMainStream ? 'main' : 'not main'"
     @click="onVideoClick(stream.id)"
-    ></video>
+    ></audio>
   </div>
 </template>
 

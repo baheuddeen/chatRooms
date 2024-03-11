@@ -49,33 +49,13 @@ export function leaveVoiceCall({
         return;
     }
     voiceCallSession.users.splice(i, 1);
-    const socketPeer = voiceCallSession.socketPeers.find((socketPeer) => {
-        return socketPeer.secondPeerEmail == socket.user_data.email
-    });
-    voiceCallSession.socketPeers.forEach((peer) => {
-        console.log(socketPeer.secondPeerEmail, socket.user_data.email);
-        
-        if (peer.secondPeerEmail == socket.user_data.email) {
-            return;
-        }
-        console.log('it should delete the track');
-        if (peer.stream && peer.stream.getTracks().indexOf(socketPeer.stream.getTracks()[0]) == -1) {
-            return;
-        }
-        peer.peer?.removeStream(socketPeer.stream);
-    });
-    socketPeer.peer?.destroy();
-    voiceCallSession.socketPeers.splice(voiceCallSession.socketPeers.indexOf(socketPeer), 1);
    
     console.log('voiceCallSession after', voiceCallSession, socket.activeVoiceCallId.toString());
 
-    if (socketPeer?.stream?.id) {
-        io.to(socket.activeVoiceCallId as any).emit('updateVoiceCallParticipants', {
-            action: 'leave',
-            conversation_id: socket.activeVoiceCallId,
-            users: voiceCallSession.users, 
-            user: socket.user_data,
-            stream_id: socketPeer.stream.id,
-        });
-    }
+    io.to(socket.activeVoiceCallId as any).emit('updateVoiceCallParticipants', {
+        action: 'leave',
+        conversation_id: socket.activeVoiceCallId,
+        users: voiceCallSession.users, 
+        user: socket.user_data,
+    });
 }

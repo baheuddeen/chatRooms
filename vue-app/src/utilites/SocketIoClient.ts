@@ -357,20 +357,18 @@ export default class SocketIoClient {
         if(SocketIoClient.voiceCall?.activeVoiceCallId?.value == args.conversation_id) {
             
             
-            if (args.user.email === User.getUser().email && args.action == 'join') {  
+            if (args.action == 'join') {  
                 SocketIoClient.voiceCall.call({
                     conversation_id: args.conversation_id,
-                    user: args.user,
+                    secondPeerEmail: args.user.email,
                 });
             }
         }
 
         if (args.action == 'leave') {  
-            
-            
-            // SocketIoClient.voiceCall.removeStream({
-            //     streamId: args.stream_id,
-            // })
+            SocketIoClient.voiceCall.removeSocketPeer({
+                secondPeerEmail: args.user.email,
+            })
         }
         
         if(SocketIoClient.chat.activeConversationId.value == args.conversation_id) {
@@ -382,12 +380,14 @@ export default class SocketIoClient {
         SocketIoClient.socket.emit('leaveVoiceCall');
     }
 
-    public static requestVoiceCall({
+    public static signal({
         data,
         activeConversationId,
+        secondPeerEmail,
     }){
-        SocketIoClient.socket.emit('requestVoiceCall', {
+        SocketIoClient.socket.emit('signal', {
             conversation_id: activeConversationId,
+            secondPeerEmail: secondPeerEmail,
             data, 
         });  
     }
@@ -396,9 +396,16 @@ export default class SocketIoClient {
         data,
         user,
     }){
-        // console.log('onSignal', data);
-        
-        // SocketIoClient.voiceCall.socketPeer.peer.signal(data); 
+        const socketpeer = SocketIoClient.voiceCall.socketPeers?.find((peer) => peer.secondPeerEmail == user.email);
+        if (socketpeer) {
+            socketpeer.signal(data);
+            return;
+        }
+        SocketIoClient.voiceCall.answerCall({
+            conversation_id: SocketIoClient.voiceCall.activeVoiceCallId.value,
+            secondPeerEmail: user.email,
+            data,
+        });
     }
 
     public static onOtherDeviceIsLoggedIn() {
