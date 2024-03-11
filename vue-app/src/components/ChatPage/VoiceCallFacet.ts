@@ -117,8 +117,17 @@ export default class VoiceCallFacet {
         const constraints = {
             video: false,
             audio: {
-              channelCount: 1,
-              echoCancellation: true,
+                autoGainControl: false,
+                channelCount: 2,
+                echoCancellation: false,
+                latency: 0,
+                noiseSuppression: false,
+                sampleRate: {
+                    ideal: 48000,
+                    min: 44100,
+                },
+                sampleSize: 16,
+                volume: 1.0
             }
           } as MediaStreamConstraints;
           try {
